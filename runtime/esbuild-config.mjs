@@ -30,7 +30,7 @@ import { fileURLToPath } from 'node:url';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
-/** `<repo>/vscode-ext-host` */
+/** The repository root. */
 export const ROOT = resolve(__dirname, '..');
 /** The vendored upstream closure. */
 export const VENDOR = resolve(ROOT, 'vendor');
