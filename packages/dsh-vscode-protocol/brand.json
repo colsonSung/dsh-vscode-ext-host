@@ -1,0 +1,23 @@
+{
+  "nameShort": "DeepSeek Harness",
+  "nameLong": "DeepSeek Harness",
+  "applicationName": "deepseek-harness",
+  "dataFolderName": ".dsh",
+  "urlProtocol": "dsh",
+  "win32AppUserModelId": "DeepSeek.Harness",
+  "win32AppName": "DeepSeek Harness",
+  "quality": "stable",
+  "commit": "dsh-s1",
+  "version": "1.104.0-dsh",
+  "licenseName": "MIT",
+  "licenseUrl": "https://github.com/microsoft/vscode/blob/main/LICENSE.txt",
+  "extensionsGallery": {
+    "serviceUrl": "https://open-vsx.org",
+    "servicePPEUrl": "https://open-vsx.org",
+    "searchUrl": "https://open-vsx.org/api/-/search",
+    "itemUrl": "https://open-vsx.org/api/{publisher}/{name}/{version}/file/{publisher}.{name}-{version}.vsix",
+    "publisherUrl": "https://open-vsx.org/api/-/publisher/{publisher}",
+    "resourceUrl": "https://open-vsx.org/api/{publisher}/{name}/{version}/file/*",
+    "controlUrl": ""
+  }
+}

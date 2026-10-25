@@ -1,0 +1,6 @@
+{
+  "meta": {
+    "title": "VS Code 扩展宿主",
+    "description": "在 DSH 里用 vendored 的开源扩展宿主进程运行真实的 VS Code 扩展包。"
+  }
+}

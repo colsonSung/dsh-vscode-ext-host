@@ -1,0 +1,36 @@
+{
+  "name": "dsh-vscode-protocol",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "VS Code's own binary extension-host RPC protocol (PersistentProtocol + RPCProtocol) plus the DSH channel mapping.",
+  "license": "MIT",
+  "author": "Ethan Song",
+  "exports": {
+    ".": "./dist/index.js"
+  },
+  "files": [
+    "dist",
+    "src",
+    "brand.json",
+    "LICENSE",
+    "README.md"
+  ],
+  "dependencies": {},
+  "scripts": {
+    "build": "node build.mjs"
+  },
+  "keywords": [
+    "deepseek-harness",
+    "dsh",
+    "vscode",
+    "extension-host",
+    "rpc"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/colsonSung/dsh-vscode-ext-host.git",
+    "directory": "packages/dsh-vscode-protocol"
+  },
+  "homepage": "https://github.com/colsonSung/dsh-vscode-ext-host#readme"
+}

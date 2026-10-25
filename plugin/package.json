@@ -1,0 +1,56 @@
+{
+  "name": "dsh-vscode-extension-host",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Run real VS Code extension packages (VSIX) inside DeepSeek Harness: a vendored, open source extension host in a child process, with trust gating, crash recovery and a model-facing tool.",
+  "icon": "./icon.svg",
+  "exports": {
+    ".": "./index.js",
+    "./locale/*.json": "./locale/*.json",
+    "./icon": "./icon.svg",
+    "./client": "./client.js"
+  },
+  "files": [
+    "README.md",
+    "client.js",
+    "cordis.patch.yml",
+    "dist/",
+    "icon.svg",
+    "index.js",
+    "locale/*.json",
+    "main-host.js",
+    "src/*",
+    "vendor/ATTRIBUTION.md",
+    "vendor/LICENSE.vscode.txt",
+    "webview-surface.js"
+  ],
+  "dependencies": {
+    "dsh-vscode-protocol": "link:../packages/dsh-vscode-protocol"
+  },
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
+    "client": {
+      "platform": "web",
+      "immediately": true
+    }
+  },
+  "license": "MIT",
+  "author": "Ethan Song",
+  "keywords": [
+    "deepseek-harness",
+    "dsh",
+    "plugin",
+    "vscode",
+    "extension-host",
+    "vsix"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/colsonSung/dsh-vscode-ext-host.git",
+    "directory": "plugin"
+  },
+  "homepage": "https://github.com/colsonSung/dsh-vscode-ext-host#readme"
+}

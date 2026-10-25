@@ -1,0 +1,372 @@
+[dsh-main] profile     = /home/<user>/workspace/dsh-vscode-ext-host/spike/profile
+[dsh-main] node exec  = /Applications/DeepSeek Harness.app/Contents/Resources/runtime/bin/node
+[dsh-main] child      = /home/<user>/workspace/dsh-vscode-ext-host/plugin/dist/extension-host.js
+[dsh-main] resolved 3 extension(s): ms-vscode.vscode-js-profile-table, redhat.vscode-yaml, dsh-probe.hello-dsh
+[dsh-main] activation events for ms-vscode.vscode-js-profile-table: ["onCommand:extension.jsProfileVisualizer.table.clearCodeLenses","onCustomEditor:jsProfileVisualizer.cpuprofile.table","onCustomEditor:jsProfileVisualizer.heapprofile.table","onCustomEditor:jsProfileVisualizer.heapsnapshot.table"]
+[dsh-main] activation events for redhat.vscode-yaml: ["onLanguage:yaml","onLanguage:yaml-textmate","onLanguage:yaml-tmlanguage","onLanguage:ansible","onLanguage:azure-pipelines","onLanguage:dockercompose","onLanguage:github-actions-workflow","onLanguage:home-assistant","onLanguage:manifest-yaml","onLanguage:spring-boot-properties-yaml"]
+[dsh-main] activation events for dsh-probe.hello-dsh: ["onStartupFinished","onCommand:dsh-probe.hello"]
+[dsh-main] -> $initializeWorkspace  (BLOCKING POINT)
+[dsh-main rpc] -> request: ExtHostWorkspace.$initializeWorkspace( [{"id":"dsh-spike-workspace","name":"DSH Spike Workspace","folders":[]},true]
+[exthost] [dsh-exthost] pid=29391 node=v24.21.0 argv=["/Applications/DeepSeek Harness.app/Contents/Resources/runtime/primary-runtime/dependencies/node/bin/node","/home/<user>/workspace/dsh-vscode-ext-host/plugin/dist/extension-host.js"]
+[dsh-main rpc] <- receiveRequest MainThreadLogger.$registerLogger( [{"resource":{"$mid":1,"fsPath":"/home/<user>/workspace/dsh-vscode-ext-host/spike/profile/logs/exthost.log","external":"file:///home/<user>/workspace/dsh-vscode-ext-host/spike/profile/logs/exthost.log","path":"/home/<user>/Doc
+[dsh-main rpc] -> ack undefined
+[dsh-main rpc] <- receiveRequest MainThreadWindow.$getInitialState( []
+[dsh-main rpc] -> ack undefined
+[dsh-main rpc] <- receiveRequest MainThreadCommands.$registerCommand( ["__vsce68897d4-8685-411e-9fc1-c0e16b6d2243"]
+[dsh-main] >>> MainThreadCommands.$registerCommand("__vsce68897d4-8685-411e-9fc1-c0e16b6d2243")
+[dsh-main rpc] -> ack undefined
+[dsh-main rpc] <- receiveRequest MainThreadTerminalService.$registerProcessSupport( [true]
+[dsh-main] (stub) MainThreadTerminalService.$registerProcessSupport(1 args) -> undefined
+[dsh-main rpc] -> ack undefined
+[dsh-main rpc] <- receiveRequest MainThreadSearch.$registerTextSearchProvider( [0,"vscode-userdata"]
+[dsh-main] (stub) MainThreadSearch.$registerTextSearchProvider(2 args) -> undefined
+[dsh-main rpc] -> ack undefined
+[dsh-main rpc] <- receiveRequest MainThreadTask.$registerSupportedExecutions( [true]
+[dsh-main] (stub) MainThreadTask.$registerSupportedExecutions(1 args) -> undefined
+[dsh-main rpc] -> ack undefined
+[dsh-main rpc] <- receiveRequest MainThreadTask.$registerTaskSystem( ["file",{"scheme":"file","authority":"","platform":"darwin"}]
+[dsh-main] (stub) MainThreadTask.$registerTaskSystem(2 args) -> undefined
+[dsh-main rpc] -> ack undefined
+[dsh-main rpc] <- receiveRequest MainThreadTask.$registerSupportedExecutions( [true,true,true]
+[dsh-main] (stub) MainThreadTask.$registerSupportedExecutions(3 args) -> undefined
+[dsh-main rpc] -> ack undefined
+[dsh-main rpc] <- receiveRequest MainThreadChatSkills.$getTools( []
+[dsh-main] (stub) MainThreadLanguageModelTools.$getTools(0 args) -> []
+[dsh-main rpc] -> ack undefined
+[dsh-main rpc] -> reply: undefined
+[dsh-main rpc] -> reply: {"tabs":{"groups":[]}}
+[dsh-main rpc] -> reply: undefined
+[dsh-main rpc] -> reply: undefined
+[dsh-main rpc] -> reply: undefined
+[dsh-main rpc] -> reply: undefined
+[dsh-main rpc] -> reply: undefined
+[dsh-main rpc] -> reply: undefined
+[dsh-main rpc] -> reply: []
+[dsh-main rpc] <- receiveRequest MainThreadLogger.$registerLogger( [{"resource":{"$mid":1,"fsPath":"/home/<user>/workspace/dsh-vscode-ext-host/spike/profile/logs/extHostTelemetry.log","external":"file:///home/<user>/workspace/dsh-vscode-ext-host/spike/profile/logs/extHostTelemetry.log","path":"/U
+[dsh-main rpc] -> ack undefined
+[dsh-main rpc] <- ack undefined
+[dsh-main rpc] <- receiveReply: undefined
+[dsh-main rpc] -> reply: undefined
+[dsh-main] -> $initializeConfiguration
+[dsh-main rpc] -> request: ExtHostConfiguration.$initializeConfiguration( [{"defaults":{"contents":{},"keys":[],"overrides":[]},"policy":{"contents":{},"keys":[],"overrides":[]},"application":{"contents":{},"keys":[],"overrides":[]},"userLocal":{"contents":{},"keys":[],"overrides":[]},"userRemote":{"contents":{},"keys":[],"overrides":[]},"workspace":{"contents":{},"keys":
+[dsh-main rpc] <- ack undefined
+[dsh-main rpc] <- receiveReply: undefined
+[dsh-main] -> $initializeTelemetryLevel
+[dsh-main rpc] -> request: ExtHostTelemetry.$initializeTelemetryLevel( [0,false,{"usage":false,"error":false}]
+[dsh-main rpc] <- ack undefined
+[dsh-main rpc] <- receiveReply: undefined
+[dsh-main] -> $initializeIsConnectionMetered
+[dsh-main rpc] -> request: ExtHostMeteredConnection.$initializeIsConnectionMetered( [false]
+[dsh-main rpc] <- receiveRequest MainThreadFileSystem.$ensureActivation( ["file"]
+[dsh-main] (stub) MainThreadFileSystem.$ensureActivation(1 args) -> undefined
+[dsh-main rpc] -> ack undefined
+[dsh-main rpc] <- ack undefined
+[dsh-main rpc] <- receiveReply: undefined
+[dsh-main rpc] -> reply: undefined
+[dsh-main] -> $startExtensionHost
+[dsh-main rpc] -> request: ExtHostExtensionService.$startExtensionHost( [{"versionId":1,"toRemove":[],"toAdd":[],"addActivationEvents":{},"myToRemove":[],"myToAdd":[]}]
+[dsh-main rpc] <- ack undefined
+[dsh-main rpc] <- receiveRequest MainThreadDebugService.$registerDebugTypes( [[]]
+[dsh-main] (stub) MainThreadDebugService.$registerDebugTypes(1 args) -> undefined
+[dsh-main rpc] -> ack undefined
+[dsh-main rpc] <- receiveRequest MainThreadExtensionService.$setPerformanceMarks( [[{"name":"code/timeOrigin","startTime":1792818133231.927},{"name":"code/extHost/didCreateServices","startTime":1792818133297},{"name":"code/extHost/willWaitForConfig","startTime":1792818133302},{"name":"code/extHost/didWaitForConfig","startTime":1792818133306},{"name":"code/extHost/didInitAPI","sta
+[dsh-main] MainThreadExtensionService.$setPerformanceMarks(7 marks)
+[dsh-main rpc] -> ack undefined
+[dsh-main rpc] <- receiveRequest MainThreadExtensionService.$onWillActivateExtension( [{"value":"dsh-probe.hello-dsh","_lower":"dsh-probe.hello-dsh"}]
+[dsh-main] MainThreadExtensionService.$onWillActivateExtension(dsh-probe.hello-dsh)
+[dsh-main rpc] -> ack undefined
+[dsh-main rpc] <- receiveReply: undefined
+[dsh-main rpc] -> reply: undefined
+[dsh-main rpc] -> reply: undefined
+[dsh-main rpc] -> reply: undefined
+[dsh-main] -> $activateByEvent("onCommand:extension.jsProfileVisualizer.table.clearCodeLenses")
+[dsh-main rpc] -> request: ExtHostExtensionService.$activateByEvent( ["onCommand:extension.jsProfileVisualizer.table.clearCodeLenses",0]
+[dsh-main rpc] <- ack undefined
+[dsh-main rpc] <- receiveRequest MainThreadExtensionService.$onWillActivateExtension( [{"value":"ms-vscode.vscode-js-profile-table","_lower":"ms-vscode.vscode-js-profile-table"}]
+[dsh-main] MainThreadExtensionService.$onWillActivateExtension(ms-vscode.vscode-js-profile-table)
+[dsh-main rpc] -> ack undefined
+[dsh-main rpc] <- receiveRequest MainThreadTelemetry.$publicLog2( ["activatePlugin",{"id":"dsh-probe.hello-dsh","name":"hello-dsh","extensionVersion":"1.0.0","publisherDisplayName":"dsh-probe","activationEvents":"onStartupFinished","isBuiltin":false,"reason":"onStartupFinished","reasonId":"dsh-probe.hello-dsh"}]
+[dsh-main rpc] -> ack undefined
+[dsh-main rpc] <- receiveRequest MainThreadStorage.$initializeExtensionStorage( [true,"dsh-probe.hello-dsh"]
+[dsh-main] MainThreadStorage.$initializeExtensionStorage(true, dsh-probe.hello-dsh)
+[dsh-main rpc] -> ack undefined
+[dsh-main rpc] <- receiveRequest MainThreadStorage.$initializeExtensionStorage( [false,"dsh-probe.hello-dsh"]
+[dsh-main] MainThreadStorage.$initializeExtensionStorage(false, dsh-probe.hello-dsh)
+[dsh-main rpc] -> ack undefined
+[dsh-main rpc] -> reply: undefined
+[dsh-main rpc] -> reply: undefined
+[dsh-main rpc] -> reply: undefined
+[dsh-main rpc] -> reply: undefined
+[exthost] 
+START_NATIVE_LOG
+[exthost] [dsh-probe] activate() called
+
+END_NATIVE_LOG
+[exthost] 
+START_NATIVE_LOG
+[exthost] [dsh-probe] extension id = dsh-probe.hello-dsh
+[exthost] 
+END_NATIVE_LOG
+[exthost] 
+START_NATIVE_LOG
+[exthost] [dsh-probe] vscode.env.appName = DeepSeek Harness
+
+END_NATIVE_LOG
+[exthost] 
+START_NATIVE_LOG
+[exthost] [dsh-probe] vscode.version = 1.104.0-spike
+
+END_NATIVE_LOG
+[dsh-main rpc] <- receiveRequest MainThreadTelemetry.$publicLog2( ["activatePlugin",{"id":"ms-vscode.vscode-js-profile-table","name":"vscode-js-profile-table","extensionVersion":"1.0.11","publisherDisplayName":"ms-vscode","activationEvents":"","isBuiltin":false,"reason":"onCommand:extension.jsProfileVisualizer.table.clearCodeLenses","reasonId":"ms-vscode.vscode-js
+[dsh-main rpc] -> ack undefined
+[dsh-main rpc] <- receiveRequest MainThreadStorage.$initializeExtensionStorage( [true,"ms-vscode.vscode-js-profile-table"]
+[dsh-main] MainThreadStorage.$initializeExtensionStorage(true, ms-vscode.vscode-js-profile-table)
+[dsh-main rpc] -> ack undefined
+[dsh-main rpc] <- receiveRequest MainThreadStorage.$initializeExtensionStorage( [false,"ms-vscode.vscode-js-profile-table"]
+[dsh-main] MainThreadStorage.$initializeExtensionStorage(false, ms-vscode.vscode-js-profile-table)
+[dsh-main rpc] -> ack undefined
+[dsh-main rpc] <- receiveRequest MainThreadConsole.$logExtensionHostMessage( [{"type":"__$console","severity":"log","arguments":"[\"[dsh-probe] activate() called\",{\"__$stack\":\"\\tat console.<anonymous> (/home/<user>/workspace/dsh-vscode-ext-host/plugin/dist/extension-host.js:115102:14)\\n\\tat activate (/home/<user>/Documents/deepseek-harn
+[dsh-main] [extension-console:log] {"type":"__$console","severity":"log","arguments":"[\"[dsh-probe] activate() called\",{\"__$stack\":\"\\tat console.<anonymous> (/home/<user>/workspace/dsh-vscode-ext-host/plugin/dist/extension-host.js:115102:14)\\n\\tat activate (/home/<user>/workspace/dsh-vscode-ext-host/spike/profile/extensions/dsh-probe.hello-dsh-1.0.0/extension/extension.js:5:10)\\n\\tat AbstractExtHostExtensionService._callActivateOptional (/home/<user>/workspace/dsh-vscode-ext-host/plugin/dist/extension-host.js:68278:57)\\n\\tat AbstractExtHostExtensionService._callActivate (/home/<user>/workspace/dsh-vscode-ext-host/plugin/dist/extension-host.js:68266:17)\\n\\tat /home/<user>/workspace/dsh-vscode-ext-host/plugin/dist/extension-host.js:68169:46\\n\\tat process.processTicksAndRejections (node:internal/process/task_queues:104:5)\\n\\tat async ActivationOperation._activate (/home/<user>/workspace/dsh-vscode-ext-host/plugin/dist/extension-host.js:61569:21)\\n\\tat async ActivationOperation._waitForDepsThenActivate (/home/<user>/workspace/dsh-vscode-ext-host/plugin/dist/extension-host.js:61565:5)\\n\\tat async ActivationOperation._initialize (/home/<user>/workspace/dsh-vscode-ext-host/plugin/dist/extension-host.js:61538:5)\"}]"}
+[dsh-main rpc] -> ack undefined
+[dsh-main rpc] <- receiveRequest MainThreadConsole.$logExtensionHostMessage( [{"type":"__$console","severity":"log","arguments":"[\"[dsh-probe] extension id =\",\"dsh-probe.hello-dsh\",{\"__$stack\":\"\\tat console.<anonymous> (/home/<user>/workspace/dsh-vscode-ext-host/plugin/dist/extension-host.js:115102:14)\\n\\tat activate (/home/<user>/Do
+[dsh-main] [extension-console:log] {"type":"__$console","severity":"log","arguments":"[\"[dsh-probe] extension id =\",\"dsh-probe.hello-dsh\",{\"__$stack\":\"\\tat console.<anonymous> (/home/<user>/workspace/dsh-vscode-ext-host/plugin/dist/extension-host.js:115102:14)\\n\\tat activate (/home/<user>/workspace/dsh-vscode-ext-host/spike/profile/extensions/dsh-probe.hello-dsh-1.0.0/extension/extension.js:6:10)\\n\\tat AbstractExtHostExtensionService._callActivateOptional (/home/<user>/workspace/dsh-vscode-ext-host/plugin/dist/extension-host.js:68278:57)\\n\\tat AbstractExtHostExtensionService._callActivate (/home/<user>/workspace/dsh-vscode-ext-host/plugin/dist/extension-host.js:68266:17)\\n\\tat /home/<user>/workspace/dsh-vscode-ext-host/plugin/dist/extension-host.js:68169:46\\n\\tat process.processTicksAndRejections (node:internal/process/task_queues:104:5)\\n\\tat async ActivationOperation._activate (/home/<user>/workspace/dsh-vscode-ext-host/plugin/dist/extension-host.js:61569:21)\\n\\tat async ActivationOperation._waitForDepsThenActivate (/home/<user>/workspace/dsh-vscode-ext-host/plugin/dist/extension-host.js:61565:5)\\n\\tat async ActivationOperation._initialize (/home/<user>/workspace/dsh-vscode-ext-host/plugin/dist/extension-host.js:61538:5)\"}]"}
+[dsh-main rpc] -> ack undefined
+[dsh-main rpc] <- receiveRequest MainThreadConsole.$logExtensionHostMessage( [{"type":"__$console","severity":"log","arguments":"[\"[dsh-probe] vscode.env.appName =\",\"DeepSeek Harness\",{\"__$stack\":\"\\tat console.<anonymous> (/home/<user>/workspace/dsh-vscode-ext-host/plugin/dist/extension-host.js:115102:14)\\n\\tat activate (/home/<user>
+[dsh-main] [extension-console:log] {"type":"__$console","severity":"log","arguments":"[\"[dsh-probe] vscode.env.appName =\",\"DeepSeek Harness\",{\"__$stack\":\"\\tat console.<anonymous> (/home/<user>/workspace/dsh-vscode-ext-host/plugin/dist/extension-host.js:115102:14)\\n\\tat activate (/home/<user>/workspace/dsh-vscode-ext-host/spike/profile/extensions/dsh-probe.hello-dsh-1.0.0/extension/extension.js:7:10)\\n\\tat AbstractExtHostExtensionService._callActivateOptional (/home/<user>/workspace/dsh-vscode-ext-host/plugin/dist/extension-host.js:68278:57)\\n\\tat AbstractExtHostExtensionService._callActivate (/home/<user>/workspace/dsh-vscode-ext-host/plugin/dist/extension-host.js:68266:17)\\n\\tat /home/<user>/workspace/dsh-vscode-ext-host/plugin/dist/extension-host.js:68169:46\\n\\tat process.processTicksAndRejections (node:internal/process/task_queues:104:5)\\n\\tat async ActivationOperation._activate (/home/<user>/workspace/dsh-vscode-ext-host/plugin/dist/extension-host.js:61569:21)\\n\\tat async ActivationOperation._waitForDepsThenActivate (/home/<user>/workspace/dsh-vscode-ext-host/plugin/dist/extension-host.js:61565:5)\\n\\tat async ActivationOperation._initialize (/home/<user>/workspace/dsh-vscode-ext-host/plugin/dist/extension-host.js:61538:5)\"}]"}
+[dsh-main rpc] -> ack undefined
+[dsh-main rpc] <- receiveRequest MainThreadConsole.$logExtensionHostMessage( [{"type":"__$console","severity":"log","arguments":"[\"[dsh-probe] vscode.version =\",\"1.104.0-spike\",{\"__$stack\":\"\\tat console.<anonymous> (/home/<user>/workspace/dsh-vscode-ext-host/plugin/dist/extension-host.js:115102:14)\\n\\tat activate (/home/<user>/Docume
+[dsh-main] [extension-console:log] {"type":"__$console","severity":"log","arguments":"[\"[dsh-probe] vscode.version =\",\"1.104.0-spike\",{\"__$stack\":\"\\tat console.<anonymous> (/home/<user>/workspace/dsh-vscode-ext-host/plugin/dist/extension-host.js:115102:14)\\n\\tat activate (/home/<user>/workspace/dsh-vscode-ext-host/spike/profile/extensions/dsh-probe.hello-dsh-1.0.0/extension/extension.js:8:10)\\n\\tat AbstractExtHostExtensionService._callActivateOptional (/home/<user>/workspace/dsh-vscode-ext-host/plugin/dist/extension-host.js:68278:57)\\n\\tat AbstractExtHostExtensionService._callActivate (/home/<user>/workspace/dsh-vscode-ext-host/plugin/dist/extension-host.js:68266:17)\\n\\tat /home/<user>/workspace/dsh-vscode-ext-host/plugin/dist/extension-host.js:68169:46\\n\\tat process.processTicksAndRejections (node:internal/process/task_queues:104:5)\\n\\tat async ActivationOperation._activate (/home/<user>/workspace/dsh-vscode-ext-host/plugin/dist/extension-host.js:61569:21)\\n\\tat async ActivationOperation._waitForDepsThenActivate (/home/<user>/workspace/dsh-vscode-ext-host/plugin/dist/extension-host.js:61565:5)\\n\\tat async ActivationOperation._initialize (/home/<user>/workspace/dsh-vscode-ext-host/plugin/dist/extension-host.js:61538:5)\"}]"}
+[dsh-main rpc] -> ack undefined
+[dsh-main rpc] <- receiveRequest MainThreadCommands.$registerCommand( ["dsh-probe.hello"]
+[dsh-main] >>> MainThreadCommands.$registerCommand("dsh-probe.hello")
+[dsh-main rpc] -> ack undefined
+[dsh-main rpc] <- receiveRequest MainThreadMessageService.$showMessage( [1,"[dsh-probe] hello from the DSH extension host",{"source":{"identifier":{"value":"dsh-probe.hello-dsh","_lower":"dsh-probe.hello-dsh"},"label":"Hello DSH (probe extension)"}},[]]
+[dsh-main] MainThreadMessageService.$showMessage("1")
+[dsh-main rpc] -> ack undefined
+[dsh-main rpc] <- receiveRequest MainThreadExtensionService.$onDidActivateExtension( [{"value":"dsh-probe.hello-dsh","_lower":"dsh-probe.hello-dsh"},1,4,1,{"startup":false,"extensionId":{"value":"dsh-probe.hello-dsh","_lower":"dsh-probe.hello-dsh"},"activationEvent":"onStartupFinished"}]
+[dsh-main] >>> ACTIVATED dsh-probe.hello-dsh (reason={"startup":false,"extensionId":{"value":"dsh-probe.hello-dsh","_lower":"dsh-probe.hello-dsh"},"activationEvent":"onStartupFinished"}, codeLoading=1ms, activateCall=4ms, activateResolved=1ms)
+[dsh-main rpc] -> ack undefined
+[dsh-main rpc] <- receiveRequest MainThreadTelemetry.$publicLog2( ["extensionActivationTimes",{"id":"dsh-probe.hello-dsh","name":"hello-dsh","extensionVersion":"1.0.0","publisherDisplayName":"dsh-probe","activationEvents":"onStartupFinished","isBuiltin":false,"reason":"onStartupFinished","reasonId":"dsh-probe.hello-dsh","startup":false,"codeLoadingTime":1,"activat
+[dsh-main rpc] -> ack undefined
+[dsh-main rpc] -> reply: undefined
+[dsh-main rpc] -> reply: undefined
+[dsh-main rpc] -> reply: undefined
+[dsh-main rpc] -> reply: undefined
+[dsh-main rpc] -> reply: undefined
+[dsh-main rpc] -> reply: undefined
+[dsh-main rpc] -> reply: undefined
+[dsh-main rpc] -> reply: undefined
+[dsh-main rpc] -> reply: undefined
+[dsh-main rpc] -> reply: undefined
+[dsh-main rpc] -> reply: undefined
+[dsh-main rpc] <- receiveRequest MainThreadCustomEditors.$registerCustomEditorProvider( [{"id":{"value":"ms-vscode.vscode-js-profile-table","_lower":"ms-vscode.vscode-js-profile-table"},"location":{"$mid":1,"fsPath":"/home/<user>/workspace/dsh-vscode-ext-host/spike/profile/extensions/ms-vscode.vscode-js-profile-table-1.0.11/extension","path":"/Users/e
+[dsh-main] (stub) MainThreadCustomEditors.$registerCustomEditorProvider(6 args) -> undefined
+[dsh-main rpc] -> ack undefined
+[dsh-main rpc] <- receiveRequest MainThreadCustomEditors.$registerCustomEditorProvider( [{"id":{"value":"ms-vscode.vscode-js-profile-table","_lower":"ms-vscode.vscode-js-profile-table"},"location":{"$mid":1,"fsPath":"/home/<user>/workspace/dsh-vscode-ext-host/spike/profile/extensions/ms-vscode.vscode-js-profile-table-1.0.11/extension","path":"/Users/e
+[dsh-main] (stub) MainThreadCustomEditors.$registerCustomEditorProvider(6 args) -> undefined
+[dsh-main rpc] -> ack undefined
+[dsh-main rpc] <- receiveRequest MainThreadCustomEditors.$registerCustomEditorProvider( [{"id":{"value":"ms-vscode.vscode-js-profile-table","_lower":"ms-vscode.vscode-js-profile-table"},"location":{"$mid":1,"fsPath":"/home/<user>/workspace/dsh-vscode-ext-host/spike/profile/extensions/ms-vscode.vscode-js-profile-table-1.0.11/extension","path":"/Users/e
+[dsh-main] (stub) MainThreadCustomEditors.$registerCustomEditorProvider(6 args) -> undefined
+[dsh-main rpc] -> ack undefined
+[dsh-main rpc] <- receiveRequest MainThreadDocumentContentProviders.$registerTextContentProvider( [0,"js-viz-download"]
+[dsh-main] (stub) MainThreadDocumentContentProviders.$registerTextContentProvider(2 args) -> undefined
+[dsh-main rpc] -> ack undefined
+[dsh-main rpc] <- receiveRequest MainThreadLanguageFeatures.$registerCodeLensSupport( [0,[{"$serialized":true,"language":"*","isBuiltin":false}],1]
+[dsh-main] (stub) MainThreadLanguageFeatures.$registerCodeLensSupport(3 args) -> undefined
+[dsh-main rpc] -> ack undefined
+[dsh-main rpc] <- receiveRequest MainThreadCommands.$registerCommand( ["extension.jsProfileVisualizer.table.clearCodeLenses"]
+[dsh-main] >>> MainThreadCommands.$registerCommand("extension.jsProfileVisualizer.table.clearCodeLenses")
+[dsh-main rpc] -> ack undefined
+[dsh-main rpc] <- receiveRequest MainThreadExtensionService.$onDidActivateExtension( [{"value":"ms-vscode.vscode-js-profile-table","_lower":"ms-vscode.vscode-js-profile-table"},8,0,0,{"startup":false,"extensionId":{"value":"ms-vscode.vscode-js-profile-table","_lower":"ms-vscode.vscode-js-profile-table"},"activationEvent":"onCommand:extension.jsProfileVisualizer.table.clearCodeLenses
+[dsh-main] >>> ACTIVATED ms-vscode.vscode-js-profile-table (reason={"startup":false,"extensionId":{"value":"ms-vscode.vscode-js-profile-table","_lower":"ms-vscode.vscode-js-profile-table"},"activationEvent":"onCommand:extension.jsProfileVisualizer.table.clearCodeLenses"}, codeLoading=8ms, activateCall=0ms, activateResolved=0ms)
+[dsh-main rpc] -> ack undefined
+[dsh-main rpc] <- receiveRequest MainThreadTelemetry.$publicLog2( ["extensionActivationTimes",{"id":"ms-vscode.vscode-js-profile-table","name":"vscode-js-profile-table","extensionVersion":"1.0.11","publisherDisplayName":"ms-vscode","activationEvents":"","isBuiltin":false,"reason":"onCommand:extension.jsProfileVisualizer.table.clearCodeLenses","reasonId":"ms-vscode
+[dsh-main rpc] -> ack undefined
+[dsh-main rpc] <- receiveReply: undefined
+[dsh-main rpc] -> reply: undefined
+[dsh-main rpc] -> reply: undefined
+[dsh-main rpc] -> reply: undefined
+[dsh-main rpc] -> reply: undefined
+[dsh-main rpc] -> reply: undefined
+[dsh-main rpc] -> reply: undefined
+[dsh-main rpc] -> reply: undefined
+[dsh-main rpc] -> reply: undefined
+[dsh-main] -> $activateByEvent("onCustomEditor:jsProfileVisualizer.cpuprofile.table")
+[dsh-main rpc] -> request: ExtHostExtensionService.$activateByEvent( ["onCustomEditor:jsProfileVisualizer.cpuprofile.table",0]
+[dsh-main rpc] <- ack undefined
+[dsh-main rpc] <- receiveReply: undefined
+[dsh-main] -> $activateByEvent("onCustomEditor:jsProfileVisualizer.heapprofile.table")
+[dsh-main rpc] -> request: ExtHostExtensionService.$activateByEvent( ["onCustomEditor:jsProfileVisualizer.heapprofile.table",0]
+[dsh-main rpc] <- ack undefined
+[dsh-main rpc] <- receiveReply: undefined
+[dsh-main] -> $activateByEvent("onCustomEditor:jsProfileVisualizer.heapsnapshot.table")
+[dsh-main rpc] -> request: ExtHostExtensionService.$activateByEvent( ["onCustomEditor:jsProfileVisualizer.heapsnapshot.table",0]
+[dsh-main rpc] <- ack undefined
+[dsh-main rpc] <- receiveReply: undefined
+[dsh-main] -> $activate(ms-vscode.vscode-js-profile-table)
+[dsh-main rpc] -> request: ExtHostExtensionService.$activate( [{"value":"ms-vscode.vscode-js-profile-table","_lower":"ms-vscode.vscode-js-profile-table"},"other"]
+[dsh-main rpc] <- ack undefined
+[dsh-main rpc] <- receiveReply: true
+[dsh-main] -> $activateByEvent("onLanguage:yaml")
+[dsh-main rpc] -> request: ExtHostExtensionService.$activateByEvent( ["onLanguage:yaml",0]
+[dsh-main rpc] <- ack undefined
+[dsh-main rpc] <- receiveRequest MainThreadExtensionService.$onWillActivateExtension( [{"value":"redhat.vscode-yaml","_lower":"redhat.vscode-yaml"}]
+[dsh-main] MainThreadExtensionService.$onWillActivateExtension(redhat.vscode-yaml)
+[dsh-main rpc] -> ack undefined
+[dsh-main rpc] -> reply: undefined
+[dsh-main rpc] <- receiveRequest MainThreadTelemetry.$publicLog2( ["activatePlugin",{"id":"redhat.vscode-yaml","name":"vscode-yaml","extensionVersion":"2.1.2026102308","publisherDisplayName":"redhat","activationEvents":"onLanguage:yaml,onLanguage:yaml-textmate,onLanguage:yaml-tmlanguage,onLanguage:ansible,onLanguage:azure-pipelines,onLanguage:dockercompose,onLangu
+[dsh-main rpc] -> ack undefined
+[dsh-main rpc] <- receiveRequest MainThreadStorage.$initializeExtensionStorage( [true,"redhat.vscode-yaml"]
+[dsh-main] MainThreadStorage.$initializeExtensionStorage(true, redhat.vscode-yaml)
+[dsh-main rpc] -> ack undefined
+[dsh-main rpc] <- receiveRequest MainThreadStorage.$initializeExtensionStorage( [false,"redhat.vscode-yaml"]
+[dsh-main] MainThreadStorage.$initializeExtensionStorage(false, redhat.vscode-yaml)
+[dsh-main rpc] -> ack undefined
+[dsh-main rpc] -> reply: undefined
+[dsh-main rpc] -> reply: undefined
+[dsh-main rpc] -> reply: undefined
+[dsh-main rpc] <- receiveRequest MainThreadFileSystem.$ensureActivation( ["file"]
+[dsh-main] (stub) MainThreadFileSystem.$ensureActivation(1 args) -> undefined
+[dsh-main rpc] -> ack undefined
+[dsh-main rpc] <- receiveRequest MainThreadFileSystem.$ensureActivation( ["file"]
+[dsh-main] (stub) MainThreadFileSystem.$ensureActivation(1 args) -> undefined
+[dsh-main rpc] -> ack undefined
+[dsh-main rpc] <- receiveRequest MainThreadDocumentContentProviders.$registerTextContentProvider( [1,"json-schema"]
+[dsh-main] (stub) MainThreadDocumentContentProviders.$registerTextContentProvider(2 args) -> undefined
+[dsh-main rpc] -> ack undefined
+[dsh-main rpc] -> reply: undefined
+[dsh-main rpc] -> reply: undefined
+[dsh-main rpc] -> reply: undefined
+[dsh-main rpc] <- receiveRequest MainThreadFileSystem.$ensureActivation( ["file"]
+[dsh-main] (stub) MainThreadFileSystem.$ensureActivation(1 args) -> undefined
+[dsh-main rpc] -> ack undefined
+[dsh-main rpc] <- receiveRequest MainThreadLogger.$registerLogger( [{"resource":{"$mid":1,"fsPath":"/home/<user>/workspace/dsh-vscode-ext-host/spike/profile/logs/redhat.vscode-yaml/YAML Support.log","external":"file:///home/<user>/workspace/dsh-vscode-ext-host/spike/profile/logs/redhat.vscode-yam
+[dsh-main rpc] -> ack undefined
+[dsh-main rpc] -> reply: undefined
+[dsh-main rpc] -> reply: undefined
+[dsh-main rpc] <- receiveRequest MainThreadMessageService.$showMessage( [1,"Help Red Hat improve its extensions by allowing them to collect usage data. \n      Read our [privacy statement](https://developers.redhat.com/article/tool-data-collection?from=redhat.vscode-yaml) \n    and learn how to [opt out](https://github.com/redhat-developer/vscode-redhat-telemetry#how-to
+[dsh-main] MainThreadMessageService.$showMessage("1")
+[dsh-main rpc] -> ack undefined
+[dsh-main rpc] -> reply: undefined
+[dsh-main rpc] <- receiveRequest MainThreadLanguageFeatures.$registerCompletionsProvider( [2,[{"$serialized":true,"language":"yaml","isBuiltin":false},{"$serialized":true,"language":"yaml-textmate","isBuiltin":false},{"$serialized":true,"language":"yaml-tmlanguage","isBuiltin":false},{"$serialized":true,"language":"ansible","isBuiltin":false},{"$serialized":true,"language":"azure-pipelin
+[dsh-main] (stub) MainThreadLanguageFeatures.$registerCompletionsProvider(5 args) -> undefined
+[dsh-main rpc] -> ack undefined
+[dsh-main rpc] <- receiveRequest MainThreadLanguageFeatures.$registerHoverProvider( [3,[{"$serialized":true,"language":"yaml","isBuiltin":false},{"$serialized":true,"language":"yaml-textmate","isBuiltin":false},{"$serialized":true,"language":"yaml-tmlanguage","isBuiltin":false},{"$serialized":true,"language":"ansible","isBuiltin":false},{"$serialized":true,"language":"azure-pipelin
+[dsh-main] (stub) MainThreadLanguageFeatures.$registerHoverProvider(2 args) -> undefined
+[dsh-main rpc] -> ack undefined
+[dsh-main rpc] <- receiveRequest MainThreadLanguageFeatures.$registerDefinitionSupport( [4,[{"$serialized":true,"language":"yaml","isBuiltin":false},{"$serialized":true,"language":"yaml-textmate","isBuiltin":false},{"$serialized":true,"language":"yaml-tmlanguage","isBuiltin":false},{"$serialized":true,"language":"ansible","isBuiltin":false},{"$serialized":true,"language":"azure-pipelin
+[dsh-main] (stub) MainThreadLanguageFeatures.$registerDefinitionSupport(2 args) -> undefined
+[dsh-main rpc] -> ack undefined
+[dsh-main rpc] <- receiveRequest MainThreadLanguageFeatures.$registerDocumentSymbolProvider( [5,[{"$serialized":true,"language":"yaml","isBuiltin":false},{"$serialized":true,"language":"yaml-textmate","isBuiltin":false},{"$serialized":true,"language":"yaml-tmlanguage","isBuiltin":false},{"$serialized":true,"language":"ansible","isBuiltin":false},{"$serialized":true,"language":"azure-pipelin
+[dsh-main] (stub) MainThreadLanguageFeatures.$registerDocumentSymbolProvider(3 args) -> undefined
+[dsh-main rpc] -> ack undefined
+[dsh-main rpc] <- receiveRequest MainThreadLanguageFeatures.$registerCodeActionSupport( [6,[{"$serialized":true,"language":"yaml","isBuiltin":false},{"$serialized":true,"language":"yaml-textmate","isBuiltin":false},{"$serialized":true,"language":"yaml-tmlanguage","isBuiltin":false},{"$serialized":true,"language":"ansible","isBuiltin":false},{"$serialized":true,"language":"azure-pipelin
+[dsh-main] (stub) MainThreadLanguageFeatures.$registerCodeActionSupport(6 args) -> undefined
+[dsh-main rpc] -> ack undefined
+[dsh-main rpc] <- receiveRequest MainThreadLanguageFeatures.$registerCodeLensSupport( [7,[{"$serialized":true,"language":"yaml","isBuiltin":false},{"$serialized":true,"language":"yaml-textmate","isBuiltin":false},{"$serialized":true,"language":"yaml-tmlanguage","isBuiltin":false},{"$serialized":true,"language":"ansible","isBuiltin":false},{"$serialized":true,"language":"azure-pipelin
+[dsh-main] (stub) MainThreadLanguageFeatures.$registerCodeLensSupport(3 args) -> undefined
+[dsh-main rpc] -> ack undefined
+[dsh-main rpc] <- receiveRequest MainThreadLanguageFeatures.$registerOnTypeFormattingSupport( [9,[{"$serialized":true,"language":"yaml","isBuiltin":false},{"$serialized":true,"language":"yaml-textmate","isBuiltin":false},{"$serialized":true,"language":"yaml-tmlanguage","isBuiltin":false},{"$serialized":true,"language":"ansible","isBuiltin":false},{"$serialized":true,"language":"azure-pipelin
+[dsh-main] (stub) MainThreadLanguageFeatures.$registerOnTypeFormattingSupport(4 args) -> undefined
+[dsh-main rpc] -> ack undefined
+[dsh-main rpc] <- receiveRequest MainThreadLanguageFeatures.$registerRenameSupport( [10,[{"$serialized":true,"language":"yaml","isBuiltin":false},{"$serialized":true,"language":"yaml-textmate","isBuiltin":false},{"$serialized":true,"language":"yaml-tmlanguage","isBuiltin":false},{"$serialized":true,"language":"ansible","isBuiltin":false},{"$serialized":true,"language":"azure-pipeli
+[dsh-main] (stub) MainThreadLanguageFeatures.$registerRenameSupport(3 args) -> undefined
+[dsh-main rpc] -> ack undefined
+[dsh-main rpc] <- receiveRequest MainThreadLanguageFeatures.$registerDocumentLinkProvider( [11,[{"$serialized":true,"language":"yaml","isBuiltin":false},{"$serialized":true,"language":"yaml-textmate","isBuiltin":false},{"$serialized":true,"language":"yaml-tmlanguage","isBuiltin":false},{"$serialized":true,"language":"ansible","isBuiltin":false},{"$serialized":true,"language":"azure-pipeli
+[dsh-main] (stub) MainThreadLanguageFeatures.$registerDocumentLinkProvider(3 args) -> undefined
+[dsh-main rpc] -> ack undefined
+[dsh-main rpc] <- receiveRequest MainThreadCommands.$registerCommand( ["jumpToSchema"]
+[dsh-main] >>> MainThreadCommands.$registerCommand("jumpToSchema")
+[dsh-main rpc] -> ack undefined
+[dsh-main rpc] <- receiveRequest MainThreadLanguageFeatures.$registerFoldingRangeProvider( [12,[{"$serialized":true,"language":"yaml","isBuiltin":false},{"$serialized":true,"language":"yaml-textmate","isBuiltin":false},{"$serialized":true,"language":"yaml-tmlanguage","isBuiltin":false},{"$serialized":true,"language":"ansible","isBuiltin":false},{"$serialized":true,"language":"azure-pipeli
+[dsh-main] (stub) MainThreadLanguageFeatures.$registerFoldingRangeProvider(4 args) -> undefined
+[dsh-main rpc] -> ack undefined
+[dsh-main rpc] <- receiveRequest MainThreadLanguageFeatures.$registerSelectionRangeProvider( [14,[{"$serialized":true,"language":"yaml","isBuiltin":false},{"$serialized":true,"language":"yaml-textmate","isBuiltin":false},{"$serialized":true,"language":"yaml-tmlanguage","isBuiltin":false},{"$serialized":true,"language":"ansible","isBuiltin":false},{"$serialized":true,"language":"azure-pipeli
+[dsh-main] (stub) MainThreadLanguageFeatures.$registerSelectionRangeProvider(2 args) -> undefined
+[dsh-main rpc] -> ack undefined
+[dsh-main rpc] <- receiveRequest MainThreadExtensionService.$onDidActivateExtension( [{"value":"redhat.vscode-yaml","_lower":"redhat.vscode-yaml"},26,0,87,{"startup":false,"extensionId":{"value":"redhat.vscode-yaml","_lower":"redhat.vscode-yaml"},"activationEvent":"onLanguage:yaml"}]
+[dsh-main] >>> ACTIVATED redhat.vscode-yaml (reason={"startup":false,"extensionId":{"value":"redhat.vscode-yaml","_lower":"redhat.vscode-yaml"},"activationEvent":"onLanguage:yaml"}, codeLoading=26ms, activateCall=0ms, activateResolved=87ms)
+[dsh-main rpc] -> ack undefined
+[dsh-main rpc] <- receiveRequest MainThreadTelemetry.$publicLog2( ["extensionActivationTimes",{"id":"redhat.vscode-yaml","name":"vscode-yaml","extensionVersion":"2.1.2026102308","publisherDisplayName":"redhat","activationEvents":"onLanguage:yaml,onLanguage:yaml-textmate,onLanguage:yaml-tmlanguage,onLanguage:ansible,onLanguage:azure-pipelines,onLanguage:dockercompo
+[dsh-main rpc] -> ack undefined
+[dsh-main rpc] <- receiveReply: undefined
+[dsh-main rpc] -> reply: undefined
+[dsh-main rpc] -> reply: undefined
+[dsh-main rpc] -> reply: undefined
+[dsh-main rpc] -> reply: undefined
+[dsh-main rpc] -> reply: undefined
+[dsh-main rpc] -> reply: undefined
+[dsh-main rpc] -> reply: undefined
+[dsh-main rpc] -> reply: undefined
+[dsh-main rpc] -> reply: undefined
+[dsh-main rpc] -> reply: undefined
+[dsh-main rpc] -> reply: undefined
+[dsh-main rpc] -> reply: undefined
+[dsh-main rpc] -> reply: undefined
+[dsh-main rpc] -> reply: undefined
+[dsh-main] -> $activateByEvent("onLanguage:yaml-textmate")
+[dsh-main rpc] -> request: ExtHostExtensionService.$activateByEvent( ["onLanguage:yaml-textmate",0]
+[dsh-main rpc] <- ack undefined
+[dsh-main rpc] <- receiveReply: undefined
+[dsh-main] -> $activateByEvent("onLanguage:yaml-tmlanguage")
+[dsh-main rpc] -> request: ExtHostExtensionService.$activateByEvent( ["onLanguage:yaml-tmlanguage",0]
+[dsh-main rpc] <- ack undefined
+[dsh-main rpc] <- receiveReply: undefined
+[dsh-main] -> $activateByEvent("onLanguage:ansible")
+[dsh-main rpc] -> request: ExtHostExtensionService.$activateByEvent( ["onLanguage:ansible",0]
+[dsh-main rpc] <- ack undefined
+[dsh-main rpc] <- receiveReply: undefined
+[dsh-main] -> $activateByEvent("onLanguage:azure-pipelines")
+[dsh-main rpc] -> request: ExtHostExtensionService.$activateByEvent( ["onLanguage:azure-pipelines",0]
+[dsh-main rpc] <- ack undefined
+[dsh-main rpc] <- receiveReply: undefined
+[dsh-main] -> $activateByEvent("onLanguage:dockercompose")
+[dsh-main rpc] -> request: ExtHostExtensionService.$activateByEvent( ["onLanguage:dockercompose",0]
+[dsh-main rpc] <- ack undefined
+[dsh-main rpc] <- receiveReply: undefined
+[dsh-main] -> $activateByEvent("onLanguage:github-actions-workflow")
+[dsh-main rpc] -> request: ExtHostExtensionService.$activateByEvent( ["onLanguage:github-actions-workflow",0]
+[dsh-main rpc] <- ack undefined
+[dsh-main rpc] <- receiveReply: undefined
+[dsh-main] -> $activateByEvent("onLanguage:home-assistant")
+[dsh-main rpc] -> request: ExtHostExtensionService.$activateByEvent( ["onLanguage:home-assistant",0]
+[dsh-main rpc] <- ack undefined
+[dsh-main rpc] <- receiveReply: undefined
+[dsh-main] -> $activateByEvent("onLanguage:manifest-yaml")
+[dsh-main rpc] -> request: ExtHostExtensionService.$activateByEvent( ["onLanguage:manifest-yaml",0]
+[dsh-main rpc] <- ack undefined
+[dsh-main rpc] <- receiveReply: undefined
+[dsh-main] -> $activateByEvent("onLanguage:spring-boot-properties-yaml")
+[dsh-main rpc] -> request: ExtHostExtensionService.$activateByEvent( ["onLanguage:spring-boot-properties-yaml",0]
+[dsh-main rpc] <- ack undefined
+[dsh-main rpc] <- receiveReply: undefined
+[dsh-main] -> $activate(redhat.vscode-yaml)
+[dsh-main rpc] -> request: ExtHostExtensionService.$activate( [{"value":"redhat.vscode-yaml","_lower":"redhat.vscode-yaml"},"other"]
+[dsh-main rpc] <- ack undefined
+[dsh-main rpc] <- receiveReply: true
+[dsh-main] -> $activateByEvent("onStartupFinished")
+[dsh-main rpc] -> request: ExtHostExtensionService.$activateByEvent( ["onStartupFinished",0]
+[dsh-main rpc] <- ack undefined
+[dsh-main rpc] <- receiveReply: undefined
+[dsh-main] -> $activateByEvent("onCommand:dsh-probe.hello")
+[dsh-main rpc] -> request: ExtHostExtensionService.$activateByEvent( ["onCommand:dsh-probe.hello",0]
+[dsh-main rpc] <- ack undefined
+[dsh-main rpc] <- receiveReply: undefined
+[dsh-main] -> $activate(dsh-probe.hello-dsh)
+[dsh-main rpc] -> request: ExtHostExtensionService.$activate( [{"value":"dsh-probe.hello-dsh","_lower":"dsh-probe.hello-dsh"},"other"]
+[dsh-main rpc] <- ack undefined
+[dsh-main rpc] <- receiveReply: true
+[dsh-main rpc] <- receiveRequest MainThreadCommands.$registerCommand( ["yaml.select.json.schema"]
+[dsh-main] >>> MainThreadCommands.$registerCommand("yaml.select.json.schema")
+[dsh-main rpc] -> ack undefined
+[dsh-main rpc] <- receiveRequest MainThreadStatusBar.$disposeEntry( ["1"]
+[dsh-main] (stub) MainThreadStatusBar.$disposeEntry(1 args) -> undefined
+[dsh-main rpc] -> ack undefined
+[dsh-main rpc] -> reply: undefined
+[dsh-main rpc] -> reply: undefined
+[dsh-main rpc] <- receiveRequest MainThreadStatusBar.$disposeEntry( ["1"]
+[dsh-main] (stub) MainThreadStatusBar.$disposeEntry(1 args) -> undefined
+[dsh-main rpc] -> ack undefined
+[dsh-main rpc] -> reply: undefined
+[dsh-main] observed main-thread calls (30): ["MainThreadTerminalService.$registerProcessSupport","MainThreadSearch.$registerTextSearchProvider","MainThreadTask.$registerSupportedExecutions","MainThreadTask.$registerTaskSystem","MainThreadLanguageModelTools.$getTools","MainThreadFileSystem.$ensureActivation","MainThreadDebugService.$registerDebugTypes","MainThreadCustomEditors.$registerCustomEditorProvider","MainThreadDocumentContentProviders.$registerTextContentProvider","MainThreadLanguageFeatures.$registerCodeLensSupport","MainThreadLanguageFeatures.$registerCompletionsProvider","MainThreadLanguageFeatures.$registerHoverProvider","MainThreadLanguageFeatures.$registerDefinitionSupport","MainThreadLanguageFeatures.$registerDocumentSymbolProvider","MainThreadLanguageFeatures.$registerCodeActionSupport","MainThreadLanguageFeatures.$registerOnTypeFormattingSupport","MainThreadLanguageFeatures.$registerRenameSupport","MainThreadLanguageFeatures.$registerDocumentLinkProvider","MainThreadLanguageFeatures.$registerFoldingRangeProvider","MainThreadLanguageFeatures.$registerSelectionRangeProvider","MainThreadStatusBar.$disposeEntry"]
+[dsh-main] spike finished

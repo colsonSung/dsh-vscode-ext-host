@@ -1,0 +1,22 @@
+
+  bundle/dist/extension-host.js  4.7mb ⚠️
+
+⚡ Done in 90ms
+
+=== extension-host ===
+bundle:    /home/<user>/workspace/dsh-vscode-ext-host/plugin/dist/extension-host.js
+size:      4.68 MiB (124871 lines)
+inputs:    657 total, 638 from the vendored upstream tree
+licence:   636 upstream copyright headers kept in the artefact
+
+  bundle/main-host.js  586.1kb
+
+⚡ Done in 16ms
+
+=== main-host ===
+bundle:    /home/<user>/workspace/dsh-vscode-ext-host/plugin/main-host.js
+size:      0.57 MiB (15632 lines)
+inputs:    82 total, 46 from the vendored upstream tree
+licence:   46 upstream copyright headers kept in the artefact
+
+copied vendor/LICENSE.vscode.txt and vendor/ATTRIBUTION.md into the bundle

@@ -1,0 +1,22 @@
+# The stdio LSP provider.
+#
+# The row publishes `ctx.lsp` (the seam the generated DSH API catalog documents but no
+# shipped package implements) and registers one provider per language server.
+#
+# `servers` is intentionally empty: the built-in defaults (TypeScript, Python, Go, Rust)
+# are merged in by id, so a user only restates the language they want to change. A default
+# is disabled by restating it with `enabled: false`.
+- insert:
+    - id: lsp-stdio
+      name: 'dsh-lsp-stdio'
+      config:
+        # 1 = the DSH one-based convention, 0 = the LSP-native zero-based form.
+        positionBase: 1
+        requestTimeoutMs: 15000
+        initializeTimeoutMs: 20000
+        # Language servers an installed VSIX extension declares are picked up automatically
+        # (see the bundle README for the `dsh.lspServer` convention).
+        extensionServers:
+          enabled: true
+          requireTrusted: true
+        servers: []

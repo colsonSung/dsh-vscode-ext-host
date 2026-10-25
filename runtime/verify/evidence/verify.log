@@ -1,0 +1,57 @@
+DSH S1 — extension host verification
+node v22.22.3 on darwin/arm64
+workspace: /home/<user>/workspace
+
+=== 1. END TO END: a real Marketplace extension activates in a throwaway profile ===
+  profile: /var/folders/dw/snn6hztx1_1453kpzymhdbl40000gn/T/dsh-exthost-e2e-QvJgdn
+[setup] unpacked redhat.vscode-yaml@2.1.2026102308 -> /var/folders/dw/snn6hztx1_1453kpzymhdbl40000gn/T/dsh-exthost-e2e-QvJgdn/extensions/redhat.vscode-yaml-2.1.2026102308
+[setup] wrote /var/folders/dw/snn6hztx1_1453kpzymhdbl40000gn/T/dsh-exthost-e2e-QvJgdn/extensions.json (1 extension(s))
+[setup] wrote /var/folders/dw/snn6hztx1_1453kpzymhdbl40000gn/T/dsh-exthost-e2e-QvJgdn/extensions-trust.json (redhat)
+  host: running=true pid=64438 restarts=0
+  extensions: [{"id":"redhat.vscode-yaml@2.1.2026102308","publisher":"redhat","name":"vscode-yaml","version":"2.1.2026102308","active":true,"activatedAt":"2026-10-24T06:10:36.816Z"}]
+  PASS  the extension host loaded redhat.vscode-yaml
+        loaded extensions: ["redhat.vscode-yaml@2.1.2026102308"]
+  PASS  redhat.vscode-yaml activated
+        active=true activatedAt=2026-10-24T06:10:36.816Z error=none
+  registered commands: ["__vsc1e22caa8-b092-4eeb-8983-22880aec1148","jumpToSchema"]
+  PASS  the command "jumpToSchema" reached the DSH side
+        registered commands: ["__vsc1e22caa8-b092-4eeb-8983-22880aec1148","jumpToSchema"]
+  PASS  the command "jumpToSchema" is registered in the DSH command registry
+        DSH command registry: ["vsc1e22caa8-b092-4eeb-8983-22880aec1148","jumptoschema"]
+
+=== 2. CRASH RECOVERY: the host restarts a crashing extension host ===
+  profile: /var/folders/dw/snn6hztx1_1453kpzymhdbl40000gn/T/dsh-exthost-crash-tpdVSl
+  PASS  the host noticed the crash
+        2026-10-24T06:10:36.980Z the extension host exited with code 1 and signal null
+  PASS  the host restarted the extension host
+        restarts=1 running=true lastError=the extension host exited with code 1 and signal null
+  PASS  the restart used a backoff
+        2026-10-24T06:10:36.980Z INFO restarting the extension host in 1000ms (crash 1 of 3)
+
+=== 3. TRUST GATE: an untrusted publisher is never loaded ===
+  profile: /var/folders/dw/snn6hztx1_1453kpzymhdbl40000gn/T/dsh-exthost-trust-RpHByD
+[setup] unpacked redhat.vscode-yaml@2.1.2026102308 -> /var/folders/dw/snn6hztx1_1453kpzymhdbl40000gn/T/dsh-exthost-trust-RpHByD/extensions/redhat.vscode-yaml-2.1.2026102308
+[setup] the publisher "redhat" was left OUT of extensions-trust.json
+[setup] wrote /var/folders/dw/snn6hztx1_1453kpzymhdbl40000gn/T/dsh-exthost-trust-RpHByD/extensions.json (1 extension(s))
+[setup] wrote /var/folders/dw/snn6hztx1_1453kpzymhdbl40000gn/T/dsh-exthost-trust-RpHByD/extensions-trust.json (no trusted publisher)
+  extensions: []
+  skipped:    [{"id":"redhat.vscode-yaml@2.1.2026102308","reason":"untrusted-publisher","detail":"the publisher \"redhat\" is not trusted, so the extension host will not load this extension"}]
+  PASS  no extension was loaded
+        loaded: []
+  PASS  the reason is the untrusted publisher
+        skipped: [{"id":"redhat.vscode-yaml@2.1.2026102308","reason":"untrusted-publisher","detail":"the publisher \"redhat\" is not trusted, so the extension host will not load this extension"}]
+  PASS  the command "jumpToSchema" was not registered
+        registered commands: ["__vscdd508029-f4f9-4507-92f9-874d9ab95fbc"]
+
+=== 4. ENABLE STATE: a change in extensions.json takes effect without a restart ===
+  profile: /var/folders/dw/snn6hztx1_1453kpzymhdbl40000gn/T/dsh-exthost-enable-fwYIp3
+  before: [{"id":"redhat.vscode-yaml@2.1.2026102308","publisher":"redhat","name":"vscode-yaml","version":"2.1.2026102308","active":true,"activatedAt":"2026-10-24T06:10:37.464Z"}]
+  wrote extensions.json with enabled: false
+  after:  []
+  PASS  the disabled extension left the host
+        extensions after the change: []
+  PASS  the host process was NOT restarted
+        pid before=64444 after=64444 restarts=0
+
+=== RESULT ===
+  all checks passed

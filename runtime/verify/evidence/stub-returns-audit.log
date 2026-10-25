@@ -1,0 +1,3 @@
+[audit] the protocol declares 539 main-thread methods
+[audit] the table holds 539 method defaults
+[audit] the table covers every main-thread method of the protocol

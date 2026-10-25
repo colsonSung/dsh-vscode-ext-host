@@ -1,0 +1,47 @@
+{
+  "name": "dsh-vscode-webview-surface",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Render a VS Code extension's webview in DSH: the custom editor of a file is resolved by the extension host, and the HTML it produced is shown in the document preview.",
+  "icon": "./icon.svg",
+  "exports": {
+    ".": "./index.js",
+    "./client": "./client.js",
+    "./icon": "./icon.svg"
+  },
+  "files": [
+    "index.js",
+    "client.js",
+    "cordis.patch.yml",
+    "icon.svg",
+    "src/*"
+  ],
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
+    "client": {
+      "platform": "web",
+      "immediately": true
+    }
+  },
+  "devDependencies": {
+    "esbuild": "^0.28.2"
+  },
+  "license": "MIT",
+  "author": "Ethan Song",
+  "keywords": [
+    "deepseek-harness",
+    "dsh",
+    "plugin",
+    "vscode",
+    "webview"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/colsonSung/dsh-vscode-ext-host.git",
+    "directory": "webview-surface"
+  },
+  "homepage": "https://github.com/colsonSung/dsh-vscode-ext-host#readme"
+}

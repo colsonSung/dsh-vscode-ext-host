@@ -1,0 +1,49 @@
+{
+  "name": "ai-tool",
+  "displayName": "DSH AI Tool Probe",
+  "description": "A minimal VS Code extension that contributes one languageModelTool and one chatSkill, used to verify the DSH main-thread D-class bridge.",
+  "publisher": "dsh-probe",
+  "version": "1.0.0",
+  "engines": {
+    "vscode": "^1.95.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [
+    "onLanguageModelTool:dsh-probe_echo"
+  ],
+  "main": "./extension.js",
+  "contributes": {
+    "languageModelTools": [
+      {
+        "name": "dsh-probe_echo",
+        "displayName": "Echo",
+        "modelDescription": "Echoes the given text back to the caller. Use it to check that a VS Code extension tool reached the DSH tool registry.",
+        "userDescription": "回显输入文本",
+        "canBeReferencedInPrompt": true,
+        "toolReferenceName": "dshEcho",
+        "tags": [
+          "dsh-probe"
+        ],
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "text": {
+              "type": "string",
+              "description": "The text to echo back."
+            }
+          },
+          "required": [
+            "text"
+          ]
+        }
+      }
+    ],
+    "chatSkills": [
+      {
+        "path": "./skills/dsh-echo/SKILL.md"
+      }
+    ]
+  }
+}

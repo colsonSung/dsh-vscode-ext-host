@@ -1,0 +1,42 @@
+$ node spike/gen-stub-returns.mjs
+[gen-stub-returns] parsed 89 MainThread shapes, wrote 517 method defaults -> /home/<user>/workspace/dsh-vscode-ext-host/spike/src/stub-returns.ts
+
+$ node spike/build.mjs
+▲ [WARNING] Import "default" will always be undefined because there is no matching export in "stub:@vscode/proxy-agent" [import-is-undefined]
+
+    upstream/src/vs/workbench/api/node/proxyResolver.ts:141:36:
+      141 │   const target = (proxyAgent as any).default || proxyAgent;
+          ╵                                      ~~~~~~~
+
+▲ [WARNING] Import "patchUndici" will always be undefined because there is no matching export in "stub:@vscode/proxy-agent" [import-is-undefined]
+
+    upstream/src/vs/workbench/api/node/proxyResolver.ts:455:17:
+      455 │             proxyAgent.patchUndici(undici);
+          ╵                        ~~~~~~~~~~~
+
+2 warnings
+
+  dist/extension-host.js  4.4mb ⚠️
+
+⚡ Done in 73ms
+
+=== extension-host ===
+bundle: /home/<user>/workspace/dsh-vscode-ext-host/plugin/dist/extension-host.js
+size:   4550 KiB (121901 lines)
+inputs: 650 total, 638 from upstream/src/vs
+upstream inputs listed in: /home/<user>/workspace/dsh-vscode-ext-host/plugin/dist/extension-host.inputs.json
+
+  dist/main-host.js  350.5kb
+
+⚡ Done in 12ms
+
+=== main-host ===
+bundle: /home/<user>/workspace/dsh-vscode-ext-host/plugin/dist/main-host.js
+size:   350 KiB (9388 lines)
+inputs: 46 total, 43 from upstream/src/vs
+upstream inputs listed in: /home/<user>/workspace/dsh-vscode-ext-host/plugin/dist/main-host.inputs.json
+
+$ node spike/export-vendor.mjs
+[export-vendor] extracted LICENSE.txt from git object store (1184ad4d45794110deb6b897ea83b15aac44ed89)
+[export-vendor] 638 files / 251377 lines -> /home/<user>/workspace/dsh-vscode-ext-host/vendor
+[export-vendor] summary -> /home/<user>/workspace/dsh-vscode-ext-host/vendor/closure-summary.json

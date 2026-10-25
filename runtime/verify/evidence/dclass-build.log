@@ -1,0 +1,10 @@
+
+  runtime/fixtures/extension-host-probe.js  4.7mb ⚠️
+
+⚡ Done in 88ms
+built runtime/fixtures/extension-host-probe.js — 657 inputs
+
+  runtime/fixtures/ai-dclass-e2e.mjs  550.0kb
+
+⚡ Done in 11ms
+built runtime/fixtures/ai-dclass-e2e.mjs — 78 inputs, 46 from the vendored upstream tree

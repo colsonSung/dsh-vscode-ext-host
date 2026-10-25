@@ -1,0 +1,70 @@
+PASS  T1a duplicate provider id is rejected
+      raised LSP_CONFLICT
+PASS  T1b duplicate normalized extension is rejected
+      raised LSP_CONFLICT
+PASS  T1c a provider without query() is rejected
+      raised LSP_INVALID_REQUEST
+PASS  T1d a rejected registration publishes nothing
+      providers=1 owner(ts)=a
+PASS  T2a the provider is selected by file extension and receives the language id
+      languageId=typescript kind=hover
+PASS  T2b an unserved extension raises LSP_UNAVAILABLE
+      raised LSP_UNAVAILABLE
+PASS  T2c extensions are normalized consistently
+      normalizeExtension('.TS')=ts extensionOfFilePath('/w/x/y.tar.gz')=gz
+PASS  T3a a missing executable raises LSP_SERVER_NOT_INSTALLED
+      raised LSP_SERVER_NOT_INSTALLED
+PASS  T4a goToDefinition returns a location with one-based positions
+      {"kind":"locations","locations":[{"uri":"file:///workspace/src/answer.ts","range":{"start":{"line":5,"character":3},"end":{"line":5,"character":9}}}],"resolvedWorkspaceUri":"file:///home/<user>/workspace/dsh-vscode-ext-host/lsp-stdio/runtime/verify/tmp"}
+PASS  T4b findReferences returns every reference
+      [{"uri":"file:///home/<user>/workspace/dsh-vscode-ext-host/lsp-stdio/runtime/verify/tmp/sample.ts","range":{"start":{"line":2,"character":1},"end":{"line":2,"character":5}}},{"uri":"file:///home/<user>/workspace/dsh-vscode-ext-host/lsp-stdio/runtime/verify/tmp/sample.ts","range":{"start":{"line":7,"character":5},"end":{"line":7,"character":9}}}]
+PASS  T4c hover returns the server contents
+      {"kind":"hover","hover":{"contents":"**answer**: the answer","range":{"start":{"line":4,"character":1},"end":{"line":4,"character":7}}}}
+PASS  T4d a method the server does not implement raises LSP_UNSUPPORTED_OPERATION
+      raised LSP_UNSUPPORTED_OPERATION
+PASS  T4e the result carries the resolved workspace uri
+      file:///home/<user>/workspace/dsh-vscode-ext-host/lsp-stdio/runtime/verify/tmp
+PASS  T5a a server that never answers raises LSP_TIMEOUT
+      raised LSP_TIMEOUT
+PASS  T6a an unreadable file raises LSP_INVALID_REQUEST
+      raised LSP_INVALID_REQUEST
+PASS  T7a an extension-declared server is discovered and its language map derived
+      [{"id":"acme.mylang","enabled":true,"command":"mylang-server","args":["--stdio"],"cwd":"","env":{},"extensions":["ml"],"languageIds":["mylang"],"extensionToLanguage":{"ml":"mylang"},"initOptions":{}}]
+PASS  T7b an untrusted publisher contributes no server
+      untrusted=0
+PASS  T7c a record without the flag falls back to the trust file
+      fileOnly=1
+PASS  T7d a publisher in neither source is not trusted
+      unknown=0
+PASS  T8a equally long extension and language lists pair up
+      {"ts":"typescript","tsx":"typescriptreact"}
+PASS  T8b one language id applies to every extension
+      {"py":"python"}
+PASS  T8c a manifest contributes its language map
+      {"go":"go"}
+PASS  T8d an extension-declared server wins the extensions it claims
+      ids=vsix:acme.mylang,stdio:typescript configMap={"py":"python"}
+PASS  T9 the position base conversion is explicit and single-sourced
+      {"one":{"line":1,"character":1},"zero":{"line":0,"character":0}}
+PASS  T10a the plugin publishes the ctx.lsp seam
+      seam=function
+PASS  T10b the default servers are registered as providers
+      ["stdio:typescript","stdio:python","stdio:go","stdio:rust"]
+PASS  T10c the TypeScript provider claims the TypeScript extensions
+      ["ts","tsx","js","jsx","mjs","cjs"]
+PASS  T10d a query through the published seam reaches a provider and reports the missing server
+      raised LSP_SERVER_NOT_INSTALLED
+PASS  T10e disposing the plugin releases every reservation
+      owners=0
+PASS  T11a the Config schema fills the defaults
+      {"positionBase":1,"timeout":15000,"servers":0,"extensionServers":{"enabled":true,"requireTrusted":true}}
+PASS  T11b an out-of-range position base is rejected
+      [{"message":"$.positionBase expected 1 | 0 but got 2","path":["positionBase"]}]
+PASS  T11c a server without a command is rejected
+      [{"message":"$.servers[0].command missing required value","path":["servers",0,"command"]}]
+PASS  T11d a user server overrides the default with the same id
+      merged=4 typescript={"enabled":false,"command":"x"}
+PASS  T11e a user server with a new id is appended
+      added=5
+
+34/34 passed

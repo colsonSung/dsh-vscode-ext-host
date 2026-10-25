@@ -1,0 +1,3 @@
+- insert:
+    - id: vscode-webview-surface
+      name: 'dsh-vscode-webview-surface'

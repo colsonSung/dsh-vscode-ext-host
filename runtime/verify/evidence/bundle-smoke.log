@@ -1,0 +1,20 @@
+DSH S1 — bundle smoke test
+  PASS  the bundle registered the route /vscode-extension-host
+        routes: ["/vscode-extension-host"]
+  PASS  the bundle registered the tool vscode_extension_host
+        tools: ["vscode_extension_host"]
+  PASS  the status action answers the agreed shape
+        status: {"ok":true,"host":{"running":false,"pid":64911,"startedAt":"2026-10-24T06:11:57.503Z","restarts":0,"reason":"the extension host was started"},"extensions":[],"commands":[],"skipped":[]}
+  PASS  the status action names the extensions with publisher.name@version
+        extensions: []
+  PASS  the log action answers with the log lines
+        log lines: 3
+  PASS  an unknown action is refused
+        answer: {"ok":false,"error":"unknown action \"nonsense\""}
+  PASS  the model tool answers the status action
+        summary: The extension host is not running.
+  PASS  the model tool answers the log action
+        lines: 3
+
+=== RESULT ===
+  all checks passed

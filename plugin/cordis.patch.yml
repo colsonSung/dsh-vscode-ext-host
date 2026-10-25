@@ -1,0 +1,3 @@
+- insert:
+    - id: vscode-extension-host
+      name: 'dsh-vscode-extension-host'

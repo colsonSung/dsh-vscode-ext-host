@@ -1,0 +1,7 @@
+{
+  "publishers": {
+    "ms-vscode": true,
+    "redhat": true,
+    "dsh-probe": true
+  }
+}

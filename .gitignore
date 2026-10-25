@@ -1,0 +1,46 @@
+# Dependencies
+node_modules/
+package-lock.json
+pnpm-lock.yaml
+
+# Noise
+*.log
+.DS_Store
+*.tgz
+Thumbs.db
+
+# The verification evidence IS part of the repository — keep it even though *.log is ignored.
+!runtime/verify/evidence/*.log
+!lsp-stdio/runtime/verify/evidence/*.log
+!spike/evidence/*.log
+
+# Build products (rebuild them with `npm run build`)
+plugin/dist/
+plugin/main-host.js
+plugin/client.js
+webview-surface/client.js
+packages/dsh-vscode-protocol/dist/
+runtime/fixtures/extension-host-probe.js
+runtime/fixtures/ai-dclass-e2e.mjs
+dist/
+
+# The microsoft/vscode checkout. It is only needed to REGENERATE the vendored closure
+# (spike/export-vendor.mjs); the closure itself is committed under vendor/.
+upstream/
+
+# The VS Code build downloaded for the end-to-end verification. It is a third-party
+# artefact and is not committed; runtime/verify/README.md says how to fetch it.
+runtime/verify/vendor/
+
+# Third-party extension packages (downloaded VSIX / unpacked extensions)
+spike/vendor-ext/
+spike/profile/extensions/
+
+# Runtime state and credentials
+state.json
+*.state.json
+.env
+.env.*
+*.pem
+*.key
+credentials*

@@ -1,0 +1,181 @@
+{
+  "generatedAt": "2026-10-24T07:02:33.841Z",
+  "node": "v22.22.3",
+  "platform": "darwin-arm64",
+  "schemasterySource": "/tmp/dsh-src/dsh/node_modules/@deepseek-ai/schemastery",
+  "total": 34,
+  "passed": 34,
+  "failed": 0,
+  "results": [
+    {
+      "name": "T1a duplicate provider id is rejected",
+      "ok": true,
+      "detail": "raised LSP_CONFLICT"
+    },
+    {
+      "name": "T1b duplicate normalized extension is rejected",
+      "ok": true,
+      "detail": "raised LSP_CONFLICT"
+    },
+    {
+      "name": "T1c a provider without query() is rejected",
+      "ok": true,
+      "detail": "raised LSP_INVALID_REQUEST"
+    },
+    {
+      "name": "T1d a rejected registration publishes nothing",
+      "ok": true,
+      "detail": "providers=1 owner(ts)=a"
+    },
+    {
+      "name": "T2a the provider is selected by file extension and receives the language id",
+      "ok": true,
+      "detail": "languageId=typescript kind=hover"
+    },
+    {
+      "name": "T2b an unserved extension raises LSP_UNAVAILABLE",
+      "ok": true,
+      "detail": "raised LSP_UNAVAILABLE"
+    },
+    {
+      "name": "T2c extensions are normalized consistently",
+      "ok": true,
+      "detail": "normalizeExtension('.TS')=ts extensionOfFilePath('/w/x/y.tar.gz')=gz"
+    },
+    {
+      "name": "T3a a missing executable raises LSP_SERVER_NOT_INSTALLED",
+      "ok": true,
+      "detail": "raised LSP_SERVER_NOT_INSTALLED"
+    },
+    {
+      "name": "T4a goToDefinition returns a location with one-based positions",
+      "ok": true,
+      "detail": "{\"kind\":\"locations\",\"locations\":[{\"uri\":\"file:///workspace/src/answer.ts\",\"range\":{\"start\":{\"line\":5,\"character\":3},\"end\":{\"line\":5,\"character\":9}}}],\"resolvedWorkspaceUri\":\"file:///home/<user>/workspace/dsh-vscode-ext-host/lsp-stdio/runtime/verify/tmp\"}"
+    },
+    {
+      "name": "T4b findReferences returns every reference",
+      "ok": true,
+      "detail": "[{\"uri\":\"file:///home/<user>/workspace/dsh-vscode-ext-host/lsp-stdio/runtime/verify/tmp/sample.ts\",\"range\":{\"start\":{\"line\":2,\"character\":1},\"end\":{\"line\":2,\"character\":5}}},{\"uri\":\"file:///home/<user>/workspace/dsh-vscode-ext-host/lsp-stdio/runtime/verify/tmp/sample.ts\",\"range\":{\"start\":{\"line\":7,\"character\":5},\"end\":{\"line\":7,\"character\":9}}}]"
+    },
+    {
+      "name": "T4c hover returns the server contents",
+      "ok": true,
+      "detail": "{\"kind\":\"hover\",\"hover\":{\"contents\":\"**answer**: the answer\",\"range\":{\"start\":{\"line\":4,\"character\":1},\"end\":{\"line\":4,\"character\":7}}}}"
+    },
+    {
+      "name": "T4d a method the server does not implement raises LSP_UNSUPPORTED_OPERATION",
+      "ok": true,
+      "detail": "raised LSP_UNSUPPORTED_OPERATION"
+    },
+    {
+      "name": "T4e the result carries the resolved workspace uri",
+      "ok": true,
+      "detail": "file:///home/<user>/workspace/dsh-vscode-ext-host/lsp-stdio/runtime/verify/tmp"
+    },
+    {
+      "name": "T5a a server that never answers raises LSP_TIMEOUT",
+      "ok": true,
+      "detail": "raised LSP_TIMEOUT"
+    },
+    {
+      "name": "T6a an unreadable file raises LSP_INVALID_REQUEST",
+      "ok": true,
+      "detail": "raised LSP_INVALID_REQUEST"
+    },
+    {
+      "name": "T7a an extension-declared server is discovered and its language map derived",
+      "ok": true,
+      "detail": "[{\"id\":\"acme.mylang\",\"enabled\":true,\"command\":\"mylang-server\",\"args\":[\"--stdio\"],\"cwd\":\"\",\"env\":{},\"extensions\":[\"ml\"],\"languageIds\":[\"mylang\"],\"extensionToLanguage\":{\"ml\":\"mylang\"},\"initOptions\":{}}]"
+    },
+    {
+      "name": "T7b an untrusted publisher contributes no server",
+      "ok": true,
+      "detail": "untrusted=0"
+    },
+    {
+      "name": "T7c a record without the flag falls back to the trust file",
+      "ok": true,
+      "detail": "fileOnly=1"
+    },
+    {
+      "name": "T7d a publisher in neither source is not trusted",
+      "ok": true,
+      "detail": "unknown=0"
+    },
+    {
+      "name": "T8a equally long extension and language lists pair up",
+      "ok": true,
+      "detail": "{\"ts\":\"typescript\",\"tsx\":\"typescriptreact\"}"
+    },
+    {
+      "name": "T8b one language id applies to every extension",
+      "ok": true,
+      "detail": "{\"py\":\"python\"}"
+    },
+    {
+      "name": "T8c a manifest contributes its language map",
+      "ok": true,
+      "detail": "{\"go\":\"go\"}"
+    },
+    {
+      "name": "T8d an extension-declared server wins the extensions it claims",
+      "ok": true,
+      "detail": "ids=vsix:acme.mylang,stdio:typescript configMap={\"py\":\"python\"}"
+    },
+    {
+      "name": "T9 the position base conversion is explicit and single-sourced",
+      "ok": true,
+      "detail": "{\"one\":{\"line\":1,\"character\":1},\"zero\":{\"line\":0,\"character\":0}}"
+    },
+    {
+      "name": "T10a the plugin publishes the ctx.lsp seam",
+      "ok": true,
+      "detail": "seam=function"
+    },
+    {
+      "name": "T10b the default servers are registered as providers",
+      "ok": true,
+      "detail": "[\"stdio:typescript\",\"stdio:python\",\"stdio:go\",\"stdio:rust\"]"
+    },
+    {
+      "name": "T10c the TypeScript provider claims the TypeScript extensions",
+      "ok": true,
+      "detail": "[\"ts\",\"tsx\",\"js\",\"jsx\",\"mjs\",\"cjs\"]"
+    },
+    {
+      "name": "T10d a query through the published seam reaches a provider and reports the missing server",
+      "ok": true,
+      "detail": "raised LSP_SERVER_NOT_INSTALLED"
+    },
+    {
+      "name": "T10e disposing the plugin releases every reservation",
+      "ok": true,
+      "detail": "owners=0"
+    },
+    {
+      "name": "T11a the Config schema fills the defaults",
+      "ok": true,
+      "detail": "{\"positionBase\":1,\"timeout\":15000,\"servers\":0,\"extensionServers\":{\"enabled\":true,\"requireTrusted\":true}}"
+    },
+    {
+      "name": "T11b an out-of-range position base is rejected",
+      "ok": true,
+      "detail": "[{\"message\":\"$.positionBase expected 1 | 0 but got 2\",\"path\":[\"positionBase\"]}]"
+    },
+    {
+      "name": "T11c a server without a command is rejected",
+      "ok": true,
+      "detail": "[{\"message\":\"$.servers[0].command missing required value\",\"path\":[\"servers\",0,\"command\"]}]"
+    },
+    {
+      "name": "T11d a user server overrides the default with the same id",
+      "ok": true,
+      "detail": "merged=4 typescript={\"enabled\":false,\"command\":\"x\"}"
+    },
+    {
+      "name": "T11e a user server with a new id is appended",
+      "ok": true,
+      "detail": "added=5"
+    }
+  ]
+}

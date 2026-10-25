@@ -1,0 +1,9 @@
+2026-10-24T06:06:15.046Z rpc <- receiveReply: true
+2026-10-24T06:06:15.046Z activated redhat.vscode-yaml
+2026-10-24T06:06:15.046Z the extension host is running
+2026-10-24T06:06:15.055Z the extension list changed: +none -redhat.vscode-yaml
+2026-10-24T06:06:15.055Z rpc -> request: ExtHostExtensionService.$deltaExtensions( [{"versionId":1792821975055,"toRemove":[{"value":"redhat.vscode-yaml","_lower":"redhat.vscode-yaml"}],"toAdd":[],"addActivationEvents":{},"myToRemove":[{"value":"redhat.vscode-yaml","_lower":"redhat.vscode-yaml"}],"myToAdd":[]}]
+2026-10-24T06:06:15.057Z rpc <- ack 
+2026-10-24T06:06:15.057Z rpc <- receiveRequest MainThreadDebugService.$registerDebugTypes( [[]]
+2026-10-24T06:06:15.057Z (stub) MainThreadDebugService.$registerDebugTypes(1 args) -> 
+2026-10-24T06:06:15.057Z rpc -> ack 

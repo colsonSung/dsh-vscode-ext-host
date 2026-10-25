@@ -1,0 +1,6 @@
+{
+  "meta": {
+    "title": "VS Code Extension Host",
+    "description": "Run real VS Code extension packages inside DSH in a vendored, open source extension host process."
+  }
+}

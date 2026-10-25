@@ -1,0 +1,28 @@
+{
+  "extensions": [
+    {
+      "id": "ms-vscode.vscode-js-profile-table",
+      "publisher": "ms-vscode",
+      "name": "vscode-js-profile-table",
+      "version": "1.0.11",
+      "directory": "ms-vscode.vscode-js-profile-table-1.0.11",
+      "enabled": true
+    },
+    {
+      "id": "redhat.vscode-yaml",
+      "publisher": "redhat",
+      "name": "vscode-yaml",
+      "version": "2.1.2026102308",
+      "directory": "redhat.vscode-yaml-2.1.2026102308",
+      "enabled": true
+    },
+    {
+      "id": "dsh-probe.hello-dsh",
+      "publisher": "dsh-probe",
+      "name": "hello-dsh",
+      "version": "1.0.0",
+      "directory": "dsh-probe.hello-dsh-1.0.0",
+      "enabled": true
+    }
+  ]
+}

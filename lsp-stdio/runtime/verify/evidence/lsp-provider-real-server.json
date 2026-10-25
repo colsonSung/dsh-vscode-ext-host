@@ -1,0 +1,27 @@
+{
+  "generatedAt": "2026-10-24T07:02:33.872Z",
+  "server": {
+    "id": "python",
+    "command": "/home/<user>/.npm/_npx/110e52990071af13/node_modules/.bin/pyright-langserver",
+    "args": [
+      "--stdio"
+    ],
+    "source": "npm exec cache (110e52990071af13)"
+  },
+  "workspace": "/home/<user>/workspace/dsh-vscode-ext-host/lsp-stdio/runtime/verify/tmp/pyright-9qKdmD",
+  "checks": [
+    {
+      "name": "R1 goToDefinition against a real language server",
+      "ok": true,
+      "detail": "[{\"uri\":\"file:///home/<user>/workspace/dsh-vscode-ext-host/lsp-stdio/runtime/verify/tmp/pyright-9qKdmD/app.py\",\"range\":{\"start\":{\"line\":1,\"character\":5},\"end\":{\"line\":1,\"character\":10}}}]"
+    },
+    {
+      "name": "R2 hover against a real language server",
+      "ok": true,
+      "detail": "\"(function) def greet(name: Unknown) -> Unknown\""
+    }
+  ],
+  "passed": 2,
+  "total": 2,
+  "failed": 0
+}

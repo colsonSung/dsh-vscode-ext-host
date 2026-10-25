@@ -1,0 +1,23 @@
+   [exthost] [dsh-exthost] pid=65005 node=v22.22.3 argv=["/home/<user>/.openagents/nodejs/bin/node","/home/<user>/workspace/dsh-vscode-ext-host/runtime/fixtures/extension-host-probe.js"]
+   [exthost] DSH_EXTHOST_READY
+   [exthost] [dsh-exthost] ready (via stderr)
+   [dsh warn] [dsh-vscode] the DSH command registry is unavailable; extension commands stay extension-only
+   [host] MainThreadTerminalService.$registerProcessSupport(true) — DSH has no Pseudoterminal
+   [probe] -> $startExtensionHost
+   [host] MainThreadExtensionService.$setPerformanceMarks(7 marks)
+   [probe] -> $activateByEvent
+   [host] MainThreadExtensionService.$onWillActivateExtension(dsh-probe.ai-tool)
+   [host] MainThreadExtensionService.$onDidActivateExtension(dsh-probe.ai-tool) codeLoading=1ms activateCall=0ms activateResolved=0ms
+   [probe] -> $activate
+PASS  the DSH tool registry holds the contributed tool  -> dsh-probe_echo
+PASS  the tool description is the extension's modelDescription  -> Echoes the given text back to the caller. Use it to check that a VS Code extension tool reached the DSH tool registry.
+PASS  the tool parameters are the extension's inputSchema  -> {"type":"object","properties":{"text":{"type":"string","description":"The text to echo back."}},"required":["text"]}
+PASS  $getTools() answers one tool  -> ["dsh-probe_echo"]
+PASS  $getTools() carries the protocol id, the source and the schema  -> {"id":"dsh-probe_echo","toolReferenceName":"dshEcho","fullReferenceName":"dsh-probe.ai-tool.dshEcho","tags":["dsh-probe"],"displayName":"Echo","userDescription":"回显输入文本","modelDescription":"Echoes the given text back to the caller. Use it to check that a VS Code extension tool reached the DSH tool registry.","source":{"type":"extension","label":"dsh-probe.ai-tool","extensionId":{"value":"dsh-probe.ai-tool","_lower":"dsh-probe.ai-tool"}},"inputSchema":{"type":"object","properties":{"text":{"type":"string","description":"The text to echo back."}},"required":["text"]}}
+PASS  the tool call reached the extension implementation  -> echo: hello from dsh
+PASS  the extension tool went through the DSH approval pipeline  -> "Run the DSH echo tool? — The echo tool prints the given text back to the caller."
+PASS  the approval reason is the extension's confirmation copy  -> Run the DSH echo tool? — The echo tool prints the given text back to the caller.
+PASS  the contributed chatSkill reached ctx.skills  -> dsh-echo
+PASS  the skill carries the frontmatter description and the body  -> Echoes a piece of text back unchanged. Use it to verify that a VS Code extension's contributed skill reached the DSH skill registry.
+
+10/10 checks passed

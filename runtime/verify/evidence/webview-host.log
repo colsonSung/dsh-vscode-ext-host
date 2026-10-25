@@ -1,0 +1,372 @@
+2026-10-24T07:38:10.764Z resolved 1 extension(s): hediet.vscode-drawio@1.17.261024055
+2026-10-24T07:38:10.766Z spawn /home/<user>/.openagents/nodejs/bin/node /home/<user>/workspace/dsh-vscode-ext-host/plugin/dist/extension-host.js (pid 990)
+2026-10-24T07:38:10.767Z rpc -> request: ExtHostConfiguration.$acceptConfigurationChanged( [{"defaults":{"contents":{"hediet.vscode-drawio.offline":true,"hediet.vscode-drawio.online-url":"https://embed.diagrams.net/","hediet.vscode-drawio.codeLinkActivated":false,"hediet.vscode-drawio.local-storage":{},"hediet.vscode-drawio.simpleLabels":false,"hediet.vscode-drawio.svgAppearance":"light","hediet.vscode-drawio.zoomFactor":1.2,"hediet.vscode-drawio.resizeImages":null,"hediet.vscode-drawio…
+2026-10-24T07:38:10.833Z [exthost] [dsh-exthost] pid=990 node=v22.22.3 argv=["/home/<user>/.openagents/nodejs/bin/node","/home/<user>/workspace/dsh-vscode-ext-host/plugin/dist/extension-host.js"]
+2026-10-24T07:38:10.838Z the extension host signalled readiness via fd
+2026-10-24T07:38:10.838Z -> $initializeWorkspace (the blocking init call)
+2026-10-24T07:38:10.838Z rpc -> request: ExtHostWorkspace.$initializeWorkspace( [{"id":"dsh-/var/folders/dw/snn6hztx1_1453kpzymhdbl40000gn/T/dsh-webview-e2e-gS0BBu","name":"DeepSeek Harness","folders":[]},true]
+2026-10-24T07:38:10.838Z [exthost] [dsh-exthost] ready (via fd)
+2026-10-24T07:38:10.838Z rpc <- receiveRequest MainThreadLogger.$registerLogger( [{"resource":{"$mid":1,"fsPath":"/var/folders/dw/snn6hztx1_1453kpzymhdbl40000gn/T/dsh-webview-e2e-gS0BBu/logs/exthost.log","external":"file:///var/folders/dw/snn6hztx1_1453kpzymhdbl40000gn/T/dsh-webview-e2e-gS0BBu/logs/exthost.log","path":"/var/folders/dw/snn6hztx1_1453kpzymhdbl40000gn/T/dsh-webview-e2e-gS0BBu/logs/exthost.log","scheme":"file"},"id":"exthost","name":"Extension Host"}]
+2026-10-24T07:38:10.839Z rpc -> ack 
+2026-10-24T07:38:10.839Z rpc <- receiveRequest MainThreadWindow.$getInitialState( []
+2026-10-24T07:38:10.839Z rpc -> ack 
+2026-10-24T07:38:10.839Z rpc <- receiveRequest MainThreadCommands.$registerCommand( ["__vsc6b68b336-67b3-48f5-aaa8-efd561a1715e"]
+2026-10-24T07:38:10.839Z rpc -> ack 
+2026-10-24T07:38:10.839Z rpc <- receiveRequest MainThreadTerminalService.$registerProcessSupport( [true]
+2026-10-24T07:38:10.839Z MainThreadTerminalService.$registerProcessSupport(true) — DSH has no Pseudoterminal
+2026-10-24T07:38:10.839Z rpc -> ack 
+2026-10-24T07:38:10.839Z rpc <- receiveRequest MainThreadSearch.$registerTextSearchProvider( [0,"vscode-userdata"]
+2026-10-24T07:38:10.839Z (stub) MainThreadSearch.$registerTextSearchProvider(2 args) -> 
+2026-10-24T07:38:10.839Z rpc -> ack 
+2026-10-24T07:38:10.839Z rpc <- receiveRequest MainThreadTask.$registerSupportedExecutions( [true]
+2026-10-24T07:38:10.839Z (stub) MainThreadTask.$registerSupportedExecutions(1 args) -> 
+2026-10-24T07:38:10.839Z rpc -> ack 
+2026-10-24T07:38:10.839Z rpc <- receiveRequest MainThreadTask.$registerTaskSystem( ["file",{"scheme":"file","authority":"","platform":"darwin"}]
+2026-10-24T07:38:10.839Z (stub) MainThreadTask.$registerTaskSystem(2 args) -> 
+2026-10-24T07:38:10.839Z rpc -> ack 
+2026-10-24T07:38:10.839Z rpc <- receiveRequest MainThreadTask.$registerSupportedExecutions( [true,true,true]
+2026-10-24T07:38:10.839Z (stub) MainThreadTask.$registerSupportedExecutions(3 args) -> 
+2026-10-24T07:38:10.840Z rpc -> ack 
+2026-10-24T07:38:10.840Z rpc <- receiveRequest MainThreadChatSkills.$getTools( []
+2026-10-24T07:38:10.840Z rpc -> ack 
+2026-10-24T07:38:10.840Z rpc -> reply: 
+2026-10-24T07:38:10.840Z rpc -> reply: {"tabs":{"groups":[]}}
+2026-10-24T07:38:10.840Z rpc -> reply: 
+2026-10-24T07:38:10.840Z rpc -> reply: 
+2026-10-24T07:38:10.840Z rpc -> reply: 
+2026-10-24T07:38:10.840Z rpc -> reply: 
+2026-10-24T07:38:10.840Z rpc -> reply: 
+2026-10-24T07:38:10.840Z rpc -> reply: 
+2026-10-24T07:38:10.840Z rpc -> reply: []
+2026-10-24T07:38:10.840Z rpc <- receiveRequest MainThreadLogger.$registerLogger( [{"resource":{"$mid":1,"fsPath":"/var/folders/dw/snn6hztx1_1453kpzymhdbl40000gn/T/dsh-webview-e2e-gS0BBu/logs/extHostTelemetry.log","external":"file:///var/folders/dw/snn6hztx1_1453kpzymhdbl40000gn/T/dsh-webview-e2e-gS0BBu/logs/extHostTelemetry.log","path":"/var/folders/dw/snn6hztx1_1453kpzymhdbl40000gn/T/dsh-webview-e2e-gS0BBu/logs/extHostTelemetry.log","scheme":"file"},"id":"extHostTelemetry","n…
+2026-10-24T07:38:10.840Z rpc -> ack 
+2026-10-24T07:38:10.840Z rpc <- ack 
+2026-10-24T07:38:10.840Z rpc <- receiveReply: 
+2026-10-24T07:38:10.840Z rpc -> reply: 
+2026-10-24T07:38:10.841Z rpc <- ack 
+2026-10-24T07:38:10.841Z rpc <- receiveReply: 
+2026-10-24T07:38:10.841Z -> $initializeConfiguration
+2026-10-24T07:38:10.843Z rpc -> request: ExtHostConfiguration.$initializeConfiguration( [{"defaults":{"contents":{},"keys":[],"overrides":[]},"policy":{"contents":{},"keys":[],"overrides":[]},"application":{"contents":{},"keys":[],"overrides":[]},"userLocal":{"contents":{},"keys":[],"overrides":[]},"userRemote":{"contents":{},"keys":[],"overrides":[]},"workspace":{"contents":{},"keys":[],"overrides":[]},"folders":[],"configurationScopes":[]}]
+2026-10-24T07:38:10.851Z rpc <- ack 
+2026-10-24T07:38:10.851Z rpc <- receiveReply: 
+2026-10-24T07:38:10.851Z -> $initializeTelemetryLevel
+2026-10-24T07:38:10.851Z rpc -> request: ExtHostTelemetry.$initializeTelemetryLevel( [0,false,{"usage":false,"error":false}]
+2026-10-24T07:38:10.852Z rpc <- receiveRequest MainThreadFileSystem.$ensureActivation( ["file"]
+2026-10-24T07:38:10.853Z rpc -> ack 
+2026-10-24T07:38:10.853Z rpc <- ack 
+2026-10-24T07:38:10.853Z rpc <- receiveReply: 
+2026-10-24T07:38:10.853Z rpc -> reply: 
+2026-10-24T07:38:10.853Z -> $initializeIsConnectionMetered
+2026-10-24T07:38:10.853Z rpc -> request: ExtHostMeteredConnection.$initializeIsConnectionMetered( [false]
+2026-10-24T07:38:10.856Z rpc <- ack 
+2026-10-24T07:38:10.856Z rpc <- receiveReply: 
+2026-10-24T07:38:10.856Z -> $startExtensionHost
+2026-10-24T07:38:10.856Z rpc -> request: ExtHostExtensionService.$startExtensionHost( [{"versionId":1,"toRemove":[],"toAdd":[],"addActivationEvents":{},"myToRemove":[],"myToAdd":[]}]
+2026-10-24T07:38:10.858Z rpc <- ack 
+2026-10-24T07:38:10.858Z rpc <- receiveRequest MainThreadDebugService.$registerDebugTypes( [[]]
+2026-10-24T07:38:10.858Z (stub) MainThreadDebugService.$registerDebugTypes(1 args) -> 
+2026-10-24T07:38:10.858Z rpc -> ack 
+2026-10-24T07:38:10.858Z rpc <- receiveRequest MainThreadExtensionService.$setPerformanceMarks( [[{"name":"code/timeOrigin","startTime":1792827490775.902},{"name":"code/extHost/didCreateServices","startTime":1792827490833},{"name":"code/extHost/willWaitForConfig","startTime":1792827490838},{"name":"code/extHost/didWaitForConfig","startTime":1792827490843},{"name":"code/extHost/didInitAPI","startTime":1792827490845},{"name":"code/extHost/didInitProxyResolver","startTime":1792827490851},{"name…
+2026-10-24T07:38:10.858Z MainThreadExtensionService.$setPerformanceMarks(7 marks)
+2026-10-24T07:38:10.858Z rpc -> ack 
+2026-10-24T07:38:10.858Z rpc <- receiveReply: 
+2026-10-24T07:38:10.858Z rpc -> reply: 
+2026-10-24T07:38:10.858Z rpc -> reply: 
+2026-10-24T07:38:10.858Z rpc -> request: ExtHostExtensionService.$activateByEvent( ["onLanguage:markdown",0]
+2026-10-24T07:38:10.861Z rpc <- ack 
+2026-10-24T07:38:10.861Z rpc <- receiveRequest MainThreadExtensionService.$onWillActivateExtension( [{"value":"hediet.vscode-drawio","_lower":"hediet.vscode-drawio"}]
+2026-10-24T07:38:10.861Z MainThreadExtensionService.$onWillActivateExtension(hediet.vscode-drawio)
+2026-10-24T07:38:10.861Z rpc -> ack 
+2026-10-24T07:38:10.861Z rpc -> reply: 
+2026-10-24T07:38:10.869Z rpc <- receiveRequest MainThreadTelemetry.$publicLog2( ["activatePlugin",{"id":"hediet.vscode-drawio","name":"vscode-drawio","extensionVersion":"1.17.261024055","publisherDisplayName":"hediet","activationEvents":"onLanguage:markdown,onUri","isBuiltin":false,"reason":"onLanguage:markdown","reasonId":"hediet.vscode-drawio"}]
+2026-10-24T07:38:10.869Z rpc -> ack 
+2026-10-24T07:38:10.869Z rpc <- receiveRequest MainThreadStorage.$initializeExtensionStorage( [true,"hediet.vscode-drawio"]
+2026-10-24T07:38:10.869Z rpc -> ack 
+2026-10-24T07:38:10.869Z rpc <- receiveRequest MainThreadStorage.$initializeExtensionStorage( [false,"hediet.vscode-drawio"]
+2026-10-24T07:38:10.869Z rpc -> ack 
+2026-10-24T07:38:10.869Z rpc -> reply: 
+2026-10-24T07:38:10.869Z rpc -> reply: 
+2026-10-24T07:38:10.869Z rpc -> reply: 
+2026-10-24T07:38:10.877Z [exthost] START_NATIVE_LOG
+2026-10-24T07:38:10.878Z [exthost] Could not get liveshare API
+2026-10-24T07:38:10.878Z [exthost] END_NATIVE_LOG
+2026-10-24T07:38:10.879Z rpc <- receiveRequest MainThreadFileSystem.$ensureActivation( ["file"]
+2026-10-24T07:38:10.879Z rpc -> ack 
+2026-10-24T07:38:10.879Z rpc <- receiveRequest MainThreadCommands.$fireCommandActivationEvent( ["setContext"]
+2026-10-24T07:38:10.879Z rpc -> request: ExtHostExtensionService.$activateByEvent( ["onCommand:setContext",0]
+2026-10-24T07:38:10.879Z rpc -> ack 
+2026-10-24T07:38:10.879Z rpc <- receiveRequest MainThreadCommands.$executeCommand( ["_setContext",["vscode-drawio.experimentalFeaturesEnabled",false],true]
+2026-10-24T07:38:10.880Z rpc -> ack 
+2026-10-24T07:38:10.880Z rpc <- receiveRequest MainThreadCommands.$fireCommandActivationEvent( ["setContext"]
+2026-10-24T07:38:10.880Z rpc -> request: ExtHostExtensionService.$activateByEvent( ["onCommand:setContext",0]
+2026-10-24T07:38:10.880Z rpc -> ack 
+2026-10-24T07:38:10.880Z rpc <- receiveRequest MainThreadCommands.$executeCommand( ["_setContext",["hediet.vscode-drawio.active",false],true]
+2026-10-24T07:38:10.880Z rpc -> ack 
+2026-10-24T07:38:10.880Z rpc <- receiveRequest MainThreadCommands.$registerCommand( ["hediet.vscode-drawio.changeTheme"]
+2026-10-24T07:38:10.880Z rpc -> ack 
+2026-10-24T07:38:10.880Z rpc <- receiveRequest MainThreadCommands.$registerCommand( ["hediet.vscode-drawio.convert"]
+2026-10-24T07:38:10.880Z rpc -> ack 
+2026-10-24T07:38:10.880Z rpc <- receiveRequest MainThreadCommands.$registerCommand( ["hediet.vscode-drawio.reload-webview"]
+2026-10-24T07:38:10.880Z rpc -> ack 
+2026-10-24T07:38:10.880Z rpc <- receiveRequest MainThreadCommands.$registerCommand( ["hediet.vscode-drawio.export"]
+2026-10-24T07:38:10.880Z rpc -> ack 
+2026-10-24T07:38:10.880Z rpc <- receiveRequest MainThreadStatusBar.$disposeEntry( ["1"]
+2026-10-24T07:38:10.880Z (stub) MainThreadStatusBar.$disposeEntry(1 args) -> 
+2026-10-24T07:38:10.880Z rpc -> ack 
+2026-10-24T07:38:10.880Z rpc <- receiveRequest MainThreadStatusBar.$disposeEntry( ["2"]
+2026-10-24T07:38:10.880Z (stub) MainThreadStatusBar.$disposeEntry(1 args) -> 
+2026-10-24T07:38:10.880Z rpc -> ack 
+2026-10-24T07:38:10.880Z rpc <- receiveRequest MainThreadCommands.$registerCommand( ["hediet.vscode-drawio.linkCodeWithSelectedNode"]
+2026-10-24T07:38:10.880Z rpc -> ack 
+2026-10-24T07:38:10.880Z rpc <- receiveRequest MainThreadCommands.$registerCommand( ["hediet.vscode-drawio.toggleCodeLinkActivation"]
+2026-10-24T07:38:10.880Z rpc -> ack 
+2026-10-24T07:38:10.880Z rpc <- receiveRequest MainThreadCommands.$registerCommand( ["hediet.vscode-drawio.linkFileWithSelectedNode"]
+2026-10-24T07:38:10.880Z rpc -> ack 
+2026-10-24T07:38:10.880Z rpc <- receiveRequest MainThreadCommands.$registerCommand( ["hediet.vscode-drawio.linkSymbolWithSelectedNode"]
+2026-10-24T07:38:10.880Z rpc -> ack 
+2026-10-24T07:38:10.880Z rpc <- receiveRequest MainThreadCommands.$registerCommand( ["hediet.vscode-drawio.linkWsSymbolWithSelectedNode"]
+2026-10-24T07:38:10.880Z rpc -> ack 
+2026-10-24T07:38:10.880Z rpc <- receiveRequest MainThreadLanguageFeatures.$registerDocumentLinkProvider( [0,[{"$serialized":true,"language":"*","isBuiltin":false}],false]
+2026-10-24T07:38:10.880Z rpc -> ack 
+2026-10-24T07:38:10.880Z rpc <- receiveRequest MainThreadFileSystem.$registerFileSystemProvider( [0,"drawio",1026,null]
+2026-10-24T07:38:10.881Z MainThreadFileSystem.$registerFileSystemProvider(0, drawio) — DSH has no custom file-system providers
+2026-10-24T07:38:10.881Z rpc -> ack 
+2026-10-24T07:38:10.881Z rpc <- receiveRequest MainThreadCustomEditors.$registerTextEditorProvider( [{"id":{"value":"hediet.vscode-drawio","_lower":"hediet.vscode-drawio"},"location":{"$mid":1,"fsPath":"/var/folders/dw/snn6hztx1_1453kpzymhdbl40000gn/T/dsh-webview-e2e-gS0BBu/extensions/hediet.vscode-drawio-1.17.261024055/extension","path":"/var/folders/dw/snn6hztx1_1453kpzymhdbl40000gn/T/dsh-webview-e2e-gS0BBu/extensions/hediet.vscode-drawio-1.17.261024055/extension","scheme":"file"}},"hediet.vsc…
+2026-10-24T07:38:10.881Z registered the text custom editor "hediet.vscode-drawio-text" (hediet.vscode-drawio)
+2026-10-24T07:38:10.881Z rpc -> ack 
+2026-10-24T07:38:10.881Z rpc <- receiveRequest MainThreadCustomEditors.$registerCustomEditorProvider( [{"id":{"value":"hediet.vscode-drawio","_lower":"hediet.vscode-drawio"},"location":{"$mid":1,"fsPath":"/var/folders/dw/snn6hztx1_1453kpzymhdbl40000gn/T/dsh-webview-e2e-gS0BBu/extensions/hediet.vscode-drawio-1.17.261024055/extension","path":"/var/folders/dw/snn6hztx1_1453kpzymhdbl40000gn/T/dsh-webview-e2e-gS0BBu/extensions/hediet.vscode-drawio-1.17.261024055/extension","scheme":"file"}},"hediet.vsc…
+2026-10-24T07:38:10.881Z registered the custom editor "hediet.vscode-drawio" (hediet.vscode-drawio)
+2026-10-24T07:38:10.881Z rpc -> ack 
+2026-10-24T07:38:10.881Z rpc <- receiveRequest MainThreadCommands.$registerCommand( ["hediet.vscode-drawio.newDiagram"]
+2026-10-24T07:38:10.881Z rpc -> ack 
+2026-10-24T07:38:10.881Z rpc <- receiveRequest MainThreadLanguageFeatures.$registerCodeLensSupport( [1,[{"$serialized":true,"language":"markdown","scheme":"file","isBuiltin":false}],null]
+2026-10-24T07:38:10.881Z rpc -> ack 
+2026-10-24T07:38:10.881Z rpc <- receiveRequest MainThreadLanguageFeatures.$registerCodeLensSupport( [2,[{"$serialized":true,"language":"markdown","scheme":"file","isBuiltin":false}],null]
+2026-10-24T07:38:10.881Z rpc -> ack 
+2026-10-24T07:38:10.881Z rpc <- receiveRequest MainThreadCustomEditors.$registerTextEditorProvider( [{"id":{"value":"hediet.vscode-drawio","_lower":"hediet.vscode-drawio"},"location":{"$mid":1,"fsPath":"/var/folders/dw/snn6hztx1_1453kpzymhdbl40000gn/T/dsh-webview-e2e-gS0BBu/extensions/hediet.vscode-drawio-1.17.261024055/extension","path":"/var/folders/dw/snn6hztx1_1453kpzymhdbl40000gn/T/dsh-webview-e2e-gS0BBu/extensions/hediet.vscode-drawio-1.17.261024055/extension","scheme":"file"}},"drawio-inl…
+2026-10-24T07:38:10.881Z registered the text custom editor "drawio-inline-editor.drawioEditor" (hediet.vscode-drawio)
+2026-10-24T07:38:10.881Z rpc -> ack 
+2026-10-24T07:38:10.881Z rpc <- receiveRequest MainThreadCustomEditors.$registerTextEditorProvider( [{"id":{"value":"hediet.vscode-drawio","_lower":"hediet.vscode-drawio"},"location":{"$mid":1,"fsPath":"/var/folders/dw/snn6hztx1_1453kpzymhdbl40000gn/T/dsh-webview-e2e-gS0BBu/extensions/hediet.vscode-drawio-1.17.261024055/extension","path":"/var/folders/dw/snn6hztx1_1453kpzymhdbl40000gn/T/dsh-webview-e2e-gS0BBu/extensions/hediet.vscode-drawio-1.17.261024055/extension","scheme":"file"}},"drawio-inl…
+2026-10-24T07:38:10.881Z registered the text custom editor "drawio-inline-editor.markdownEditor" (hediet.vscode-drawio)
+2026-10-24T07:38:10.881Z rpc -> ack 
+2026-10-24T07:38:10.881Z rpc <- receiveRequest MainThreadTextEditors.$registerTextEditorDecorationType( [{"value":"hediet.vscode-drawio","_lower":"hediet.vscode-drawio"},"TextEditorDecorationType1",{"isWholeLine":true,"backgroundColor":"rgba(255, 200, 0, 0.05)","overviewRulerColor":"rgba(255, 200, 0, 0.5)"}]
+2026-10-24T07:38:10.881Z rpc -> ack 
+2026-10-24T07:38:10.881Z rpc <- receiveRequest MainThreadUrls.$registerUriHandler( [0,{"value":"hediet.vscode-drawio","_lower":"hediet.vscode-drawio"},"Draw.io Integration"]
+2026-10-24T07:38:10.881Z MainThreadUrls.$registerUriHandler(0) for hediet.vscode-drawio — DSH has no URI router, the handler is dropped
+2026-10-24T07:38:10.881Z rpc -> ack 
+2026-10-24T07:38:10.881Z rpc <- receiveRequest MainThreadCommands.$registerCommand( ["drawio-inline-editor.editDiagram"]
+2026-10-24T07:38:10.881Z rpc -> ack 
+2026-10-24T07:38:10.881Z rpc <- receiveRequest MainThreadCommands.$registerCommand( ["drawio-inline-editor.insertDiagram"]
+2026-10-24T07:38:10.881Z rpc -> ack 
+2026-10-24T07:38:10.881Z rpc <- receiveRequest MainThreadCommands.$registerCommand( ["drawio-inline-editor.toggleLock"]
+2026-10-24T07:38:10.881Z rpc -> ack 
+2026-10-24T07:38:10.881Z rpc <- receiveRequest MainThreadCommands.$registerCommand( ["drawio-inline-editor.previewDiagram"]
+2026-10-24T07:38:10.881Z rpc -> ack 
+2026-10-24T07:38:10.881Z rpc <- receiveRequest MainThreadCommands.$registerCommand( ["drawio-inline-editor.convertMermaid"]
+2026-10-24T07:38:10.881Z rpc -> ack 
+2026-10-24T07:38:10.881Z rpc <- receiveRequest MainThreadCommands.$registerCommand( ["drawio-inline-editor.convertPlantUml"]
+2026-10-24T07:38:10.881Z rpc -> ack 
+2026-10-24T07:38:10.881Z rpc <- receiveRequest MainThreadCommands.$registerCommand( ["drawio-inline-editor.inlinePreview"]
+2026-10-24T07:38:10.881Z rpc -> ack 
+2026-10-24T07:38:10.882Z rpc <- receiveRequest MainThreadConsole.$logExtensionHostMessage( [{"type":"__$console","severity":"warn","arguments":"[\"Could not get liveshare API\",{\"__$stack\":\"\\tat console.<anonymous> (/home/<user>/workspace/dsh-vscode-ext-host/plugin/dist/extension-host.js:117869:14)\\n\\tat e.LiveshareFeature.<anonymous> (/private/var/folders/dw/snn6hztx1_1453kpzymhdbl40000gn/T/dsh-webview-e2e-gS0BBu/extensions/hediet.vscode-drawio-…
+2026-10-24T07:38:10.882Z [extension-console:warn] {"type":"__$console","severity":"warn","arguments":"[\"Could not get liveshare API\",{\"__$stack\":\"\\tat console.<anonymous> (/home/<user>/workspace/dsh-vscode-ext-host/plugin/dist/extension-host.js:117869:14)\\n\\tat e.LiveshareFeature.<anonymous> (/private/var/folders/dw/snn6hztx1_1453kpzymhdbl40000gn/T/dsh-webview-e2e-gS0BBu/extensions/hediet.vscode-drawio-1.17.261024055/extension/dist/extension/index.js:2:153277)\\n\\tat Generator.next (<anonymous>)\\n\\tat s (/private/var/folders/dw/snn6hztx1_1453kpzymhdbl40000gn/T/dsh-webview-e2e-gS0BBu/extensions/hediet.vscode-drawio-1.17.261024055/extension/dist/extension/index.js:2:152642)\\n\\tat process.processTicksAndRejections (node:internal/process/task_queues:103:5)\"}]"}
+2026-10-24T07:38:10.882Z rpc -> ack 
+2026-10-24T07:38:10.882Z rpc <- receiveRequest MainThreadExtensionService.$onDidActivateExtension( [{"value":"hediet.vscode-drawio","_lower":"hediet.vscode-drawio"},6,4,3,{"startup":false,"extensionId":{"value":"hediet.vscode-drawio","_lower":"hediet.vscode-drawio"},"activationEvent":"onLanguage:markdown"}]
+2026-10-24T07:38:10.882Z MainThreadExtensionService.$onDidActivateExtension(hediet.vscode-drawio) codeLoading=6ms activateCall=4ms activateResolved=3ms
+2026-10-24T07:38:10.882Z rpc -> ack 
+2026-10-24T07:38:10.882Z rpc <- receiveRequest MainThreadTelemetry.$publicLog2( ["extensionActivationTimes",{"id":"hediet.vscode-drawio","name":"vscode-drawio","extensionVersion":"1.17.261024055","publisherDisplayName":"hediet","activationEvents":"onLanguage:markdown,onUri","isBuiltin":false,"reason":"onLanguage:markdown","reasonId":"hediet.vscode-drawio","startup":false,"codeLoadingTime":6,"activateCallTime":4,"activateResolvedTime":3,"outcome":"success"}]
+2026-10-24T07:38:10.882Z rpc -> ack 
+2026-10-24T07:38:10.882Z rpc <- receiveReply: 
+2026-10-24T07:38:10.882Z rpc -> reply: 
+2026-10-24T07:38:10.882Z rpc -> reply: 
+2026-10-24T07:38:10.882Z rpc -> reply: 
+2026-10-24T07:38:10.882Z rpc -> reply: 
+2026-10-24T07:38:10.882Z rpc -> reply: 
+2026-10-24T07:38:10.882Z rpc -> reply: 
+2026-10-24T07:38:10.882Z rpc -> reply: 
+2026-10-24T07:38:10.882Z rpc -> reply: 
+2026-10-24T07:38:10.882Z rpc -> reply: 
+2026-10-24T07:38:10.882Z rpc -> reply: 
+2026-10-24T07:38:10.882Z rpc -> reply: 
+2026-10-24T07:38:10.882Z rpc -> reply: 
+2026-10-24T07:38:10.882Z rpc -> reply: 
+2026-10-24T07:38:10.882Z rpc -> reply: 
+2026-10-24T07:38:10.882Z rpc -> reply: 
+2026-10-24T07:38:10.882Z rpc -> reply: 
+2026-10-24T07:38:10.882Z rpc -> reply: 
+2026-10-24T07:38:10.882Z rpc -> reply: 
+2026-10-24T07:38:10.882Z rpc -> reply: 
+2026-10-24T07:38:10.882Z rpc -> reply: 
+2026-10-24T07:38:10.882Z rpc -> reply: 
+2026-10-24T07:38:10.882Z rpc -> reply: 
+2026-10-24T07:38:10.882Z rpc -> reply: 
+2026-10-24T07:38:10.882Z rpc -> reply: 
+2026-10-24T07:38:10.882Z rpc -> reply: 
+2026-10-24T07:38:10.882Z rpc -> reply: 
+2026-10-24T07:38:10.882Z rpc -> reply: 
+2026-10-24T07:38:10.882Z rpc -> reply: 
+2026-10-24T07:38:10.882Z rpc -> reply: 
+2026-10-24T07:38:10.882Z rpc -> reply: 
+2026-10-24T07:38:10.882Z rpc -> reply: 
+2026-10-24T07:38:10.882Z rpc -> reply: 
+2026-10-24T07:38:10.882Z rpc -> reply: 
+2026-10-24T07:38:10.882Z rpc -> reply: 
+2026-10-24T07:38:10.882Z rpc -> reply: 
+2026-10-24T07:38:10.883Z rpc -> request: ExtHostExtensionService.$activateByEvent( ["onUri",0]
+2026-10-24T07:38:10.885Z rpc <- ack 
+2026-10-24T07:38:10.885Z rpc <- ack 
+2026-10-24T07:38:10.885Z rpc <- ack 
+2026-10-24T07:38:10.885Z rpc <- receiveReply: 
+2026-10-24T07:38:10.885Z rpc <- receiveReply: 
+2026-10-24T07:38:10.885Z rpc <- receiveReply: 
+2026-10-24T07:38:10.885Z rpc <- receiveRequest MainThreadLogger.$registerLogger( [{"resource":{"$mid":1,"fsPath":"/var/folders/dw/snn6hztx1_1453kpzymhdbl40000gn/T/dsh-webview-e2e-gS0BBu/logs/output_logging_20261024T153810/1-Drawio Integration Log.log","external":"file:///var/folders/dw/snn6hztx1_1453kpzymhdbl40000gn/T/dsh-webview-e2e-gS0BBu/logs/output_logging_20261024T153810/1-Drawio%20Integration%20Log.log","path":"/var/folders/dw/snn6hztx1_1453kpzymhdbl40000gn/T/dsh-webview…
+2026-10-24T07:38:10.885Z rpc -> ack 
+2026-10-24T07:38:10.885Z rpc <- receiveRequest MainThreadOutputService.$register( ["Drawio Integration Log",{"$mid":1,"fsPath":"/var/folders/dw/snn6hztx1_1453kpzymhdbl40000gn/T/dsh-webview-e2e-gS0BBu/logs/output_logging_20261024T153810/1-Drawio Integration Log.log","external":"file:///var/folders/dw/snn6hztx1_1453kpzymhdbl40000gn/T/dsh-webview-e2e-gS0BBu/logs/output_logging_20261024T153810/1-Drawio%20Integration%20Log.log","path":"/var/folders/dw/snn6hztx1_1453kpzymhdbl40000gn/…
+2026-10-24T07:38:10.885Z rpc -> ack 
+2026-10-24T07:38:10.885Z rpc -> reply: 
+2026-10-24T07:38:10.885Z rpc -> reply: 
+2026-10-24T07:38:10.885Z rpc -> request: ExtHostExtensionService.$activateByEvent( ["onCommand:hediet.vscode-drawio.convert",0]
+2026-10-24T07:38:10.885Z rpc -> reply: 
+2026-10-24T07:38:10.885Z rpc -> reply: 
+2026-10-24T07:38:10.888Z rpc <- ack 
+2026-10-24T07:38:10.888Z rpc <- receiveReply: 
+2026-10-24T07:38:10.888Z rpc -> request: ExtHostExtensionService.$activateByEvent( ["onCommand:hediet.vscode-drawio.export",0]
+2026-10-24T07:38:10.891Z rpc <- ack 
+2026-10-24T07:38:10.891Z rpc <- receiveReply: 
+2026-10-24T07:38:10.891Z rpc -> request: ExtHostExtensionService.$activateByEvent( ["onCommand:hediet.vscode-drawio.toggleCodeLinkActivation",0]
+2026-10-24T07:38:10.894Z rpc <- ack 
+2026-10-24T07:38:10.894Z rpc <- receiveReply: 
+2026-10-24T07:38:10.894Z rpc -> request: ExtHostExtensionService.$activateByEvent( ["onCommand:hediet.vscode-drawio.changeTheme",0]
+2026-10-24T07:38:10.897Z rpc <- ack 
+2026-10-24T07:38:10.897Z rpc <- receiveReply: 
+2026-10-24T07:38:10.897Z rpc -> request: ExtHostExtensionService.$activateByEvent( ["onCommand:hediet.vscode-drawio.editDiagramAsText",0]
+2026-10-24T07:38:10.899Z rpc <- ack 
+2026-10-24T07:38:10.900Z rpc <- receiveReply: 
+2026-10-24T07:38:10.900Z rpc -> request: ExtHostExtensionService.$activateByEvent( ["onCommand:hediet.vscode-drawio.linkCodeWithSelectedNode",0]
+2026-10-24T07:38:10.902Z rpc <- ack 
+2026-10-24T07:38:10.902Z rpc <- receiveReply: 
+2026-10-24T07:38:10.902Z rpc -> request: ExtHostExtensionService.$activateByEvent( ["onCommand:hediet.vscode-drawio.newDiagram",0]
+2026-10-24T07:38:10.905Z rpc <- ack 
+2026-10-24T07:38:10.905Z rpc <- receiveReply: 
+2026-10-24T07:38:10.905Z rpc -> request: ExtHostExtensionService.$activateByEvent( ["onCommand:hediet.vscode-drawio.linkFileWithSelectedNode",0]
+2026-10-24T07:38:10.908Z rpc <- ack 
+2026-10-24T07:38:10.908Z rpc <- receiveReply: 
+2026-10-24T07:38:10.908Z rpc -> request: ExtHostExtensionService.$activateByEvent( ["onCommand:hediet.vscode-drawio.linkSymbolWithSelectedNode",0]
+2026-10-24T07:38:10.911Z rpc <- ack 
+2026-10-24T07:38:10.911Z rpc <- receiveReply: 
+2026-10-24T07:38:10.911Z rpc -> request: ExtHostExtensionService.$activateByEvent( ["onCommand:hediet.vscode-drawio.linkWsSymbolWithSelectedNode",0]
+2026-10-24T07:38:10.914Z rpc <- ack 
+2026-10-24T07:38:10.914Z rpc <- receiveReply: 
+2026-10-24T07:38:10.914Z rpc -> request: ExtHostExtensionService.$activateByEvent( ["onCommand:drawio-inline-editor.editDiagram",0]
+2026-10-24T07:38:10.916Z rpc <- ack 
+2026-10-24T07:38:10.916Z rpc <- receiveReply: 
+2026-10-24T07:38:10.916Z rpc -> request: ExtHostExtensionService.$activateByEvent( ["onCommand:drawio-inline-editor.insertDiagram",0]
+2026-10-24T07:38:10.919Z rpc <- ack 
+2026-10-24T07:38:10.919Z rpc <- receiveReply: 
+2026-10-24T07:38:10.919Z rpc -> request: ExtHostExtensionService.$activateByEvent( ["onCommand:drawio-inline-editor.toggleLock",0]
+2026-10-24T07:38:10.922Z rpc <- ack 
+2026-10-24T07:38:10.922Z rpc <- receiveReply: 
+2026-10-24T07:38:10.922Z rpc -> request: ExtHostExtensionService.$activateByEvent( ["onCommand:drawio-inline-editor.previewDiagram",0]
+2026-10-24T07:38:10.925Z rpc <- ack 
+2026-10-24T07:38:10.925Z rpc <- receiveReply: 
+2026-10-24T07:38:10.925Z rpc -> request: ExtHostExtensionService.$activateByEvent( ["onCommand:drawio-inline-editor.inlinePreview",0]
+2026-10-24T07:38:10.928Z rpc <- ack 
+2026-10-24T07:38:10.928Z rpc <- receiveReply: 
+2026-10-24T07:38:10.928Z rpc -> request: ExtHostExtensionService.$activateByEvent( ["onCommand:drawio-inline-editor.convertMermaid",0]
+2026-10-24T07:38:10.930Z rpc <- ack 
+2026-10-24T07:38:10.931Z rpc <- receiveReply: 
+2026-10-24T07:38:10.931Z rpc -> request: ExtHostExtensionService.$activateByEvent( ["onCommand:drawio-inline-editor.convertPlantUml",0]
+2026-10-24T07:38:10.933Z rpc <- ack 
+2026-10-24T07:38:10.933Z rpc <- receiveReply: 
+2026-10-24T07:38:10.933Z rpc -> request: ExtHostExtensionService.$activateByEvent( ["onCustomEditor:hediet.vscode-drawio",0]
+2026-10-24T07:38:10.936Z rpc <- ack 
+2026-10-24T07:38:10.936Z rpc <- receiveReply: 
+2026-10-24T07:38:10.936Z rpc -> request: ExtHostExtensionService.$activateByEvent( ["onCustomEditor:hediet.vscode-drawio-text",0]
+2026-10-24T07:38:10.939Z rpc <- ack 
+2026-10-24T07:38:10.939Z rpc <- receiveReply: 
+2026-10-24T07:38:10.939Z rpc -> request: ExtHostExtensionService.$activateByEvent( ["onCustomEditor:drawio-inline-editor.drawioEditor",0]
+2026-10-24T07:38:10.942Z rpc <- ack 
+2026-10-24T07:38:10.942Z rpc <- receiveReply: 
+2026-10-24T07:38:10.942Z rpc -> request: ExtHostExtensionService.$activateByEvent( ["onCustomEditor:drawio-inline-editor.markdownEditor",0]
+2026-10-24T07:38:10.945Z rpc <- ack 
+2026-10-24T07:38:10.945Z rpc <- receiveReply: 
+2026-10-24T07:38:10.945Z rpc -> request: ExtHostExtensionService.$activateByEvent( ["onLanguage:drawio",0]
+2026-10-24T07:38:10.947Z rpc <- ack 
+2026-10-24T07:38:10.947Z rpc <- receiveReply: 
+2026-10-24T07:38:10.947Z rpc -> request: ExtHostExtensionService.$activate( [{"value":"hediet.vscode-drawio","_lower":"hediet.vscode-drawio"},{"kind":"explicit","extensionId":"hediet.vscode-drawio"}]
+2026-10-24T07:38:10.950Z rpc <- ack 
+2026-10-24T07:38:10.950Z rpc <- receiveReply: true
+2026-10-24T07:38:10.950Z activated hediet.vscode-drawio
+2026-10-24T07:38:10.950Z the extension host is running
+2026-10-24T07:38:10.952Z rpc -> request: ExtHostExtensionService.$activateByEvent( ["onCustomEditor:hediet.vscode-drawio-text",0]
+2026-10-24T07:38:10.955Z rpc <- ack 
+2026-10-24T07:38:10.955Z rpc <- receiveReply: 
+2026-10-24T07:38:10.955Z rpc -> request: ExtHostDocumentsAndEditors.$acceptDocumentsAndEditorsDelta( [{"removedDocuments":[],"removedEditors":[],"addedEditors":[],"addedDocuments":[{"uri":{"scheme":"file","path":"/var/folders/dw/snn6hztx1_1453kpzymhdbl40000gn/T/dsh-webview-e2e-gS0BBu/sample.drawio"},"versionId":1,"lines":["<?xml version=\"1.0\" encoding=\"UTF-8\"?>","<mxfile host=\"app.diagrams.net\" type=\"device\">","  <diagram id=\"mmd-sample-1\" name=\"Page-1\">","    <mxGraphModel dx=\"900\"…
+2026-10-24T07:38:10.958Z rpc <- ack 
+2026-10-24T07:38:10.958Z rpc <- receiveReply: 
+2026-10-24T07:38:10.958Z rpc -> request: ExtHostCustomEditors.$resolveCustomEditor( [{"scheme":"file","path":"/var/folders/dw/snn6hztx1_1453kpzymhdbl40000gn/T/dsh-webview-e2e-gS0BBu/sample.drawio"},"dsh-wv-1-mvm375hn","hediet.vscode-drawio-text",{"title":"sample.drawio","contentOptions":{"enableScripts":true,"enableForms":true,"enableCommandUris":true,"localResourceRoots":[{"scheme":"file","path":"/var/folders/dw/snn6hztx1_1453kpzymhdbl40000gn/T/dsh-webview-e2e-gS0BBu/extensions/…
+2026-10-24T07:38:10.963Z [exthost] START_NATIVE_LOG
+2026-10-24T07:38:10.963Z [exthost] [SyntaxError: "undefined" is not valid JSON
+2026-10-24T07:38:10.963Z [exthost] 	at JSON.parse (<anonymous>)
+2026-10-24T07:38:10.963Z [exthost] 	at get localStorage (/private/var/folders/dw/snn6hztx1_1453kpzymhdbl40000gn/T/dsh-webview-e2e-gS0BBu/extensions/hediet.vscode-drawio-1.17.261024055/extension/dist/extension/index.js:2:95037)
+2026-10-24T07:38:10.963Z [exthost] 	at /private/var/folders/dw/snn6hztx1_1453kpzymhdbl40000gn/T/dsh-webview-e2e-gS0BBu/extensions/hediet.vscode-drawio-1.17.261024055/extension/dist/extension/index.js:2:113371
+2026-10-24T07:38:10.963Z [exthost] 	at ct (/private/var/folders/dw/snn6hztx1_1453kpzymhdbl40000gn/T/dsh-webview-e2e-gS0BBu/extensions/hediet.vscode-drawio-1.17.261024055/extension/dist/extension/index.js:2:29586)
+2026-10-24T07:38:10.963Z [exthost] 	at e.DrawioClientFactory.getOfflineHtml (/private/var/folders/dw/snn6hztx1_1453kpzymhdbl40000gn/T/dsh-webview-e2e-gS0BBu/extensions/hediet.vscode-drawio-1.17.261024055/extension/dist/extension/index.js:2:113363)
+2026-10-24T07:38:10.963Z [exthost] 	at e.DrawioClientFactory.getHtml (/private/var/folders/dw/snn6hztx1_1453kpzymhdbl40000gn/T/dsh-webview-e2e-gS0BBu/extensions/hediet.vscode-drawio-1.17.261024055/extension/dist/extension/index.js:2:113092)
+2026-10-24T07:38:10.963Z [exthost] 	at p.name (/private/var/folders/dw/snn6hztx1_1453kpzymhdbl40000gn/T/dsh-webview-e2e-gS0BBu/extensions/hediet.vscode-drawio-1.17.261024055/extension/dist/extension/index.js:2:110468)
+2026-10-24T07:38:10.963Z [exthost] 	at s (/private/var/folders/dw/snn6hztx1_1453kpzymhdbl40000gn/T/dsh-webview-e2e-gS0BBu/extensions/hediet.vscode-drawio-1.17.261024055/extension/dist/extension/index.js:2:43245)
+2026-10-24T07:38:10.963Z [exthost] 	at st (/private/var/folders/dw/snn6hztx1_1453kpzymhdbl40000gn/T/dsh-webview-e2e-gS0BBu/extensions/hediet.vscode-drawio-1.17.261024055/extension/dist/extension/index.js:2:28915)
+2026-10-24T07:38:10.963Z [exthost] 	at t.track (/private/var/folders/dw/snn6hztx1_1453kpzymhdbl40000gn/T/dsh-webview-e2e-gS0BBu/extensions/hediet.vscode-drawio-1.17.261024055/extension/dist/extension/index.js:2:40239)
+2026-10-24T07:38:10.963Z [exthost] 	at t.onInvalidate (/private/var/folders/dw/snn6hztx1_1453kpzymhdbl40000gn/T/dsh-webview-e2e-gS0BBu/extensions/hediet.vscode-drawio-1.17.261024055/extension/dist/extension/index.js:2:43189)
+2026-10-24T07:38:10.963Z [exthost] 	at t.runReaction (/private/var/folders/dw/snn6hztx1_1453kpzymhdbl40000gn/T/dsh-webview-e2e-gS0BBu/extensions/hediet.vscode-drawio-1.17.261024055/extension/dist/extension/index.js:2:40069)
+2026-10-24T07:38:10.963Z [exthost] 	at Yt (/private/var/folders/dw/snn6hztx1_1453kpzymhdbl40000gn/T/dsh-webview-e2e-gS0BBu/extensions/hediet.vscode-drawio-1.17.261024055/extension/dist/extension/index.js:2:41766)
+2026-10-24T07:38:10.963Z [exthost] 	at qt (/private/var/folders/dw/snn6hztx1_1453kpzymhdbl40000gn/T/dsh-webview-e2e-gS0BBu/extensions/hediet.vscode-drawio-1.17.261024055/extension/dist/extension/index.js:2:41399)
+2026-10-24T07:38:10.963Z [exthost] 	at Jt (/private/var/folders/dw/snn6hztx1_1453kpzymhdbl40000gn/T/dsh-webview-e2e-gS0BBu/extensions/hediet.vscode-drawio-1.17.261024055/extension/dist/extension/index.js:2:41455)
+2026-10-24T07:38:10.963Z [exthost] 	at t.schedule (/private/var/folders/dw/snn6hztx1_1453kpzymhdbl40000gn/T/dsh-webview-e2e-gS0BBu/extensions/hediet.vscode-drawio-1.17.261024055/extension/dist/extension/index.js:2:39873)
+2026-10-24T07:38:10.963Z [exthost] 	at ae (/private/var/folders/dw/snn6hztx1_1453kpzymhdbl40000gn/T/dsh-webview-e2e-gS0BBu/extensions/hediet.vscode-drawio-1.17.261024055/extension/dist/extension/index.js:2:43259)
+2026-10-24T07:38:10.963Z [exthost] 	at e.DrawioClientFactory.<anonymous> (/private/var/folders/dw/snn6hztx1_1453kpzymhdbl40000gn/T/dsh-webview-e2e-gS0BBu/extensions/hediet.vscode-drawio-1.17.261024055/extension/dist/extension/index.js:2:110155)
+2026-10-24T07:38:10.963Z [exthost] 	at Generator.next (<anonymous>)
+2026-10-24T07:38:10.963Z [exthost] 	at s (/private/var/folders/dw/snn6hztx1_1453kpzymhdbl40000gn/T/dsh-webview-e2e-gS0BBu/extensions/hediet.vscode-drawio-1.17.261024055/extension/dist/extension/index.js:2:109279)
+2026-10-24T07:38:10.963Z [exthost] 	at process.processTicksAndRejections (node:internal/process/task_queues:103:5)]
+2026-10-24T07:38:10.963Z [exthost] END_NATIVE_LOG
+2026-10-24T07:38:10.964Z rpc <- ack 
+2026-10-24T07:38:10.964Z rpc <- receiveRequest MainThreadWebviews.$setOptions( ["dsh-wv-1-mvm375hn",{"enableScripts":true,"localResourceRoots":[{"$mid":1,"fsPath":"/var/folders/dw/snn6hztx1_1453kpzymhdbl40000gn/T/dsh-webview-e2e-gS0BBu/extensions/hediet.vscode-drawio-1.17.261024055/extension","path":"/var/folders/dw/snn6hztx1_1453kpzymhdbl40000gn/T/dsh-webview-e2e-gS0BBu/extensions/hediet.vscode-drawio-1.17.261024055/extension","scheme":"file"}]}]
+2026-10-24T07:38:10.964Z rpc -> ack 
+2026-10-24T07:38:10.964Z rpc <- receiveRequest MainThreadConsole.$logExtensionHostMessage( [{"type":"__$console","severity":"error","arguments":"[\"SyntaxError: \\\"undefined\\\" is not valid JSON\\n\\tat JSON.parse (<anonymous>)\\n\\tat get localStorage (/private/var/folders/dw/snn6hztx1_1453kpzymhdbl40000gn/T/dsh-webview-e2e-gS0BBu/extensions/hediet.vscode-drawio-1.17.261024055/extension/dist/extension/index.js:2:95037)\\n\\tat /private/var/folders/dw/snn6hztx1_1453kpzymhdbl40000gn/T/…
+2026-10-24T07:38:10.964Z [extension-console:error] {"type":"__$console","severity":"error","arguments":"[\"SyntaxError: \\\"undefined\\\" is not valid JSON\\n\\tat JSON.parse (<anonymous>)\\n\\tat get localStorage (/private/var/folders/dw/snn6hztx1_1453kpzymhdbl40000gn/T/dsh-webview-e2e-gS0BBu/extensions/hediet.vscode-drawio-1.17.261024055/extension/dist/extension/index.js:2:95037)\\n\\tat /private/var/folders/dw/snn6hztx1_1453kpzymhdbl40000gn/T/dsh-webview-e2e-gS0BBu/extensions/hediet.vscode-drawio-1.17.261024055/extension/dist/extension/index.js:2:113371\\n\\tat ct (/private/var/folders/dw/snn6hztx1_1453kpzymhdbl40000gn/T/dsh-webview-e2e-gS0BBu/extensions/hediet.vscode-drawio-1.17.261024055/extension/dist/extension/index.js:2:29586)\\n\\tat e.DrawioClientFactory.getOfflineHtml (/private/var/folders/dw/snn6hztx1_1453kpzymhdbl40000gn/T/dsh-webview-e2e-gS0BBu/extensions/hediet.vscode-drawio-1.17.261024055/extension/dist/extension/index.js:2:113363)\\n\\tat e.DrawioClientFactory.getHtml (/private/var/folders/dw/snn6hztx1_1453kpzymhdbl40000gn/T/dsh-webview-e2e-gS0BBu/extensions/hediet.vscode-drawio-1.17.261024055/extension/dist/extension/index.js:2:113092)\\n\\tat p.name (/private/var/folders/dw/snn6hztx1_1453kpzymhdbl40000gn/T/dsh-webview-e2e-gS0BBu/extensions/hediet.vscode-drawio-1.17.261024055/extension/dist/extension/index.js:2:110468)\\n\\tat s (/private/var/folders/dw/snn6hztx1_1453kpzymhdbl40000gn/T/dsh-webview-e2e-gS0BBu/extensions/hediet.vscode-drawio-1.17.261024055/extension/dist/extension/index.js:2:43245)\\n\\tat st (/private/var/folders/dw/snn6hztx1_1453kpzymhdbl40000gn/T/dsh-webview-e2e-gS0BBu/extensions/hediet.vscode-drawio-1.17.261024055/extension/dist/extension/index.js:2:28915)\\n\\tat t.track (/private/var/folders/dw/snn6hztx1_1453kpzymhdbl40000gn/T/dsh-webview-e2e-gS0BBu/extensions/hediet.vscode-drawio-1.17.261024055/extension/dist/extension/index.js:2:40239)\\n\\tat t.onInvalidate (/private/var/folders/dw/snn6hztx1_1453kpzymhdbl40000gn/T/dsh-webview-e2e-gS0BBu/extensions/hediet.vscode-drawio-1.17.261024055/extension/dist/extension/index.js:2:43189)\\n\\tat t.runReaction (/private/var/folders/dw/snn6hztx1_1453kpzymhdbl40000gn/T/dsh-webview-e2e-gS0BBu/extensions/hediet.vscode-drawio-1.17.261024055/extension/dist/extension/index.js:2:40069)\\n\\tat Yt (/private/var/folders/dw/snn6hztx1_1453kpzymhdbl40000gn/T/dsh-webview-e2e-gS0BBu/extensions/hediet.vscode-drawio-1.17.261024055/extension/dist/extension/index.js:2:41766)\\n\\tat qt (/private/var/folders/dw/snn6hztx1_1453kpzymhdbl40000gn/T/dsh-webview-e2e-gS0BBu/extensions/hediet.vscode-drawio-1.17.261024055/extension/dist/extension/index.js:2:41399)\\n\\tat Jt (/private/var/folders/dw/snn6hztx1_1453kpzymhdbl40000gn/T/dsh-webview-e2e-gS0BBu/extensions/hediet.vscode-drawio-1.17.261024055/extension/dist/extension/index.js:2:41455)\\n\\tat t.schedule (/private/var/folders/dw/snn6hztx1_1453kpzymhdbl40000gn/T/dsh-webview-e2e-gS0BBu/extensions/hediet.vscode-drawio-1.17.261024055/extension/dist/extension/index.js:2:39873)\\n\\tat ae (/private/var/folders/dw/snn6hztx1_1453kpzymhdbl40000gn/T/dsh-webview-e2e-gS0BBu/extensions/hediet.vscode-drawio-1.17.261024055/extension/dist/extension/index.js:2:43259)\\n\\tat e.DrawioClientFactory.<anonymous> (/private/var/folders/dw/snn6hztx1_1453kpzymhdbl40000gn/T/dsh-webview-e2e-gS0BBu/extensions/hediet.vscode-drawio-1.17.261024055/extension/dist/extension/index.js:2:110155)\\n\\tat Generator.next (<anonymous>)\\n\\tat s (/private/var/folders/dw/snn6hztx1_1453kpzymhdbl40000gn/T/dsh-webview-e2e-gS0BBu/extensions/hediet.vscode-drawio-1.17.261024055/extension/dist/extension/index.js:2:109279)\\n\\tat process.processTicksAndRejections (node:internal/process/task_queues:103:5)\",{\"__$stack\":\"\\tat console.<anonymous> (/home/<user>/workspace/dsh-vscode-ext-host/plugin/dist/extension-host.js:117869:14)\\n\\tat get localStorage (/private/var/folders/dw/snn6hztx1_1453kpzymhdbl40000gn/T/dsh-webview-e2e-gS0BBu/extensions/hediet.vscode-drawio-1.17.261024055/extension/dist/extension/index.js:2:95136)\\n\\tat /private/var/folders/dw/snn6hztx1_1453kpzymhdbl40000gn/T/dsh-webview-e2e-gS0BBu/extensions/hediet.vscode-drawio-1.17.261024055/extension/dist/extension/index.js:2:113371\\n\\tat ct (/private/var/folders/dw/snn6hztx1_1453kpzymhdbl40000gn/T/dsh-webview-e2e-gS0BBu/extensions/hediet.vscode-drawio-1.17.261024055/extension/dist/extension/index.js:2:29586)\\n\\tat e.DrawioClientFactory.getOfflineHtml (/private/var/folders/dw/snn6hztx1_1453kpzymhdbl40000gn/T/dsh-webview-e2e-gS0BBu/extensions/hediet.vscode-drawio-1.17.261024055/extension/dist/extension/index.js:2:113363)\\n\\tat e.DrawioClientFactory.getHtml (/private/var/folders/dw/snn6hztx1_1453kpzymhdbl40000gn/T/dsh-webview-e2e-gS0BBu/extensions/hediet.vscode-drawio-1.17.261024055/extension/dist/extension/index.js:2:113092)\\n\\tat p.name (/private/var/folders/dw/snn6hztx1_1453kpzymhdbl40000gn/T/dsh-webview-e2e-gS0BBu/extensions/hediet.vscode-drawio-1.17.261024055/extension/dist/extension/index.js:2:110468)\\n\\tat s (/private/var/folders/dw/snn6hztx1_1453kpzymhdbl40000gn/T/dsh-webview-e2e-gS0BBu/extensions/hediet.vscode-drawio-1.17.261024055/extension/dist/extension/index.js:2:43245)\\n\\tat st (/private/var/folders/dw/snn6hztx1_1453kpzymhdbl40000gn/T/dsh-webview-e2e-gS0BBu/extensions/hediet.vscode-drawio-1.17.261024055/extension/dist/extension/index.js:2:28915)\\n\\tat t.track (/private/var/folders/dw/snn6hztx1_1453kpzymhdbl40000gn/T/dsh-webview-e2e-gS0BBu/extensions/hediet.vscode-drawio-1.17.261024055/extension/dist/extension/index.js:2:40239)\\n\\tat t.onInvalidate (/private/var/folders/dw/snn6hztx1_1453kpzymhdbl40000gn/T/dsh-webview-e2e-gS0BBu/extensions/hediet.vscode-drawio-1.17.261024055/extension/dist/extension/index.js:2:43189)\\n\\tat t.runReaction (/private/var/folders/dw/snn6hztx1_1453kpzymhdbl40000gn/T/dsh-webview-e2e-gS0BBu/extensions/hediet.vscode-drawio-1.17.261024055/extension/dist/extension/index.js:2:40069)\\n\\tat Yt (/private/var/folders/dw/snn6hztx1_1453kpzymhdbl40000gn/T/dsh-webview-e2e-gS0BBu/extensions/hediet.vscode-drawio-1.17.261024055/extension/dist/extension/index.js:2:41766)\\n\\tat qt (/private/var/folders/dw/snn6hztx1_1453kpzymhdbl40000gn/T/dsh-webview-e2e-gS0BBu/extensions/hediet.vscode-drawio-1.17.261024055/extension/dist/extension/index.js:2:41399)\\n\\tat Jt (/private/var/folders/dw/snn6hztx1_1453kpzymhdbl40000gn/T/dsh-webview-e2e-gS0BBu/extensions/hediet.vscode-drawio-1.17.261024055/extension/dist/extension/index.js:2:41455)\\n\\tat t.schedule (/private/var/folders/dw/snn6hztx1_1453kpzymhdbl40000gn/T/dsh-webview-e2e-gS0BBu/extensions/hediet.vscode-drawio-1.17.261024055/extension/dist/extension/index.js:2:39873)\\n\\tat ae (/private/var/folders/dw/snn6hztx1_1453kpzymhdbl40000gn/T/dsh-webview-e2e-gS0BBu/extensions/hediet.vscode-drawio-1.17.261024055/extension/dist/extension/index.js:2:43259)\\n\\tat e.DrawioClientFactory.<anonymous> (/private/var/folders/dw/snn6hztx1_1453kpzymhdbl40000gn/T/dsh-webview-e2e-gS0BBu/extensions/hediet.vscode-drawio-1.17.261024055/extension/dist/extension/index.js:2:110155)\\n\\tat Generator.next (<anonymous>)\\n\\tat s (/private/var/folders/dw/snn6hztx1_1453kpzymhdbl40000gn/T/dsh-webview-e2e-gS0BBu/extensions/hediet.vscode-drawio-1.17.261024055/extension/dist/extension/index.js:2:109279)\\n\\tat process.processTicksAndRejections (node:internal/process/task_queues:103:5)\"}]"}
+2026-10-24T07:38:10.964Z rpc -> ack 
+2026-10-24T07:38:10.964Z rpc <- receiveRequest MainThreadWebviews.$setHtml( ["dsh-wv-1-mvm375hn","<!DOCTYPE html>\n<html>\n\t<head>\n\t\t<base href=\"https://file%2B.vscode-resource.vscode-cdn.net/var/folders/dw/snn6hztx1_1453kpzymhdbl40000gn/T/dsh-webview-e2e-gS0BBu/extensions/hediet.vscode-drawio-1.17.261024055/extension/drawio/src/main/webapp/index.html\" />\n\t\t<script type=\"text/javascript\">\n\t\t\tvar log;\n\t\t\tvar editorUi;\n\t\t\t(() => {\n\t\t\t\tconst api =…
+2026-10-24T07:38:10.964Z the webview "dsh-wv-1-mvm375hn" produced 14110 characters of HTML
+2026-10-24T07:38:10.964Z rpc -> ack 
+2026-10-24T07:38:10.964Z rpc <- receiveRequest MainThreadCommands.$fireCommandActivationEvent( ["setContext"]
+2026-10-24T07:38:10.965Z rpc -> request: ExtHostExtensionService.$activateByEvent( ["onCommand:setContext",0]
+2026-10-24T07:38:10.965Z rpc -> ack 
+2026-10-24T07:38:10.965Z rpc <- receiveRequest MainThreadCommands.$executeCommand( ["_setContext",["hediet.vscode-drawio.active",true],true]
+2026-10-24T07:38:10.965Z rpc -> ack 
+2026-10-24T07:38:10.965Z rpc <- receiveReply: 
+2026-10-24T07:38:10.965Z rpc -> reply: 
+2026-10-24T07:38:10.965Z rpc -> reply: 
+2026-10-24T07:38:10.965Z rpc -> reply: 
+2026-10-24T07:38:10.965Z rpc -> reply: 
+2026-10-24T07:38:10.965Z rpc -> request: ExtHostWebviews.$onMessage( ["dsh-wv-1-mvm375hn","{\"hello\":\"dsh\"}",{"value":[]}]
+2026-10-24T07:38:10.966Z rpc <- receiveRequest MainThreadStatusBar.$setEntry( ["1","hediet.vscode-drawio","hediet.vscode-drawio","Draw.io Integration (Extension)","Theme: kennedy",null,false,{"id":"hediet.vscode-drawio.changeTheme","title":""},null,null,false,null,null]
+2026-10-24T07:38:10.966Z (stub) MainThreadStatusBar.$setEntry(13 args) -> 
+2026-10-24T07:38:10.966Z rpc -> ack 
+2026-10-24T07:38:10.966Z rpc <- receiveRequest MainThreadStatusBar.$setEntry( ["2","hediet.vscode-drawio","hediet.vscode-drawio","Draw.io Integration (Extension)","$(link) $(circle-outline) Code Link",null,false,{"id":"hediet.vscode-drawio.toggleCodeLinkActivation","title":""},null,null,true,null,null]
+2026-10-24T07:38:10.966Z (stub) MainThreadStatusBar.$setEntry(13 args) -> 
+2026-10-24T07:38:10.966Z rpc -> ack 
+2026-10-24T07:38:10.966Z rpc -> reply: 
+2026-10-24T07:38:10.966Z rpc -> reply: 
+2026-10-24T07:38:10.968Z rpc <- ack 
+2026-10-24T07:38:10.968Z rpc <- receiveRequest MainThreadExtensionService.$onExtensionRuntimeError( [{"value":"hediet.vscode-drawio","_lower":"hediet.vscode-drawio"},{"$isError":true,"name":"SyntaxError","message":"\"[object Object]\" is not valid JSON","stack":"SyntaxError: \"[object Object]\" is not valid JSON\n\tat JSON.parse (<anonymous>)\n\tat /private/var/folders/dw/snn6hztx1_1453kpzymhdbl40000gn/T/dsh-webview-e2e-gS0BBu/extensions/hediet.vscode-drawio-1.17.261024055/extension/dist/extensi…
+2026-10-24T07:38:10.968Z MainThreadExtensionService.$onExtensionRuntimeError(hediet.vscode-drawio): "[object Object]" is not valid JSON
+2026-10-24T07:38:10.968Z rpc -> ack 
+2026-10-24T07:38:10.968Z rpc <- receiveRequest MainThreadErrors.$onUnexpectedError( [{"$isError":true,"name":"SyntaxError","message":"\"[object Object]\" is not valid JSON","stack":"SyntaxError: \"[object Object]\" is not valid JSON\n\tat JSON.parse (<anonymous>)\n\tat /private/var/folders/dw/snn6hztx1_1453kpzymhdbl40000gn/T/dsh-webview-e2e-gS0BBu/extensions/hediet.vscode-drawio-1.17.261024055/extension/dist/extension/index.js:2:105507\n\tat UniqueContainer.value (/private/var/fo…
+2026-10-24T07:38:10.968Z MainThreadErrors.$onUnexpectedError: "[object Object]" is not valid JSON
+2026-10-24T07:38:10.968Z rpc -> ack 
+2026-10-24T07:38:10.968Z rpc <- ack 
+2026-10-24T07:38:10.968Z rpc <- receiveReply: 
+2026-10-24T07:38:10.968Z rpc <- receiveReply: 
+2026-10-24T07:38:10.968Z rpc -> reply: 
+2026-10-24T07:38:10.968Z rpc -> reply: 
+2026-10-24T07:38:10.968Z rpc -> reply: 

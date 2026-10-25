@@ -1,0 +1,253 @@
+{
+  "upstreamCommit": "1184ad4d45794110deb6b897ea83b15aac44ed89 2026-10-23 17:19:34 -0700",
+  "generatedBy": "spike/export-vendor.mjs",
+  "closure": "transitive import closure of the vendored extension host + main host (esbuild metafile)",
+  "totalFiles": 638,
+  "totalLines": 251377,
+  "byDirectory": {
+    "workbench/api": {
+      "files": 151,
+      "lines": 61457
+    },
+    "base/common": {
+      "files": 118,
+      "lines": 42686
+    },
+    "workbench/contrib": {
+      "files": 83,
+      "lines": 37446
+    },
+    "editor/common": {
+      "files": 34,
+      "lines": 19804
+    },
+    "workbench/services": {
+      "files": 47,
+      "lines": 19598
+    },
+    "platform/agentHost": {
+      "files": 63,
+      "lines": 16745
+    },
+    "platform/mcp": {
+      "files": 11,
+      "lines": 5770
+    },
+    "platform/files": {
+      "files": 10,
+      "lines": 4717
+    },
+    "base/parts": {
+      "files": 6,
+      "lines": 4527
+    },
+    "workbench/common": {
+      "files": 5,
+      "lines": 3545
+    },
+    "platform/configuration": {
+      "files": 4,
+      "lines": 3007
+    },
+    "platform/contextkey": {
+      "files": 3,
+      "lines": 2595
+    },
+    "base/node": {
+      "files": 8,
+      "lines": 1990
+    },
+    "platform/tunnel": {
+      "files": 4,
+      "lines": 1645
+    },
+    "platform/agentPlugins": {
+      "files": 2,
+      "lines": 1595
+    },
+    "platform/extensions": {
+      "files": 3,
+      "lines": 1579
+    },
+    "platform/terminal": {
+      "files": 3,
+      "lines": 1398
+    },
+    "platform/remote": {
+      "files": 6,
+      "lines": 1386
+    },
+    "platform/quickinput": {
+      "files": 1,
+      "lines": 1303
+    },
+    "platform/extensionManagement": {
+      "files": 4,
+      "lines": 1242
+    },
+    "platform/policy": {
+      "files": 3,
+      "lines": 1214
+    },
+    "platform/log": {
+      "files": 3,
+      "lines": 1153
+    },
+    "platform/telemetry": {
+      "files": 4,
+      "lines": 926
+    },
+    "platform/storage": {
+      "files": 1,
+      "lines": 900
+    },
+    "platform/userDataProfile": {
+      "files": 2,
+      "lines": 886
+    },
+    "platform/environment": {
+      "files": 3,
+      "lines": 846
+    },
+    "platform/instantiation": {
+      "files": 6,
+      "lines": 812
+    },
+    "platform/request": {
+      "files": 3,
+      "lines": 790
+    },
+    "platform/actions": {
+      "files": 1,
+      "lines": 784
+    },
+    "platform/artifactIntegrations": {
+      "files": 3,
+      "lines": 706
+    },
+    "platform/dialogs": {
+      "files": 1,
+      "lines": 645
+    },
+    "platform/notification": {
+      "files": 2,
+      "lines": 631
+    },
+    "platform/editor": {
+      "files": 1,
+      "lines": 582
+    },
+    "platform/window": {
+      "files": 1,
+      "lines": 580
+    },
+    "platform/workspace": {
+      "files": 3,
+      "lines": 566
+    },
+    "platform/github": {
+      "files": 4,
+      "lines": 565
+    },
+    "platform/externalTerminal": {
+      "files": 2,
+      "lines": 438
+    },
+    "platform/chat": {
+      "files": 2,
+      "lines": 406
+    },
+    "platform/theme": {
+      "files": 1,
+      "lines": 346
+    },
+    "platform/keybinding": {
+      "files": 1,
+      "lines": 275
+    },
+    "platform/assignment": {
+      "files": 1,
+      "lines": 266
+    },
+    "platform/secrets": {
+      "files": 1,
+      "lines": 266
+    },
+    "amdX.ts": {
+      "files": 1,
+      "lines": 246
+    },
+    "nls.ts": {
+      "files": 1,
+      "lines": 245
+    },
+    "platform/progress": {
+      "files": 1,
+      "lines": 237
+    },
+    "platform/shell": {
+      "files": 1,
+      "lines": 223
+    },
+    "platform/markers": {
+      "files": 1,
+      "lines": 220
+    },
+    "platform/dataChannel": {
+      "files": 1,
+      "lines": 192
+    },
+    "platform/sandbox": {
+      "files": 2,
+      "lines": 162
+    },
+    "platform/opener": {
+      "files": 1,
+      "lines": 161
+    },
+    "platform/commands": {
+      "files": 1,
+      "lines": 150
+    },
+    "platform/jsonschemas": {
+      "files": 1,
+      "lines": 144
+    },
+    "platform/sign": {
+      "files": 3,
+      "lines": 133
+    },
+    "platform/product": {
+      "files": 2,
+      "lines": 128
+    },
+    "platform/defaultAccount": {
+      "files": 1,
+      "lines": 110
+    },
+    "platform/label": {
+      "files": 1,
+      "lines": 95
+    },
+    "platform/encryption": {
+      "files": 1,
+      "lines": 72
+    },
+    "platform/path": {
+      "files": 1,
+      "lines": 72
+    },
+    "platform/registry": {
+      "files": 1,
+      "lines": 64
+    },
+    "platform/accessibility": {
+      "files": 1,
+      "lines": 58
+    },
+    "platform/uriIdentity": {
+      "files": 1,
+      "lines": 47
+    }
+  }
+}

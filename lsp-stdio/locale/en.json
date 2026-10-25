@@ -1,0 +1,6 @@
+{
+  "meta": {
+    "title": "Language Server Provider (stdio)",
+    "description": "Provides ctx.lsp and points it at real language servers over stdio, so definition, references, implementation and hover work."
+  }
+}
