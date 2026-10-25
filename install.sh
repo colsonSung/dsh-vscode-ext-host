@@ -85,6 +85,15 @@ if grep -q "id: $ROW_ID" "$PATCH_FILE"; then
   echo "==> the bundle row is already in $PATCH_FILE"
 else
   echo "==> adding the bundle row to $PATCH_FILE"
+  # The profile patch layer is a top-level YAML LIST. A list item may only be
+  # appended to another list, so a file whose entries are not list items would
+  # become invalid YAML. Refuse instead of corrupting the profile.
+  # (An empty list "[]" is the one non-list line that is still a valid list.)
+  if grep -vE '^[[:space:]]*(#.*)?$' "$PATCH_FILE" | grep -qvE '^[[:space:]]*(-|\[\][[:space:]]*$)'; then
+    echo "error: $PATCH_FILE is not a top-level YAML list — refusing to modify it" >&2
+    echo "       the profile patch layer must be a list of loader patch entries" >&2
+    exit 1
+  fi
   # An empty list ("[]") cannot be followed by list items: the profile template
   # starts with one, so the entry replaces it instead of being appended.
   awk -v id="$ROW_ID" -v pkg="$PACKAGE" '
