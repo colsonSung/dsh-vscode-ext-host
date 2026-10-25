@@ -19,16 +19,3 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
-
----
-
-This licence covers the DSH-authored code in this repository: everything under
-`plugin/`, `runtime/`, `packages/`, `lsp-stdio/`, `webview-surface/` and
-`spike/`.
-
-The vendored Microsoft VS Code sources under `vendor/src/` are NOT covered by
-this licence. They are MIT-licensed by Microsoft Corporation and are
-redistributed under the terms of `vendor/LICENSE.vscode.txt`, which is the
-verbatim upstream licence text. See `vendor/ATTRIBUTION.md` for the full
-attribution, the list of MIT obligations and the trademark obligations that
-apply to the "VS Code" name and logo.
