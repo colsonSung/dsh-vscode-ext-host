@@ -65,6 +65,14 @@ The build writes to `dist/` at the repository root and needs the `upstream/` che
 `spike/profile/extensions.json` and `spike/profile/extensions-trust.json` **are**
 committed: they are the sample profile contract the spike was verified against.
 
+## A note on exporting the closure
+
+`vendor/FILELIST.txt` lists exactly the files that belong to the closure — one entry per
+file, with its line count. On a case-insensitive filesystem (macOS) an export can leave
+duplicate `X 2.ts` copies next to `X.ts`; those are filesystem artefacts, not upstream
+content, and they are not part of the closure. `vendor/src` therefore holds exactly the
+files `vendor/FILELIST.txt` lists, and nothing else.
+
 ## Upstream commit
 
 `1184ad4d45794110deb6b897ea83b15aac44ed89` (2026-10-23) — one commit later than the
