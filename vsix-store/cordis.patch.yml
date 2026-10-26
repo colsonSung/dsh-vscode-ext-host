@@ -1,0 +1,3 @@
+- insert:
+    - id: vsix-store
+      name: 'dsh-vsix-store'

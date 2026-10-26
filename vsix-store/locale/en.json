@@ -1,0 +1,6 @@
+{
+  "meta": {
+    "title": "VSIX Extension Store",
+    "description": "Search, verify, install and enable VS Code extension packages (VSIX) for DSH."
+  }
+}

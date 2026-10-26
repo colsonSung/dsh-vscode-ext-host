@@ -1,0 +1,43 @@
+{
+  "name": "dsh-vsix-store",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Store, trust and enable VS Code extension packages (VSIX) for DeepSeek Harness: search Open VSX and the Microsoft Marketplace, verify signatures, and install into the profile.",
+  "icon": "./icon.svg",
+  "exports": {
+    ".": "./index.js",
+    "./locale/*.json": "./locale/*.json",
+    "./icon": "./icon.svg"
+  },
+  "files": [
+    "index.js",
+    "cordis.patch.yml",
+    "icon.svg",
+    "locale/*.json",
+    "src/*.js",
+    "scripts/*.mjs",
+    "README.md"
+  ],
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    }
+  },
+  "license": "MIT",
+  "author": "Ethan Song",
+  "keywords": [
+    "deepseek-harness",
+    "dsh",
+    "plugin",
+    "vsix",
+    "extension-store",
+    "marketplace"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/colsonSung/dsh-vscode-ext-host.git",
+    "directory": "vsix-store"
+  },
+  "homepage": "https://github.com/colsonSung/dsh-vscode-ext-host#readme"
+}

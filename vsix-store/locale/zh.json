@@ -1,0 +1,6 @@
+{
+  "meta": {
+    "title": "VSIX 扩展仓库",
+    "description": "为 DSH 搜索、验签、安装并启用 VS Code 扩展包（VSIX）。"
+  }
+}

@@ -5,7 +5,8 @@
  *  DSH-authored (MIT).
  *
  *  The point of this script is that it uses the VSIX STORE's own modules
- *  (`vsix-store/src/install.js`, `records.js`, `state.js`), so the profile it writes has
+ *  (`vsix-store/src/install.js`, `records.js`, `state.js` — the store bundle that
+ *  ships in THIS repository), so the profile it writes has
  *  exactly the shape the store writes:
  *
  *      <profile>/extensions.json          { extensions: [ ExtensionRecord ] }
@@ -32,9 +33,9 @@ import {
 	discardStagingDirectory,
 	unpackExtension,
 	writeExtensionMetadata,
-} from '../../../vsix-store/src/install.js';
-import { readRecord } from '../../../vsix-store/src/records.js';
-import { writeState, writeTrust } from '../../../vsix-store/src/state.js';
+} from '../../vsix-store/src/install.js';
+import { readRecord } from '../../vsix-store/src/records.js';
+import { writeState, writeTrust } from '../../vsix-store/src/state.js';
 
 const [profileArg, ...rest] = process.argv.slice(2);
 if (!profileArg) {

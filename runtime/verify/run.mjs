@@ -20,16 +20,28 @@
  *--------------------------------------------------------------------------------------------*/
 
 import { execFileSync } from 'node:child_process';
-import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join, resolve } from 'node:path';
 
-import { ExtensionHostRuntime } from '../../bundle/main-host.js';
+import { ExtensionHostRuntime } from '../../plugin/main-host.js';
 
 const HERE = resolve(import.meta.dirname, '.');
 const REPO = resolve(HERE, '../..');
 const WORKSPACE = resolve(REPO, '..');
 const VSIX = resolve(REPO, 'spike/vendor-ext/vscode-yaml.vsix');
+
+// The extension package is a third-party artefact and is not committed, so a fresh
+// clone has to fetch it once. Say where it goes instead of failing with ENOENT.
+if (!existsSync(VSIX)) {
+	console.error('\nThe end-to-end check needs one real extension package, which this repository');
+	console.error('does not carry (it is somebody else\'s artefact, so it is not committed):');
+	console.error(`\n  ${VSIX}\n`);
+	console.error('Download it from the Microsoft Marketplace and put it there:');
+	console.error('  https://marketplace.visualstudio.com/items?itemName=redhat.vscode-yaml\n');
+	console.error('(the file name of the download is vscode-yaml.vsix)');
+	process.exit(1);
+}
 
 /** The failures collected during the run. */
 const failures = [];

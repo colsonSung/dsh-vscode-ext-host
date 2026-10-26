@@ -1,11 +1,15 @@
-# VS Code Extension Host for DeepSeek Harness
+# VS Code extensions for DeepSeek Harness
 
 **Run real VS Code extension packages (VSIX) inside DeepSeek Harness.**
 
-DeepSeek Harness can install third-party VS Code extensions. This plugin is the half that
-makes them *run*: it starts a real, vendored, open source VS Code **extension host** in a
-child process, loads the extensions a profile enables and trusts, and gives the model a
-tool to watch and control that process.
+DeepSeek Harness can install third-party VS Code extensions. This repository ships the
+**two halves** that make that work — one finds and installs the extension, the other makes
+it run:
+
+| Bundle | What it is |
+|---|---|
+| [`dsh-vsix-store`](./vsix-store/) | **finds and installs** — searches Open VSX and the Microsoft Marketplace, verifies the package signature, unpacks it into the profile and owns the publisher trust list |
+| [`dsh-vscode-extension-host`](./plugin/) | **makes it run** — starts a real, vendored, open source VS Code **extension host** in a child process, loads the extensions a profile enables and trusts, and gives the model a tool to watch and control that process |
 
 The extensions stay VSIX packages. They are **not** converted into Cordis bundles, and they
 run inside a genuine VS Code extension host — the same one VS Code itself uses — so an
@@ -14,11 +18,12 @@ author intended.
 
 | | |
 |---|---|
+| **The store** | searches two registries, verifies the signature, unpacks into the profile — the half that makes "installed" possible |
 | **The host** | a child process on DSH's own Node, speaking VS Code's binary RPC protocol (`PersistentProtocol` + `RPCProtocol`) |
 | **The trust gate** | an extension loads only when it is **enabled** *and* its **publisher is trusted** |
 | **Crash recovery** | a crashing host restarts with a backoff; three crashes in five minutes stop the automatic restart (VS Code's own rule) |
 | **The webview surface** | an extension's custom editor is resolved by the host and rendered in DSH's document preview, on its own origin |
-| **The model tool** | `vscode_extension_host` — start / stop / restart the host, read its state and its log |
+| **The model tools** | `vscode_extension` — search, install, remove, enable and trust extensions; `vscode_extension_host` — start / stop / restart the host, read its state and its log |
 
 ## Install
 
@@ -29,14 +34,16 @@ cd dsh-vscode-ext-host
 ```
 
 `install.sh` takes an optional profile name (`./install.sh web`), defaults to `DSH_PROFILE`
-and is idempotent. It **builds the extension host first** (see [Build](#build)), installs the
-package into the profile and adds the bundle row to `<profile>/cordis.patch.yml`.
-**Restart the Harness afterwards** — the host half of a plugin is loaded at start-up.
+and is idempotent. It **builds the extension host first** (see [Build](#build)), installs
+**both** packages into the profile and adds both bundle rows to
+`<profile>/cordis.patch.yml`. **Restart the Harness afterwards** — the host half of a
+plugin is loaded at start-up.
 
 Manual equivalent:
 
 ```bash
 dsh plugin --profile web add ./plugin
+dsh plugin --profile web add ./vsix-store
 ```
 
 ```yaml
@@ -44,6 +51,9 @@ dsh plugin --profile web add ./plugin
 - insert:
     - id: vscode-extension-host
       name: 'dsh-vscode-extension-host'
+- insert:
+    - id: vsix-store
+      name: 'dsh-vsix-store'
 ```
 
 Requirements: Node.js 20 or newer, the `dsh` command on `PATH`, and network access the
@@ -75,6 +85,10 @@ licence travels with the built artefact.
 
 The build **never modifies a vendored file**. Every DSH-specific change lives in
 `runtime/**` or `packages/**`; the upstream tree is bundled byte-identically.
+
+The **store needs no build**: `vsix-store/` is plain ESM JavaScript with **zero npm
+dependencies** — its own zip reader and its signature check are written against the Node
+standard library, so there is nothing to install and nothing to compile.
 
 ## `vendor/` and `upstream/`
 
@@ -123,7 +137,7 @@ Two licences apply, and they cover different trees.
 
 | What | Licence | Where |
 |---|---|---|
-| the DSH-authored code (`plugin/`, `runtime/`, `packages/`, `lsp-stdio/`, `webview-surface/`, `spike/`) | **MIT**, © 2026 Ethan Song | [`LICENSE`](./LICENSE) |
+| the DSH-authored code (`plugin/`, `vsix-store/`, `runtime/`, `packages/`, `lsp-stdio/`, `webview-surface/`, `spike/`) | **MIT**, © 2026 Ethan Song | [`LICENSE`](./LICENSE) |
 | the vendored VS Code sources under `vendor/src/` | **MIT**, © Microsoft Corporation | [`vendor/LICENSE.vscode.txt`](./vendor/LICENSE.vscode.txt) |
 
 The MIT licence requires the copyright notice and the permission notice to be included in
@@ -147,22 +161,29 @@ and the URL scheme is `dsh://` — **not** `vscode://`.
 ## Layout
 
 ```
-plugin/            the installable DeepSeek Harness bundle (host + client)
+plugin/            the installable DeepSeek Harness bundle: the extension host (host + client)
+vsix-store/        the installable DeepSeek Harness bundle: the VSIX store (host only)
 runtime/           the DSH-authored host code and the build scripts
 packages/          the shared protocol package (RPC framing + channel mapping)
 vendor/            the vendored VS Code closure + its licence and attribution
 lsp-stdio/         a second bundle: a stdio LSP provider (optional)
 webview-surface/   the standalone webview bundle (optional, superseded by plugin/)
 spike/             the original spike: bundler, closure exporter, stub audit
-install.sh         one-command install into a profile
+install.sh         one-command install of both bundles into a profile
 ```
 
-`plugin/` is the package `install.sh` installs. `lsp-stdio/` and `webview-surface/` are
-separate DeepSeek Harness bundles that live in the same repository; they are optional.
-The webview surface that the extension host actually uses is `plugin/webview-surface.js` —
-the standalone `webview-surface/` bundle is the earlier, separate shape.
+`plugin/` and `vsix-store/` are the two packages `install.sh` installs. `lsp-stdio/` and
+`webview-surface/` are separate DeepSeek Harness bundles that live in the same repository;
+they are optional. The webview surface that the extension host actually uses is
+`plugin/webview-surface.js` — the standalone `webview-surface/` bundle is the earlier,
+separate shape.
 
-## The model tool
+## The model tools
+
+| tool | bundle | actions |
+|---|---|---|
+| `vscode_extension` | the store | `search`, `install`, `remove`, `list`, `enable`, `trust` |
+| `vscode_extension_host` | the host | `status`, `start`, `stop`, `restart`, `log` |
 
 `vscode_extension_host` exposes the same five actions the Extensions page uses:
 
@@ -172,13 +193,28 @@ the standalone `webview-surface/` bundle is the earlier, separate shape.
 | `start` / `stop` / `restart` | control the host process |
 | `log` | read the host's log lines |
 
+The store's `install` action requires `trust: true`. Installing a third-party extension
+means running arbitrary Node code on the machine, so the tool only installs a package when
+the user confirmed that publisher explicitly — and the publisher then joins the profile's
+trust list.
+
 ## Security
 
 An installed extension is **real third-party code**: it runs with your user's permissions.
-The plugin therefore never implies that "installed" means "loaded" — an extension is only
-loaded when it is enabled *and* its publisher is trusted in
+The repository therefore never implies that "installed" means "loaded" — an extension is
+only loaded when it is enabled *and* its publisher is trusted in
 `<profile>/extensions-trust.json`. See [`SECURITY.md`](./SECURITY.md) for where every piece
 of state lives and how to revoke it.
+
+The trust gate has three layers, and the store is where the first two live:
+
+1. **Source integrity** — an Open VSX package is verified against the registry's own
+   Ed25519 public key, over the **whole `.vsix` byte stream**. The Microsoft Marketplace
+   publishes no signature that can be checked outside Microsoft, so a package from there
+   is trusted by publisher verification alone.
+2. **Publisher trust** — the publisher has to be in `<profile>/extensions-trust.json`.
+   An untrusted publisher is an **error** on the record, and the host does not load it.
+3. **Explicit confirmation** — an install must carry the user's explicit consent.
 
 ## Verification
 
@@ -191,14 +227,26 @@ node runtime/verify/run.mjs
 
 The harness builds a throwaway profile, unpacks a real marketplace extension into it with
 the VSIX store's own installer, starts the host and checks that the extension activates.
-Two of its helpers need files this repository does not carry:
+One of its helpers needs a file this repository does not carry:
 
 * `runtime/verify/vendor/` — a VS Code build downloaded for the draw.io webview check.
   It is a third-party artefact and is not committed; the verification script prints the URL
   it expects.
-* `runtime/verify/setup-profile.mjs` imports the VSIX store's modules from a **sibling
-  checkout** (`../vsix-store/`). It is only used by the verification harness, never by the
-  build or by the installed plugin.
+
+The verification harness uses the store's **own** modules — `vsix-store/src/install.js`,
+`vsix-store/src/records.js`, `vsix-store/src/state.js` — which now live in this
+repository, so the profile the harness writes has exactly the shape the store writes.
+
+The store carries its own checks, in `vsix-store/scripts/`. They never touch a profile;
+everything lands in a temporary directory:
+
+```bash
+node vsix-store/scripts/route-check.mjs                                # HTTP route + model tool
+node vsix-store/scripts/service-check.mjs                              # every store action
+node vsix-store/scripts/search-open-vsx.mjs "hello world" 3           # one live registry search
+node vsix-store/scripts/e2e-install.mjs secureannex hello-world 0.0.1 # download, verify, unpack
+node vsix-store/scripts/verify-signature.mjs secureannex hello-world 0.0.1
+```
 
 ## Development
 

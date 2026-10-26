@@ -20,7 +20,7 @@ import { mkdtempSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 
-const { apply } = await import('../../bundle/index.js');
+const { apply } = await import('../../plugin/index.js');
 
 const profileDir = mkdtempSync(join(tmpdir(), 'dsh-exthost-bundle-'));
 
@@ -31,6 +31,10 @@ const tools = [];
 
 const ctx = {
 	profileContext: { dir: profileDir, name: 'verification' },
+	// The bundle asks the Host for the client module table so it can reload a
+	// rebuilt browser bundle. A verification profile has no open page, so the
+	// table is absent — the bundle treats that as "nothing to reload".
+	get: () => undefined,
 	webServer: {
 		register(route) {
 			routes.push(route);

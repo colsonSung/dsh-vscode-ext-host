@@ -1,8 +1,8 @@
 {
   "name": "dsh-vscode-ext-host",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "private": true,
-  "description": "Source repository for the DeepSeek Harness VS Code extension host plugin: it vendors the open source VS Code extension host and runs real VSIX extensions inside DeepSeek Harness.",
+  "description": "Source repository for the DeepSeek Harness VS Code extension plugins: the VSIX store that finds and verifies extensions, and the vendored open source VS Code extension host that runs them inside DeepSeek Harness.",
   "license": "MIT",
   "author": "Ethan Song",
   "scripts": {
@@ -21,7 +21,9 @@
     "plugin",
     "vscode",
     "extension-host",
-    "vsix"
+    "vsix",
+    "extension-store",
+    "marketplace"
   ],
   "repository": {
     "type": "git",

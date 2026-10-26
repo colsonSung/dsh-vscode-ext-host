@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64" role="img" aria-label="VSIX extension store">
+  <defs>
+    <linearGradient id="vsix-store-body" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#4f7cff"/>
+      <stop offset="1" stop-color="#2b4fd8"/>
+    </linearGradient>
+  </defs>
+  <rect x="8" y="14" width="48" height="38" rx="7" fill="url(#vsix-store-body)"/>
+  <path d="M8 21h48v6H8z" fill="#0f2a86" opacity="0.35"/>
+  <path d="M8 46h48v6H8z" fill="#0f2a86" opacity="0.35"/>
+  <path d="M24 14v38M40 14v38" stroke="#0f2a86" stroke-opacity="0.28" stroke-width="3"/>
+  <path d="M32 22.5 39.5 30 32 37.5 24.5 30z" fill="#ffffff" fill-opacity="0.95"/>
+  <path d="M32 27.5 35.6 30 32 32.5 28.4 30z" fill="#2b4fd8"/>
+  <circle cx="32" cy="48" r="4.5" fill="#ffffff" fill-opacity="0.9"/>
+  <path d="M30.2 48.1 31.6 49.5 34 46.9" fill="none" stroke="#2b4fd8" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

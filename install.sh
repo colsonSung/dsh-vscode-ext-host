@@ -1,24 +1,32 @@
 #!/usr/bin/env bash
 #
-# Install the DeepSeek Harness "VS Code extension host" plugin into a profile.
+# Install the DeepSeek Harness VS Code extension plugins into a profile.
 #
 #   ./install.sh            # the profile the running Harness uses
 #   ./install.sh web        # a named profile
 #
-# The plugin ships as SOURCE: the extension host itself is built from the vendored
-# VS Code closure (see README.md), so this script builds it first when the build
-# products are missing.
+# This repository ships TWO bundles, and they are two halves of one feature:
 #
-# It installs the package into the profile and adds the bundle row to the
-# profile's patch layer. Both steps are idempotent. Restart the Harness
+#   plugin/       dsh-vscode-extension-host   the store's counterpart — makes VSIX run
+#   vsix-store/   dsh-vsix-store              finds, verifies and installs VSIX packages
+#
+# The host half ships as SOURCE: the extension host itself is built from the vendored
+# VS Code closure (see README.md), so this script builds it first when the build
+# products are missing. The store needs no build — it is plain JavaScript.
+#
+# It installs both packages into the profile and adds both bundle rows to the
+# profile's patch layer. Every step is idempotent. Restart the Harness
 # afterwards: the host half of a plugin is loaded at start-up.
 #
 set -euo pipefail
 
 HERE="$(cd "$(dirname "$0")" && pwd)"
-PACKAGE="dsh-vscode-extension-host"
-ROW_ID="vscode-extension-host"
-PLUGIN_DIR="$HERE/plugin"
+
+# The bundles to install, as "<package name>|<patch row id>|<directory>".
+BUNDLES=(
+  "dsh-vscode-extension-host|vscode-extension-host|plugin"
+  "dsh-vsix-store|vsix-store|vsix-store"
+)
 
 PROFILE="${1:-${DSH_PROFILE:-}}"
 if [ -z "$PROFILE" ]; then
@@ -64,11 +72,19 @@ else
   echo "==> the extension host is already built"
 fi
 
-# 2. Install the package into the profile.
-echo "==> installing $PACKAGE into the '$PROFILE' profile"
-dsh plugin --profile "$PROFILE" add "$PLUGIN_DIR"
-
-# 3. Add the bundle row to the profile's patch layer.
+# 2. Check the profile's patch layer BEFORE anything is installed.
+#
+#    The bundle rows go into <profile>/cordis.patch.yml, and that file must be a
+#    top-level YAML list: a list item may only be appended to another list, so
+#    a file whose entries are not list items would become invalid YAML. If the
+#    file cannot take a row, refuse now — before a package is installed into a
+#    profile that then cannot load it.
+#
+#    A top-level list item starts with "-" in column 0; the keys of that item
+#    are indented under it. So a line that starts in column 0 with anything
+#    else (a bare "id: ..." mapping) means the file is NOT a list. The one
+#    exception is an empty list "[]" on its own line — the profile template
+#    starts with one, and it is a valid list.
 if [ ! -d "$PROFILE_DIR" ]; then
   mkdir -p "$PROFILE_DIR"
 fi
@@ -81,49 +97,77 @@ if [ ! -f "$PATCH_FILE" ]; then
 YAML
 fi
 
-if grep -q "id: $ROW_ID" "$PATCH_FILE"; then
-  echo "==> the bundle row is already in $PATCH_FILE"
-else
-  echo "==> adding the bundle row to $PATCH_FILE"
-  # The profile patch layer is a top-level YAML LIST. A list item may only be
-  # appended to another list, so a file whose entries are not list items would
-  # become invalid YAML. Refuse instead of corrupting the profile.
-  # (An empty list "[]" is the one non-list line that is still a valid list.)
-  if grep -vE '^[[:space:]]*(#.*)?$' "$PATCH_FILE" | grep -qvE '^[[:space:]]*(-|\[\][[:space:]]*$)'; then
-    echo "error: $PATCH_FILE is not a top-level YAML list — refusing to modify it" >&2
-    echo "       the profile patch layer must be a list of loader patch entries" >&2
-    exit 1
+if grep -vE '^[[:space:]]*(#.*)?$' "$PATCH_FILE" | grep -qvE '^([[:space:]]|-|\[\][[:space:]]*$)'; then
+  echo "error: $PATCH_FILE is not a top-level YAML list — refusing to modify it" >&2
+  echo "       the profile patch layer must be a list of loader patch entries" >&2
+  exit 1
+fi
+
+# 3. Install every package into the profile.
+for entry in "${BUNDLES[@]}"; do
+  package="${entry%%|*}"
+  rest="${entry#*|}"
+  row_id="${rest%%|*}"
+  directory="${rest#*|}"
+
+  echo "==> installing $package into the '$PROFILE' profile"
+  dsh plugin --profile "$PROFILE" add "$HERE/$directory"
+done
+
+# 4. Add the bundle rows to the profile's patch layer.
+#
+# ensure_bundle_row <row id> <package name>
+#
+# Adds one bundle row to the patch layer, or leaves it alone when the row is
+# already there. The shape of the patch layer was checked in step 2.
+ensure_bundle_row() {
+  local row_id="$1"
+  local package="$2"
+
+  if grep -q "id: $row_id" "$PATCH_FILE"; then
+    echo "==> the bundle row '$row_id' is already in $PATCH_FILE"
+    return 0
   fi
+
+  echo "==> adding the bundle row '$row_id' to $PATCH_FILE"
+
   # An empty list ("[]") cannot be followed by list items: the profile template
   # starts with one, so the entry replaces it instead of being appended.
-  awk -v id="$ROW_ID" -v pkg="$PACKAGE" '
-    /^[[:space:]]*\[\][[:space:]]*$/ && !replaced {
+  awk -v id="$row_id" -v pkg="'$package'" '
+    /^\[\][[:space:]]*$/ && !replaced {
       print "- insert:"
       print "    - id: " id
-      print "      name: '\''" pkg "'\''"
+      print "      name: " pkg
       replaced = 1
       next
     }
     { print }
   ' "$PATCH_FILE" > "$PATCH_FILE.tmp"
-  if grep -q "id: $ROW_ID" "$PATCH_FILE.tmp"; then
+  if grep -q "id: $row_id" "$PATCH_FILE.tmp"; then
     mv "$PATCH_FILE.tmp" "$PATCH_FILE"
   else
     rm -f "$PATCH_FILE.tmp"
     cat >> "$PATCH_FILE" <<YAML
 - insert:
-    - id: $ROW_ID
-      name: '$PACKAGE'
+    - id: $row_id
+      name: '$package'
 YAML
   fi
-fi
+}
+
+for entry in "${BUNDLES[@]}"; do
+  package="${entry%%|*}"
+  rest="${entry#*|}"
+  row_id="${rest%%|*}"
+  ensure_bundle_row "$row_id" "$package"
+done
 
 cat <<DONE
 
 installed
 
   profile  $PROFILE
-  package  $PACKAGE
+  packages dsh-vscode-extension-host (extension host), dsh-vsix-store (VSIX store)
   patch    $PATCH_FILE
 
 Next: restart the DeepSeek Harness. The extension host is loaded at start-up;
