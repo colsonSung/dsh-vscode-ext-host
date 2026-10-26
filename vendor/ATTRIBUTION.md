@@ -45,5 +45,5 @@ Every vendored file keeps its original copyright header:
 
 The bundled extension host has **no runtime npm dependency**: every upstream npm package that
 is reachable from the vendored closure is replaced by a local stub
-(see `runtime/esbuild-config.mjs` → `NPM_STUBS`). Each stub is listed with its
-justification in the comment above it.
+(see `spike/build.mjs` → `NPM_STUBS`). Each stub is listed with its justification in
+`vscode-extension-support/exthost-spike.md`.

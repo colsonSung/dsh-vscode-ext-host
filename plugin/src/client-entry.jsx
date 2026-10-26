@@ -77,7 +77,7 @@ const CSS = `
 `;
 
 /** The stable identity of this preview implementation. */
-const BODY_ID = 'dsh-vscode-extension-host/webview';
+const BODY_ID = '@local/dsh-vscode-extension-host/webview';
 
 /**
  * The suffixes an editor REFUSED to open.

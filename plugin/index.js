@@ -34,7 +34,7 @@ export const inject = ['profileContext', 'webServer', 'connection', 'tools']
 export const ROUTE = '/vscode-extension-host'
 
 /** The id of this bundle's browser half, as the module table knows it. */
-const CLIENT_MODULE_ID = 'dsh-vscode-extension-host'
+const CLIENT_MODULE_ID = '@local/dsh-vscode-extension-host'
 
 /**
  * Apply the plugin.

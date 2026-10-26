@@ -5,10 +5,10 @@
  *
  *  Two artefacts:
  *
- *    plugin/dist/extension-host.js   the CHILD process (CommonJS). It carries the whole
+ *    bundle/dist/extension-host.js   the CHILD process (CommonJS). It carries the whole
  *                                     vendored extension host: 4.4 MiB, zero external runtime
  *                                     dependency.
- *    plugin/main-host.js              the MAIN side (ESM). It carries the RPC framework, the
+ *    bundle/dist/main-host.js         the MAIN side (ESM). It carries the RPC framework, the
  *                                     profile seam, the method registry and the DSH service.
  *
  *  The upstream sources are never modified: every patch lives in `runtime/**` or in
@@ -23,7 +23,7 @@ import { resolve } from 'node:path';
 
 import { ROOT, cjsBanner, sharedOptions } from './esbuild-config.mjs';
 
-const BUNDLE = resolve(ROOT, 'plugin');
+const BUNDLE = resolve(ROOT, 'bundle');
 const DIST = resolve(BUNDLE, 'dist');
 
 mkdirSync(DIST, { recursive: true });

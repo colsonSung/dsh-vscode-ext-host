@@ -1,4 +1,4 @@
-# `dsh-vscode-protocol`
+# `@local/dsh-vscode-protocol`
 
 **纯库**：无 DSH context、无自有 I/O、零第三方运行时依赖、纯 ESM。
 

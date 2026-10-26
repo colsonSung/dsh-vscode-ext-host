@@ -27,7 +27,7 @@
  *   query. Selection is per-query and order-independent; no match throws `LspError`
  *   `LSP_UNAVAILABLE`."
  *
- * @module dsh-lsp-stdio/lsp-service
+ * @module @local/dsh-lsp-stdio/lsp-service
  */
 
 import { LspErrorCode, lspError } from './lsp-error.js'

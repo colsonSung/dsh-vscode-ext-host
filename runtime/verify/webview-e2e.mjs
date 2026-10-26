@@ -31,7 +31,7 @@ import { copyFileSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSy
 import { tmpdir } from 'node:os';
 import { join, resolve } from 'node:path';
 
-import { ExtensionHostRuntime } from '../../plugin/main-host.js';
+import { ExtensionHostRuntime } from '../../bundle/main-host.js';
 import { apply as applyWebviewSurface } from '../../webview-surface/index.js';
 
 const HERE = resolve(import.meta.dirname, '.');

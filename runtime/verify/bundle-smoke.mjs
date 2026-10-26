@@ -20,7 +20,7 @@ import { mkdtempSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 
-const { apply } = await import('../../plugin/index.js');
+const { apply } = await import('../../bundle/index.js');
 
 const profileDir = mkdtempSync(join(tmpdir(), 'dsh-exthost-bundle-'));
 

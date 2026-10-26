@@ -13,7 +13,7 @@
  * encodes the body as UTF-8 before measuring it. The decoder is incremental: a chunk may
  * contain half a header or half a body, and it keeps the remainder for the next `feed()`.
  *
- * @module dsh-lsp-stdio/jsonrpc
+ * @module @local/dsh-lsp-stdio/jsonrpc
  */
 
 /** The header this codec reads and writes. */

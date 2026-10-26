@@ -1,5 +1,5 @@
 {
-  "name": "dsh-vscode-webview-surface",
+  "name": "@local/dsh-vscode-webview-surface",
   "version": "1.0.0",
   "private": true,
   "type": "module",
@@ -28,20 +28,5 @@
   },
   "devDependencies": {
     "esbuild": "^0.28.2"
-  },
-  "license": "MIT",
-  "author": "Ethan Song",
-  "keywords": [
-    "deepseek-harness",
-    "dsh",
-    "plugin",
-    "vscode",
-    "webview"
-  ],
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/colsonSung/dsh-vscode-ext-host.git",
-    "directory": "webview-surface"
-  },
-  "homepage": "https://github.com/colsonSung/dsh-vscode-ext-host#readme"
+  }
 }

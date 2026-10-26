@@ -35,7 +35,7 @@
  * Code has to a server description, and it is what makes "install the language extension
  * and the language works" true.
  *
- * @module dsh-lsp-stdio/extension-servers
+ * @module @local/dsh-lsp-stdio/extension-servers
  */
 
 import { readFile } from 'node:fs/promises'

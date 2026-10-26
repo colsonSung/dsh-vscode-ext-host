@@ -18,7 +18,7 @@
  * A missing server is never reported as an empty result. Every failure path raises an
  * {@link LspError} with a code that says what actually went wrong.
  *
- * @module dsh-lsp-stdio/stdio-provider
+ * @module @local/dsh-lsp-stdio/stdio-provider
  */
 
 import { spawn } from 'node:child_process'

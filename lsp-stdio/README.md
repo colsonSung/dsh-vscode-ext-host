@@ -1,4 +1,4 @@
-# dsh-lsp-stdio — 让 `ctx.lsp` 真的存在
+# @local/dsh-lsp-stdio — 让 `ctx.lsp` 真的存在
 
 这个 bundle 做两件事：
 
@@ -64,7 +64,7 @@ LSP 是 **0 基**、**UTF-16 code unit**。DSH 侧约定是 **1 基**。
 
 ```yaml
 - id: lsp-stdio
-  name: 'dsh-lsp-stdio'
+  name: '@local/dsh-lsp-stdio'
   config:
     positionBase: 1          # 1 = DSH 的一基约定，0 = LSP 原生
     requestTimeoutMs: 15000

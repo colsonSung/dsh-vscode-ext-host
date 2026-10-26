@@ -1,4 +1,4 @@
-# `dsh-vscode-webview-surface`
+# `@local/dsh-vscode-webview-surface`
 
 **Render a VS Code extension's webview in DSH.**
 
@@ -8,7 +8,7 @@ contract with the document preview.
 
 The **protocol** side — the panels the extensions produced, the HTML they put in them, the
 messages they sent — lives in the extension host bundle
-(`dsh-vscode-extension-host`, `runtime/main/methods/webview-*.ts` and
+(`@local/dsh-vscode-extension-host`, `runtime/main/methods/webview-*.ts` and
 `custom-editor-*.ts`). The two halves meet at one Cordis service:
 
 ```

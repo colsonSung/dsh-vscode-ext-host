@@ -43,7 +43,7 @@ const NS = 'vscodeWebviewSurface';
 const ROUTE = '/vscode-ext-host/webview';
 
 /** The stable identity of this preview implementation. */
-const BODY_ID = 'dsh-vscode-webview-surface/webview';
+const BODY_ID = '@local/dsh-vscode-webview-surface/webview';
 
 /** How often the panel's HTML is polled while it is still empty. */
 const PANEL_POLL_MS = 300;

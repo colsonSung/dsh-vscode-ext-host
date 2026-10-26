@@ -7,7 +7,7 @@
  * tell "you did not configure a server" apart from "the server is not installed" apart
  * from "the server hung". Nothing here ever reports success for work that did not happen.
  *
- * @module dsh-lsp-stdio/lsp-error
+ * @module @local/dsh-lsp-stdio/lsp-error
  */
 
 /**

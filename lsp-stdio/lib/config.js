@@ -7,7 +7,7 @@
  * point the TypeScript server at a different executable must not have to restate the other
  * three languages.
  *
- * @module dsh-lsp-stdio/config
+ * @module @local/dsh-lsp-stdio/config
  */
 
 import z from '@deepseek-ai/schemastery'

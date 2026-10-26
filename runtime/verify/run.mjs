@@ -24,7 +24,7 @@ import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync
 import { tmpdir } from 'node:os';
 import { join, resolve } from 'node:path';
 
-import { ExtensionHostRuntime } from '../../plugin/main-host.js';
+import { ExtensionHostRuntime } from '../../bundle/main-host.js';
 
 const HERE = resolve(import.meta.dirname, '.');
 const REPO = resolve(HERE, '../..');

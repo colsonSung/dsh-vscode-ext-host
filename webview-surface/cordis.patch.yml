@@ -1,3 +1,3 @@
 - insert:
     - id: vscode-webview-surface
-      name: 'dsh-vscode-webview-surface'
+      name: '@local/dsh-vscode-webview-surface'
