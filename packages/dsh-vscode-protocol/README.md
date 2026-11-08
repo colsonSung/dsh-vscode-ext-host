@@ -1,46 +1,50 @@
-# `@local/dsh-vscode-protocol`
+# `dsh-vscode-protocol`
 
-**纯库**：无 DSH context、无自有 I/O、零第三方运行时依赖、纯 ESM。
+**A pure library**: no DSH context, no I/O of its own, zero third-party runtime dependencies, pure ESM.
 
-它回答一个问题：**DSH 怎么跟一个真正的 VS Code 扩展宿主说话？**
+It answers one question: **how does DSH talk to a real VS Code extension host?**
 
-答案不是 JSON-RPC 2.0，而是 **VS Code 自己的二进制协议**：
+The answer is not JSON-RPC 2.0 but **VS Code's own binary protocol**:
 
-| 层 | 上游文件（已 vendor，逐字保留） | 说明 |
+| Layer | Upstream file (vendored, kept verbatim) | Notes |
 |---|---|---|
-| 帧 | `base/parts/ipc/common/ipc.net.ts` → `PersistentProtocol` | 13 字节头 `type\|id\|ack\|length`，**消息 id 必须严格连续**，出现空洞会请求重放而不是重新同步 |
-| RPC | `workbench/services/extensions/common/rpcProtocol.ts` → `RPCProtocol` | 请求 / 应答 / 取消三层，跑在 `IMessagePassingProtocol` 之上 |
-| 通道表 | `workbench/api/common/extHost.protocol.ts` → `MainContext` / `ExtHostContext` | 通道名与 `$` 方法名**原样保留**，改一个字符就等于「Unknown method」 |
+| Framing | `base/parts/ipc/common/ipc.net.ts` → `PersistentProtocol` | 13-byte header `type\|id\|ack\|length`; **message ids must be strictly consecutive** — a gap asks for a replay rather than resynchronising |
+| RPC | `workbench/services/extensions/common/rpcProtocol.ts` → `RPCProtocol` | request / response / cancel, running on top of `IMessagePassingProtocol` |
+| Channel table | `workbench/api/common/extHost.protocol.ts` → `MainContext` / `ExtHostContext` | channel names and `$` method names are **kept as-is**; change one character and you get "Unknown method" |
 
-## 导出
+## Exports
 
-| 导出 | 来自 | 作用 |
+| Export | From | Purpose |
 |---|---|---|
-| `PersistentProtocol` / `BufferedEmitter` / `RPCProtocol` / `ProxyIdentifier` | vendor | 传输层与 RPC 框架 |
-| `MainContext` / `ExtHostContext` | vendor | 通道常量表（原样） |
-| `DSH_MAIN_THREAD_CAPABILITY` / `mainThreadCapability()` | DSH | 每个主线程服务在 DSH 里的能力判定 |
-| `StdioSocket` | DSH | 把 Node 的 stdin/stdout 适配成上游的 `ISocket` |
-| `ReadySignalReader` / `writeReadySignalOrStderr()` | DSH | 扩展宿主 ready 握手（fd 3，退化到 stderr） |
-| `buildInitData()` / `toExtId()` / `deriveImplicitActivationEvents()` | DSH | 构造扩展宿主 init payload |
-| `PRODUCT_BRAND` | DSH | 品牌替换表（不得使用 "VS Code" 作产品名，不得使用 `vscode://`） |
+| `PersistentProtocol` / `BufferedEmitter` / `RPCProtocol` / `ProxyIdentifier` | vendor | the transport layer and the RPC framework |
+| `MainContext` / `ExtHostContext` | vendor | the channel constant tables (as-is) |
+| `DSH_MAIN_THREAD_CAPABILITY` / `mainThreadCapability()` | DSH | the capability decision for each main-thread service in DSH |
+| `StdioSocket` | DSH | adapts Node's stdin/stdout to the upstream `ISocket` |
+| `ReadySignalReader` / `writeReadySignalOrStderr()` | DSH | the extension host ready handshake (fd 3, falling back to stderr) |
+| `buildInitData()` / `toExtId()` / `deriveImplicitActivationEvents()` | DSH | builds the extension host init payload |
+| `PRODUCT_BRAND` | DSH | the brand substitution table (must not use "VS Code" as the product name, must not use `vscode://`) |
 
-## 为什么要做 ready 握手
+## Why the ready handshake exists
 
-扩展宿主在 `AbstractExtHostExtensionService._beforeAlmostReadyToRunExtensions()` 里注册 RPC
-actor。在那之前到达的请求会得到 `Unknown actor ExtHostWorkspace`，init RPC 直接丢掉。
+The extension host registers its RPC actors in
+`AbstractExtHostExtensionService._beforeAlmostReadyToRunExtensions()`. A request that arrives before
+that gets `Unknown actor ExtHostWorkspace`, and the init RPC is dropped outright.
 
-尖峰用「重试」绕过；生产化改成**独立于协议帧的显式信号**：子进程在 actor 注册完成后往
-**fd 3** 写一行 `DSH_EXTHOST_READY\n`（fd 3 不可用时退化到 stderr），主侧等到它才发第一个
-init RPC。
+The spike worked around it with retries; the production version uses **an explicit signal independent
+of protocol frames**: once its actors are registered, the child process writes a line
+`DSH_EXTHOST_READY\n` to **fd 3** (falling back to stderr when fd 3 is unavailable), and the main
+side waits for it before sending the first init RPC.
 
-## 关于 vendored 源码
+## On the vendored sources
 
-本包在仓库内构建，编译时会把 `<repo>/vscode-ext-host/vendor/src/vs/**` 内联进
-`dist/index.js`。上游源码**只读、零改动**，版权头逐字保留（构建脚本把每个模块的头注释改写成
-esbuild 的 legal comment 形式，配合 `legalComments: 'inline'` 保留在产物里）。
+This package builds inside the repository, and at compile time inlines
+`vendor/src/vs/**` into `dist/index.js`. The upstream sources are **read-only
+and unmodified**, and their copyright headers are kept verbatim (the build script rewrites each
+module's header comment into esbuild's legal comment form, kept in the artefact with
+`legalComments: 'inline'`).
 
-## 构建
+## Build
 
 ```bash
-cd vscode-ext-host/packages/dsh-vscode-protocol && node build.mjs
+node packages/dsh-vscode-protocol/build.mjs   # from the repository root
 ```

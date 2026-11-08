@@ -272,6 +272,10 @@ former. Each suite exits non-zero on a failure and prints the assertion plus its
 Working and used daily: the store, the host, custom editors, webview views, tree views, status bar,
 commands, the LSP provider, the Extensions view, and 15 of 16 mainstream extensions.
 
+Measured on macOS (darwin/arm64) with Node 22. The host is plain Node and carries no platform
+specific code of its own, but the numbers above are macOS numbers, and the extensions in the
+matrix are the ones that were run.
+
 Known limits, stated rather than hidden: Continue's chat view is blocked by macOS code-signature
 validation of its native SQLite module; `ms-vscode.hexeditor` still fails to activate; the SQLite
 viewer's worker/wasm pair is not served; GitLens' and Data Wrangler's views resolve but paint

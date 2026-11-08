@@ -7,6 +7,57 @@ DSH can install third-party VS Code extensions. This bundle is the half that mak
 loads the extensions the profile enables and trusts, and gives the model a tool to watch and
 control that process.
 
+## It is also the whole VS Code suite
+
+Since 2026-11-07 this bundle is the one bundle behind a profile's VS Code support. Its
+`cordis.patch.yml` inserts four plugin rows:
+
+| row | package | what it owns |
+|---|---|---|
+| `vsix-store` | `dsh-vsix-store` | the extension facts (`extensions.json`, `extensions-trust.json`), the registry search, the install, the trust decision |
+| `vscode-extension-host` | `dsh-vscode-extension-host` | this package: the extension host, the routes, the tool, the webview surface |
+| `lsp-stdio` | `dsh-lsp-stdio` | the `lsp` seam, and one provider per language server |
+| `extension-console` | `dsh-extension-console` | the Extensions view on the Plugins page: one card per extension of the profile, plus the Browse VSCode tab |
+
+The four keep their own packages and their own rows — the store must not die with the
+extension host — but the plugin manager shows **one** entry, and one switch governs the
+suite. The row ids, the route paths and the provided service names did not change, so a
+profile override of any of the four rows and every caller of `/vscode-extensions` keep
+working.
+
+### A profile must install all four packages
+
+The three side packages are no longer bundles, so they are **plain dependencies** of the
+profile: they belong in the profile's `package.json` `dependencies` and **not** in
+`dsh.profile.bundles`. A plain dependency that is not selected is not listed by the plugin
+manager, so the Plugins page still shows one card.
+
+They cannot be carried by this bundle's own `dependencies` alone: **pnpm does not install the
+dependencies of a `link:` package** ([pnpm link](https://pnpm.io/cli/link)), so they would
+be pruned from the profile on the next `pnpm install` and their rows would fail to import.
+The profile's manifest is what installs them:
+
+```jsonc
+"dependencies": {
+  "dsh-vscode-extension-host": "link:.../dsh-vscode-ext-host/plugin",             // the bundle
+  "dsh-vsix-store":            "link:.../dsh-vscode-ext-host/vsix-store",         // a plain dependency
+  "dsh-lsp-stdio":             "link:.../dsh-vscode-ext-host/lsp-stdio",          // a plain dependency
+  "dsh-extension-console":     "link:.../dsh-vscode-ext-host/extension-console"   // a plain dependency
+},
+"dsh": { "profile": { "bundles": ["dsh-vscode-extension-host"] } } // one bundle only
+```
+
+`install.sh` in the repository root does exactly this.
+
+### Why the console's own package keeps its browser half
+
+`dsh-extension-console` stays a package of its own even though its row now lives here:
+its browser half is a client module whose id **is** the package name (`dsh-extension-console`),
+and a package declares one client module. Moving the host half into this bundle would mean
+either rebuilding the console's client under a different id or splitting one plugin across
+two packages. A row's `name` cannot name a file inside this bundle either — the Loader
+resolves a row against the **profile** directory, not the bundle's.
+
 ## What it does
 
 1. **Reads the profile contract** — `<profile>/extensions.json` and
@@ -32,9 +83,14 @@ control that process.
 
 | action | answer |
 |---|---|
-| `status` | `{ ok: true, host: { running, pid?, startedAt?, restarts, lastError?, reason? }, extensions: [{ id, publisher, name, version, active, activatedAt?, error? }], commands, skipped }` |
+| `status` | `{ ok: true, host: { running, pid?, startedAt?, restarts, lastError?, reason? }, extensions: [{ id, publisher, name, version, active, activatedAt?, error? }], commands, statusBar, skipped }` |
 | `start` / `stop` / `restart` | `{ ok: true, host: {...} }` |
 | `log` | `{ ok: true, lines: string[] }` |
+| `command` | `{ ok: true, id, answer }` — runs a command an installed extension contributed, through the extension host |
+| `views` | `{ ok: true, views: [{ viewType, extensionId }] }` — the webview views the loaded extensions registered |
+| `resolveView` | `{ ok: true, handle, viewType, origin }` — asks the extension to fill one view; the webview surface then serves it |
+| `treeChildren` | `{ ok: true, viewId, rows, revision }` — one level of a tree view, `handle` naming the row to expand (omitted for the root) |
+| `panels` | `{ ok: true, panels: [{ handle, title, viewType, extensionId, revision }], origin }` — the webview panels the extensions opened |
 
 `extensions[].id` is `publisher.name@version`, the same shape the VSIX store writes into
 `extensions.json`.
@@ -111,6 +167,70 @@ revision: the HTML answers it in a header, the message route repeats it, and the
 half loads the frame with it — so a rewritten panel is loaded again instead of shown
 stale, and a panel that did NOT change is never loaded twice.
 
+## What has actually been run
+
+Sixteen real packages, installed into the running profile through the store's own pipeline and
+measured in a real browser. The full table, with the reasons for every failure, is in
+[`../docs/extension-matrix.md`](../docs/extension-matrix.md).
+
+| extension | what DSH does with it |
+|---|---|
+| `hediet.vscode-drawio` | the `.drawio` file opens in Draw.io inside the right Sidebar |
+| `tomoki1207.pdf` | the PDF page is painted by the extension's own pdf.js |
+| `GrapeCity.gc-excelviewer` | the CSV opens as a sortable table |
+| `zaaack.markdown-editor` | the markdown file opens in the WYSIWYG editor |
+| `saoudrizwan.claude-dev` (Cline) | opens in the right Sidebar's **Extension views** tab; the chat UI renders |
+| `Continue.continue` | **currently blocked** on macOS: its `node_sqlite3.node` signature has a different Team ID from the DSH process, so activation stops before the chat view registers |
+| `ms-vscode.hexeditor` | `window.tabGroups` now has an answer, but activation still fails later in the extension's telemetry setup |
+| `qwtel.sqlite-viewer` | its webview loads but the grid stays empty (the worker never starts) |
+| `eamodio.gitlens`, `ms-toolsai.datawrangler` | activate and register their views; the views resolve but paint nothing |
+
+The **Extension views** tab is the home for a webview VIEW (the panel an AI chat extension
+lives in). It offers the AI/agent extensions' views (Cline, Continue) and falls back to every
+registered view when none is installed: GitLens' commit details or the hex editor's data
+inspector are parts of an IDE, not standalone products, and listing them made the tab read as
+a dump of internals. Cline is the default. The HTML readiness check uses the DSH-origin panel
+route; the iframe itself still loads from the webview's own origin. A view that produces no
+HTML gets an explicit empty state and a retry, not a silent blank page.
+
+**An extension's login needs a real browser.** `vscode.env.openExternal` arrives as
+`MainThreadWindow.$openUri`, and the handler used to answer `true` without opening anything:
+Cline produced a device code, the caller was told the browser had opened, and nothing
+appeared. The handler now opens `http`/`https` URLs with the operating system's own opener,
+refuses every other scheme (a third-party extension must not launch a local handler), and
+writes both the opened URL and any failure to the host log.
+
+## Opening a file with an extension
+
+This is the point of the bundle, and it is file-shaped, not panel-shaped: an installed
+extension claims file types, and those files open **in the extension's own editor inside the
+right Sidebar**.
+
+1. The extension declares `contributes.customEditors` with the file patterns it claims
+   (Draw.io claims `*.drawio`, `*.dio`, `*.dio.svg`, …).
+2. The Host's manifest route lists those editors, one entry per editor with the suffixes it
+   claims.
+3. This bundle's browser half registers **one renderer per editor** into DSH's document
+   preview, under the extension's own name ("Draw.io", "Draw.io (Binary)"), and a body into
+   the right Sidebar's document slot. An editor with priority `default` wins the file
+   automatically; priority `option` stays in the "Open with" list instead of taking the file
+   away from the built-in viewer.
+4. Opening such a file resolves the custom editor through the extension host, the extension
+   produces its webview, and it renders where DSH shows documents — the right Sidebar.
+
+Editing is the extension's own file access, so it needs no DSH-side editor: the extension
+writes through `vscode.workspace.fs`, and the file on disk changes.
+
+Installing and choosing extensions is **not** done in the right Sidebar: it lives on the
+Plugins page (the `extension-console` row of this bundle), which owns the store, the
+installed list and the Browse VSCode tab.
+
+### Other route actions
+
+The host route also answers `treeChildren` (tree views) and `panels` (open webview panels).
+The **Extension views** tab consumes `views` and `resolveView`; tree views and arbitrary panels
+still have no shipped UI.
+
 ## The browser half reloads itself
 
 The browser half of this bundle is CODE, and a page that is already open still
@@ -124,8 +244,9 @@ having landed.
 
 ## The model tool
 
-`vscode_extension_host` — the same five actions (`status` / `start` / `stop` / `restart` /
-`log`), so the model and the Extensions page drive the same capability.
+`vscode_extension_host` — the same actions the route answers (`status` / `start` / `stop` /
+`restart` / `log`, plus `command` to run an extension's own command), so the model and the
+VS Code page drive the same capability.
 
 ## Logs
 
