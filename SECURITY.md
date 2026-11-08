@@ -2,16 +2,18 @@
 
 ## What this repository runs
 
-This repository ships two bundles, and together they run **third-party VS Code extension
-packages (VSIX) inside DeepSeek Harness**. An installed extension is real extension code:
-it runs in the extension host child process with the permissions of your user account, and
-it can read and write the files it is given. Treat installing an extension the same way
-you would treat installing a program.
+This repository ships one bundle whose four rows run **third-party VS Code extension packages
+(VSIX) inside DeepSeek Harness**. An installed extension is real extension code: it runs in the
+extension host child process with the permissions of your user account, and it can read and write
+the files it is given. Treat installing an extension the same way you would treat installing a
+program.
 
-| Bundle | What it does with third-party code |
+| Row (package) | What it does with third-party code |
 | --- | --- |
-| `dsh-vsix-store` | downloads it, verifies it, unpacks it into the profile, and keeps the publisher trust list |
-| `dsh-vscode-extension-host` | loads it into the extension host and runs it |
+| `vsix-store` (`dsh-vsix-store`) | downloads it, verifies it, unpacks it into the profile, and keeps the publisher trust list |
+| `vscode-extension-host` (`dsh-vscode-extension-host`) | loads it into the extension host and runs it |
+| `extension-console` (`dsh-extension-console`) | lists it and switches it on or off; it never loads it |
+| `lsp-stdio` (`dsh-lsp-stdio`) | starts the language servers an extension declares, as stdio child processes |
 
 ## The trust gate
 
