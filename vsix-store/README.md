@@ -204,9 +204,9 @@ The table lives in `src/capabilities.js` and is queryable (`classifyContribution
     version" is a fact, and asking five more times only turns that fact into a twelve-second wait.
   * An **unreachable host** (connect timeout / ECONNREFUSED / ENOTFOUND) will not answer five more
     times either, and each attempt costs ten seconds — that is **a minute of silence**.
-  * Measured: on this machine, `lookupOpenVsx` asking for a version only the Marketplace had took
-    **12416 ms** before the policy change and **1229 ms** after it (same URL). The whole install path
-    dropped from ~20 s to ~3.5 s as a result.
+  * Measured: on this machine, a `lookupOpenVsx` call for a version that only the Marketplace had
+    took **12416 ms** before the policy change and **1229 ms** after it (same URL). The whole install
+    path dropped from ~20 s to ~3.5 s as a result.
 * **Interactive search has its own budget**: the download path is worth waiting for (`fetchBytes`
   6 × 120 s); search is not — one interactive search is a **6 second timeout, at most 2 attempts**, and
   a fast failure that lets the other registry take over beats leaving someone staring at "searching…"
