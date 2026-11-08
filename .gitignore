@@ -19,6 +19,7 @@ plugin/dist/
 plugin/main-host.js
 plugin/client.js
 webview-surface/client.js
+extension-console/client.js
 packages/dsh-vscode-protocol/dist/
 runtime/fixtures/extension-host-probe.js
 runtime/fixtures/ai-dclass-e2e.mjs

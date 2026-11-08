@@ -82,6 +82,42 @@ export interface LoadedExtension {
 	readonly error?: string;
 }
 
+/** The configuration model the extension host parses at init. */
+export interface ConfigurationApi {
+	/** The model for `$initializeConfiguration`: defaults, user layer, workspace layer. */
+	initData(): unknown;
+}
+
+/** One status bar item an extension published. */
+export interface StatusBarEntry {
+	/** The extension host's stable id for the entry — the strip's slot. */
+	entryId: string;
+	/** The id the extension gave the item, when it gave one. */
+	id?: string;
+	/** The owning extension. */
+	extensionId?: string;
+	/** The accessible name. */
+	name?: string;
+	/** The text, which may carry `$(icon)` placeholders. */
+	text: string;
+	/** The plain text of the tooltip. */
+	tooltip?: string;
+	/** Whether the tooltip is resolved lazily by the extension. */
+	hasTooltipProvider?: boolean;
+	/** The command the item runs when clicked. */
+	command?: { id: string; title?: string };
+	/** The foreground theme colour id. */
+	color?: string;
+	/** The background theme colour id. */
+	backgroundColor?: string;
+	/** Whether the item sits on the left group. */
+	alignLeft: boolean;
+	/** The ordering within the group. */
+	priority?: number;
+	/** The accessible label and role. */
+	accessibilityInformation?: { label?: string; role?: string };
+}
+
 /**
  * The handle a main-thread method module gets as its second argument.
  *
@@ -112,6 +148,24 @@ export interface ExtHostContext {
 	log(message: string): void;
 	/** The commands the extensions registered, by command id. */
 	readonly commands: ReadonlyMap<string, (...args: any[]) => any>;
+	/** Record a tree view an extension registered. */
+	registerTreeView(viewId: string, options: unknown): void;
+	/** Forget a tree view whose provider is gone. */
+	disposeTreeView(viewId: string): void;
+	/** Bump a tree view's revision so the page reloads it. */
+	refreshTreeView(viewId: string): void;
+	/** Record a tree view's title. */
+	setTreeViewTitle(viewId: string, title: string): void;
+	/** Record a tree view's message. */
+	setTreeViewMessage(viewId: string, message: unknown): void;
+	/** Record a tree view's badge. */
+	setTreeViewBadge(viewId: string, badge: unknown): void;
+	/** Record one status bar entry an extension published or changed. */
+	setStatusBarEntry(entry: StatusBarEntry): void;
+	/** Register the configuration model the extension host is initialized with. */
+	setConfigurationApi(api: ConfigurationApi): void;
+	/** Forget one status bar entry whose item is gone. */
+	disposeStatusBarEntry(entryId: string): void;
 	/** The value `activate()` returned for one extension, or `undefined`. */
 	getExtensionExports(id: string): unknown;
 	/** Record that an extension finished activating. */

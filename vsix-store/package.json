@@ -1,5 +1,5 @@
 {
-  "name": "@local/vsix-store",
+  "name": "dsh-vsix-store",
   "version": "1.0.0",
   "private": true,
   "type": "module",
@@ -12,16 +12,10 @@
   },
   "files": [
     "index.js",
-    "cordis.patch.yml",
     "icon.svg",
     "locale/*.json",
     "src/*.js",
     "scripts/*.mjs",
     "README.md"
-  ],
-  "dsh": {
-    "bundle": {
-      "patch": "./cordis.patch.yml"
-    }
-  }
+  ]
 }

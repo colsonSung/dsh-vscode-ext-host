@@ -1,4 +1,4 @@
-   [exthost] [dsh-exthost] pid=65005 node=v22.22.3 argv=["/home/<user>/.openagents/nodejs/bin/node","/home/<user>/workspace/dsh-vscode-ext-host/runtime/fixtures/extension-host-probe.js"]
+   [exthost] [dsh-exthost] pid=65005 node=v22.22.3 argv=["~/.openagents/nodejs/bin/node","<repo>/runtime/fixtures/extension-host-probe.js"]
    [exthost] DSH_EXTHOST_READY
    [exthost] [dsh-exthost] ready (via stderr)
    [dsh warn] [dsh-vscode] the DSH command registry is unavailable; extension commands stay extension-only

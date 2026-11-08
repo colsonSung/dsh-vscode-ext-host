@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64" role="img" aria-label="Extension Console">
+  <g fill="none" stroke="#3D7EFF" stroke-width="3.5" stroke-linejoin="round">
+    <path d="M10 16h18v14H10z" />
+    <path d="M36 16h18v8H36z" />
+    <path d="M36 30h18v18H36z" />
+    <path d="M10 36h18v12H10z" />
+  </g>
+  <g fill="#3D7EFF">
+    <circle cx="28" cy="23" r="3" />
+    <circle cx="45" cy="20" r="3" />
+    <circle cx="45" cy="39" r="3" />
+    <circle cx="19" cy="42" r="3" />
+  </g>
+</svg>

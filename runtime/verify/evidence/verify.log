@@ -1,6 +1,6 @@
 DSH S1 — extension host verification
 node v22.22.3 on darwin/arm64
-workspace: /home/<user>/workspace
+workspace: <workspace>
 
 === 1. END TO END: a real Marketplace extension activates in a throwaway profile ===
   profile: /var/folders/dw/snn6hztx1_1453kpzymhdbl40000gn/T/dsh-exthost-e2e-QvJgdn

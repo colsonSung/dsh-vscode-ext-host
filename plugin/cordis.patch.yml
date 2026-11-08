@@ -1,3 +1,50 @@
+# The VS Code suite: one bundle, four plugin rows.
+#
+# These four plugins were four bundles until 2026-11-07, which meant four entries in the
+# plugin manager, four switches, and four places to look when the VS Code support of a
+# profile was broken. They are one feature, so they are one bundle now:
+#
+# - `vsix-store`     — owns the profile's extension facts (`extensions.json`,
+#                      `extensions-trust.json`), searches the registries, installs and trusts
+#                      a VSIX, and serves the store half of the Extensions page.
+# - `vscode-extension-host` — runs the installed VSIX packages as real extension code inside
+#                      a vendored VS Code extension host, and serves the host half of the
+#                      Extensions page plus the webview surface.
+# - `lsp-stdio`      — provides the `lsp` seam and registers one provider per language
+#                      server, including the servers an installed extension declares.
+# - `extension-console` — the Extensions view on the Plugins page: one card per
+#                      extension of the profile, its rows, its problems and its
+#                      dependencies, plus the Browse VSCode tab over the two registries.
+#
+# The four keep their own packages and their own rows: the store must not die with the
+# extension host, and a user who never wants a language server still gets the store. What
+# they no longer have is four bundles — one switch now governs the whole suite, and the
+# plugin manager shows one entry.
+#
+# The order is the order of dependence: the store owns the extension facts, the extension
+# host reads them, the LSP provider reads them again to find the servers an extension
+# declares, and the console reads the whole profile back through the plugin manager. Nothing
+# here writes at mount time, so the order is a readability choice, not a correctness one.
+#
+# The row ids are the ones the four bundles used, so a profile that overrides any of them
+# (`- id: lsp-stdio` with a `config:`) keeps working.
 - insert:
+    - id: vsix-store
+      name: 'dsh-vsix-store'
     - id: vscode-extension-host
       name: 'dsh-vscode-extension-host'
+    - id: lsp-stdio
+      name: 'dsh-lsp-stdio'
+      config:
+        # 1 = the DSH one-based convention, 0 = the LSP-native zero-based form.
+        positionBase: 1
+        requestTimeoutMs: 15000
+        initializeTimeoutMs: 20000
+        # Language servers an installed VSIX extension declares are picked up automatically
+        # (see the bundle README for the `dsh.lspServer` convention).
+        extensionServers:
+          enabled: true
+          requireTrusted: true
+        servers: []
+    - id: extension-console
+      name: 'dsh-extension-console'

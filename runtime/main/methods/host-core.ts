@@ -24,6 +24,7 @@
  *--------------------------------------------------------------------------------------------*/
 
 import type { ExtHostContext, MainThreadMethodFactory, MainThreadMethods } from '../host-context.js';
+import { openExternal, uriToString } from '../open-external.js';
 import { dshCommandName } from './support.js';
 
 /**
@@ -83,7 +84,10 @@ function buildCoreServices(ctx: any, host: ExtHostContext): Record<string, MainT
 				const extensionId = identifierValue(id);
 				const message = errorText(error);
 				host.markActivationError(extensionId, message);
-				host.log(`MainThreadExtensionService.$onExtensionActivationError(${extensionId}): ${message}`);
+				// The stack is what makes a failing extension diagnosable: the message alone
+				// ("Argument is `undefined` or `null`") says nothing about WHICH API failed.
+				const stack = typeof error?.stack === 'string' ? `\n${String(error.stack).slice(0, 3000)}` : '';
+				host.log(`MainThreadExtensionService.$onExtensionActivationError(${extensionId}): ${message}${stack}`);
 			},
 			'$onExtensionRuntimeError'(id: any, error: any) {
 				const extensionId = identifierValue(id);
@@ -203,8 +207,11 @@ function buildCoreServices(ctx: any, host: ExtHostContext): Record<string, MainT
 					tabs: { groups: [], lastFocusedGroup: undefined },
 				};
 			},
-			'$openUri'() {
-				return true;
+			async '$openUri'(uri: unknown) {
+				// The extension asked for a browser tab (an OAuth login is the common case).
+				// Answering `true` without opening one leaves the extension waiting forever,
+				// so the URL is opened for real and a refusal is reported as `false`.
+				return await openExternal(uriToString(uri), { log: (message) => host.log(message) });
 			},
 			'$asExternalUri'(uri: any) {
 				return uri;

@@ -14,4 +14,5 @@ export { createExtensionHostTool, defineTool } from './tool.js';
 export { resolveProfileExtensions, readExtensionsJson, readTrustJson } from './profile.js';
 export type { ExtensionRecord, ResolvedProfile, SkippedExtension } from './profile.js';
 export { createMethods, createChannelMethods, SERVICES } from './methods/index.js';
+export { isOpenableUrl, openExternal, openerFor, uriToString } from './open-external.js';
 export type { ExtHostContext, ExtensionHostState, LoadedExtension, MainThreadMethodFactory, MainThreadMethods, ResolvedExtension } from './host-context.js';

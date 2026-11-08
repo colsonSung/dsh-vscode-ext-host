@@ -1,6 +1,6 @@
 {
   "meta": {
-    "title": "VS Code 扩展宿主",
-    "description": "在 DSH 里用 vendored 的开源扩展宿主进程运行真实的 VS Code 扩展包。"
+    "title": "VS Code 扩展",
+    "description": "VSIX 扩展仓库（带信任门禁）、把已安装扩展当扩展代码运行的真实 VS Code 扩展宿主、以及 stdio 语言服务器 —— 一个插件，一个开关。"
   }
 }

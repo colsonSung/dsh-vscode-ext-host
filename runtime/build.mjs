@@ -18,12 +18,16 @@
  *--------------------------------------------------------------------------------------------*/
 
 import { build } from 'esbuild';
-import { copyFileSync, mkdirSync, readFileSync, statSync, writeFileSync } from 'node:fs';
+import { copyFileSync, existsSync, mkdirSync, readFileSync, statSync, writeFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 
 import { ROOT, cjsBanner, sharedOptions } from './esbuild-config.mjs';
 
-const BUNDLE = resolve(ROOT, 'bundle');
+// The bundle directory is `bundle/` in the development tree and `plugin/` in the published
+// one. Both trees build from the same sources, so the build finds the directory instead of
+// assuming its name.
+const BUNDLE = ['bundle', 'plugin'].map((name) => resolve(ROOT, name)).find((path) => existsSync(path));
+if (BUNDLE === undefined) throw new Error('the bundle directory is missing: expected bundle/ or plugin/ next to runtime/');
 const DIST = resolve(BUNDLE, 'dist');
 
 mkdirSync(DIST, { recursive: true });

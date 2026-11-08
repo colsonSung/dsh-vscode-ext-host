@@ -12,32 +12,11 @@
   "files": [
     "index.js",
     "lib/",
-    "cordis.patch.yml",
     "locale/*.json",
     "icon.svg",
     "README.md"
   ],
   "dependencies": {
     "@deepseek-ai/schemastery": "~3.18.5"
-  },
-  "dsh": {
-    "bundle": {
-      "patch": "./cordis.patch.yml"
-    }
-  },
-  "license": "MIT",
-  "author": "Ethan Song",
-  "keywords": [
-    "deepseek-harness",
-    "dsh",
-    "plugin",
-    "lsp",
-    "language-server"
-  ],
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/colsonSung/dsh-vscode-ext-host.git",
-    "directory": "lsp-stdio"
-  },
-  "homepage": "https://github.com/colsonSung/dsh-vscode-ext-host#readme"
+  }
 }

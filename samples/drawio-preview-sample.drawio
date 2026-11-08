@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mxfile host="app.diagrams.net" type="device">
+  <diagram id="mmd-sample-1" name="Page-1">
+    <mxGraphModel dx="900" dy="620" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" value="访客提交手机号" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="0">
+          <mxGeometry x="80" y="80" width="160" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="2" value="人脸核身校验" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="0">
+          <mxGeometry x="330" y="80" width="160" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="3" value="实名认证成功" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;" vertex="1" parent="0">
+          <mxGeometry x="580" y="80" width="160" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="4" value="提交手机号" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;" edge="1" parent="0" source="1" target="2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="5" value="核身通过" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;" edge="1" parent="0" source="2" target="3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="6" value="证件与渠道不一致" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="0">
+          <mxGeometry x="330" y="220" width="160" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="7" value="引导重新认证" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;dashed=1;" edge="1" parent="0" source="2" target="6">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

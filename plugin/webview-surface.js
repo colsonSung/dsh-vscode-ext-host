@@ -112,7 +112,9 @@ export function rewriteResourceUrls(html, origin = RESOURCE_PATH) {
 	}
 	const base = String(origin).replace(/\/$/, '');
 	let out = html.replace(
-		/https:\/\/[a-z0-9+.%-]*\.vscode-resource\.vscode-cdn\.net([^"'()\s]*)/gi,
+		// The URL ends at a quote OR at an HTML entity: inside `data-config="{&quot;path&quot;:…}"`
+		// the surrounding JSON is escaped, and a `&` is where the URL stops, not part of it.
+		/https:\/\/[a-z0-9+.%-]*\.vscode-resource\.vscode-cdn\.net([^"'()\s&<>]*)/gi,
 		(_match, tail) => {
 			const withoutQuery = String(tail).split('?')[0];
 			let decoded = withoutQuery;
@@ -129,30 +131,115 @@ export function rewriteResourceUrls(html, origin = RESOURCE_PATH) {
 	// The CSP source of a webview (`webview.cspSource`) points at `https://<id>.vscode-cdn.net`.
 	// There is no such host in DSH, so it becomes the webview's own origin.
 	out = out.replace(/https:\/\/[a-z0-9.%-]*\.vscode-cdn\.net/gi, `${base}/resource`);
+	// An extension may carry its resource URLs inside a JSON attribute — the PDF viewer puts
+	// `{ path: <asWebviewUri> }` into `data-config` percent-encoded, where the `https://` above
+	// does not appear literally. Left alone, the viewer asked for a host that does not exist and
+	// drew its toolbar around a blank page.
+	out = out.replace(
+		/https(?:%3A|:)%2F%2F[^"'()\s&<>]*?\.vscode-resource\.vscode-cdn\.net[^"'()\s&<>]*/gi,
+		(match) => {
+			// The match runs to the end of the attribute; an encoded quote marks where the URL
+			// ends and the JSON around it continues (a URL never contains one).
+			const encoded = match.split(/%22|%27/i)[0];
+			let decoded = encoded;
+			try {
+				decoded = decodeURIComponent(encoded);
+			} catch {
+				/* keep the encoded form when it is not valid percent-encoding */
+			}
+			const path = decoded
+				.replace(/^https?:\/\/[^/]*/i, '')
+				.split('?')[0];
+			return encodeURIComponent(`${base}/resource/${encodeURI(path).replace(/^\//, '')}`) + match.slice(encoded.length);
+		},
+	);
 	return out;
 }
 
 /**
- * Let the extension's own CSP run the injected shim.
+ * Make the extension's own Content-Security-Policy work on the webview's origin.
  *
- * The iframe runs on the WEBVIEW'S OWN ORIGIN, a second loopback listener the Host owns:
- * the extension's script therefore cannot reach the application's DOM, cookies or storage.
- * The CSP relaxation only lets the SHIM run.
+ * The extension writes a policy for VS Code's webview host: it names `webview.cspSource`
+ * (`https://*.vscode-cdn.net`) as a script/style origin, and often starts from
+ * `default-src 'none'`. Neither host exists here — the webview runs on DSH's own loopback
+ * origin — so the policy has to be rebuilt, not patched:
+ *
+ *   - every `*.vscode-cdn.net` source becomes the webview's own origin;
+ *   - `'none'` is dropped from a directive that also needs to allow something (a source
+ *     list of `'unsafe-inline' 'none'` is invalid, and the browser throws the whole
+ *     directive away — that is how a PDF viewer ended up with a toolbar and no page);
+ *   - a repeated directive is merged into one, because a browser applies the FIRST
+ *     `script-src` and ignores the rest.
+ *
+ * What stays closed: `default-src 'none'` is kept, so anything this policy does not name is
+ * still refused.
  *
  * @param {string} html - the extension's HTML.
- * @returns {string} the relaxed HTML.
+ * @param {string} origin - the webview's own origin.
+ * @returns {string} the HTML with the rebuilt policy.
  */
-export function relaxCsp(html) {
+export function relaxCsp(html, origin = '') {
 	if (typeof html !== 'string') {
 		return '';
 	}
+	const self = origin.length > 0 ? [origin] : ["'self'"];
+	// The attribute may be quoted either way, and the policy itself is full of single quotes:
+	// the capture has to end at the SAME quote that opened the attribute.
 	return html.replace(
-		/(<meta\s+http-equiv=["']Content-Security-Policy["']\s+content=["'])([^"']*)(["'])/gi,
-		(match, open, policy, close) => {
-			if (/script-src/i.test(policy)) {
-				return `${open}${policy.replace(/script-src([^;]*)/i, (_m, rest) => `script-src${rest} 'unsafe-inline'`)}${close}`;
+		/(<meta\s+http-equiv=["']Content-Security-Policy["']\s+content=)(["'])([^]*?)\2/gi,
+		(match, open, quote, policy) => {
+			/** The directives of the extension's policy, merged by name. */
+			const directives = new Map();
+			for (const part of policy.split(';')) {
+				const pieces = part.trim().split(/\s+/).filter((piece) => piece.length > 0);
+				if (pieces.length === 0) {
+					continue;
+				}
+				const name = pieces[0].toLowerCase();
+				const sources = directives.get(name) ?? [];
+				for (const source of pieces.slice(1)) {
+					const rewritten = /vscode-cdn\.net/i.test(source) ? (origin.length > 0 ? origin : "'self'") : source;
+					if (!sources.includes(rewritten)) {
+						sources.push(rewritten);
+					}
+				}
+				directives.set(name, sources);
 			}
-			return `${open}${policy}; script-src 'unsafe-inline'${close}`;
+			/**
+			 * Make one directive allow the sources DSH needs.
+			 *
+			 * @param {string} name - the directive.
+			 * @param {Array<string>} needed - the sources to guarantee.
+			 */
+			const allow = (name, needed) => {
+				const current = directives.get(name);
+				if (current === undefined) {
+					directives.set(name, [...needed]);
+					return;
+				}
+				if (current.length === 1 && current[0].toLowerCase() === "'none'") {
+					directives.set(name, [...needed]);
+					return;
+				}
+				const filtered = current.filter((source) => source.toLowerCase() !== "'none'");
+				for (const source of needed) {
+					if (!filtered.includes(source)) {
+						filtered.push(source);
+					}
+				}
+				directives.set(name, filtered);
+			};
+			allow('script-src', ["'unsafe-inline'", ...self]);
+			allow('style-src', ["'unsafe-inline'", ...self]);
+			allow('img-src', [...self, 'data:', 'blob:']);
+			allow('font-src', [...self, 'data:']);
+			allow('media-src', [...self, 'blob:', 'data:']);
+			allow('connect-src', [...self]);
+			allow('worker-src', [...self, 'blob:']);
+			const rebuilt = [...directives.entries()]
+				.map(([name, sources]) => [name, ...sources].join(' ').trim())
+				.join('; ');
+			return `${open}${quote}${rebuilt}${quote}`;
 		},
 	);
 }
@@ -253,7 +340,7 @@ class WebviewSurface {
 	 */
 	setHtml(handle, html) {
 		const panel = this.panels.get(handle) ?? { handle, viewType: '', extensionId: '', title: '' }
-		panel.html = injectShim(relaxCsp(rewriteResourceUrls(html, this.origin())))
+		panel.html = injectShim(relaxCsp(rewriteResourceUrls(html, this.origin()), this.origin()))
 		// The revision counts the rewrites: an extension replaces the HTML of a webview it
 		// already has (draw.io does it when the colour scheme changes), and the browser
 		// half has to notice that the panel it shows is no longer the one it fetched.
@@ -437,7 +524,11 @@ class WebviewSurface {
 				})
 			}
 		}
-		return { editors, suffixes: [...suffixes]}
+		// The webview VIEWS the loaded extensions registered. DSH has no view
+		// container, so the right-Sidebar page lists them and asks for one by
+		// type; the resolution itself goes through the extension host.
+		const views = [...this.views.values()]
+		return { editors, suffixes: [...suffixes], views }
 	}
 
 	/**
@@ -595,19 +686,53 @@ class WebviewSurface {
 	}
 
 	/**
-	 * Read a static file of an extension.
+	 * Every directory the resource route may read.
 	 *
-	 * The file has to live inside the `extension/` subtree of a LOADED extension. Anything
-	 * else is refused: the route takes an absolute path, and without this check it would be
-	 * a read-any-file primitive.
+	 * Two kinds, both from the extension side:
+	 *
+	 *   1. the `extension/` directory of every loaded extension — its own scripts, styles
+	 *      and images;
+	 *   2. every `localResourceRoots` entry a webview declared through `$setOptions`. A
+	 *      viewer extension loads the FILE it previews through `webview.asWebviewUri(...)`,
+	 *      so a route that only served the extension's own directory left those webviews
+	 *      blank: the PDF viewer drew its toolbar and no page, because the `.pdf` the
+	 *      extension asked for was refused.
+	 *
+	 * Roots are the extension's own declaration, which is the same trust model as VS Code:
+	 * an extension can already read any file through `vscode.workspace.fs`.
+	 *
+	 * @returns {Array<string>} the resolved roots.
+	 */
+	resourceRoots() {
+		const roots = []
+		for (const extension of this.extensions()) {
+			roots.push(resolve(extension.extensionPath))
+		}
+		for (const panel of this.panels.values()) {
+			const declared = panel.options?.localResourceRoots
+			for (const entry of Array.isArray(declared) ? declared : []) {
+				const path = typeof entry === 'string' ? entry : entry?.path
+				if (typeof path === 'string' && path.length > 0) {
+					roots.push(resolve(path))
+				}
+			}
+		}
+		return roots
+	}
+
+	/**
+	 * Read a file a webview asked for.
+	 *
+	 * The file has to live inside one of {@link resourceRoots}. Anything else is refused:
+	 * the route takes an absolute path, and without this check it would be a
+	 * read-any-file primitive.
 	 *
 	 * @param {string} absolutePath - the absolute path of the file.
 	 * @returns {{ bytes: Buffer, contentType: string } | undefined} the file, or undefined.
 	 */
 	resource(absolutePath) {
 		const target = resolve(String(absolutePath))
-		for (const extension of this.extensions()) {
-			const root = resolve(extension.extensionPath)
+		for (const root of this.resourceRoots()) {
 			if (target !== root && !target.startsWith(root + sep)) {
 				continue
 			}

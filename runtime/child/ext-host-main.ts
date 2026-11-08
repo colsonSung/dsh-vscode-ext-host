@@ -39,15 +39,30 @@ import '../../vendor/src/vs/workbench/api/node/extHost.node.services.js';
 /** The environment variable the host hands the init payload to the child in. */
 export const INIT_DATA_ENV = 'DSH_EXTHOST_INIT_DATA';
 
+/** The environment variable naming the FILE the host wrote the init payload to. */
+export const INIT_DATA_FILE_ENV = 'DSH_EXTHOST_INIT_FILE';
+
 /**
- * Read the init payload the host put into the environment.
+ * Read the init payload.
+ *
+ * The payload carries every installed extension's MANIFEST, and a manifest can be big:
+ * GitLens declares 1196 commands and its `package.json` alone is 900 KiB. Passed through the
+ * environment, a profile with a handful of real extensions exceeds the operating system's
+ * limit and `spawn` fails with E2BIG before the host exists. So the host writes the payload
+ * to a file and names it; the environment remains as the fallback for small payloads and for
+ * the fixtures that still spawn the child that way.
  *
  * @returns the payload.
  */
 function readInitData(): IExtensionHostInitData {
+	const file = process.env[INIT_DATA_FILE_ENV];
+	if (file) {
+		const { readFileSync } = require('node:fs') as typeof import('node:fs');
+		return JSON.parse(readFileSync(file, 'utf8')) as IExtensionHostInitData;
+	}
 	const raw = process.env[INIT_DATA_ENV];
 	if (!raw) {
-		throw new Error(`${INIT_DATA_ENV} is missing; the extension host was started without an init payload`);
+		throw new Error(`${INIT_DATA_FILE_ENV} and ${INIT_DATA_ENV} are both missing; the extension host was started without an init payload`);
 	}
 	return JSON.parse(raw) as IExtensionHostInitData;
 }
@@ -113,6 +128,25 @@ async function main(): Promise<void> {
 	process.on('SIGTERM', () => shutdown('SIGTERM'));
 	process.on('SIGINT', () => shutdown('SIGINT'));
 }
+
+// A misbehaving extension must not take the whole host down.
+//
+// Node exits on an uncaught exception or an unhandled rejection, and an extension's own code
+// can produce either: `donjayamanne.githistory` (a 2021 webpack bundle) throws while its module
+// is evaluated, which killed the process before any file could be opened. VS Code's host treats
+// such an error as "this extension failed", logs it and keeps serving the rest, so a handler is
+// installed here: the error goes to the log the host reads and the process lives on. The
+// activation that produced it has already failed and is reported through the activation path.
+const reportUnexpected = (kind: string) => (error: unknown) => {
+	try {
+		const text = (error as Error)?.stack ?? String(error);
+		writeSync(2, `[dsh-exthost] ${kind}: ${text}\n`);
+	} catch {
+		// The log is gone; there is nothing left to report to.
+	}
+};
+process.on('uncaughtException', reportUnexpected('uncaught exception'));
+process.on('unhandledRejection', reportUnexpected('unhandled rejection'));
 
 main().catch((error) => {
 	writeSync(2, `[dsh-exthost] fatal: ${(error as Error)?.stack ?? String(error)}\n`);

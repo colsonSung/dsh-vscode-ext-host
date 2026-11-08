@@ -1,6 +1,6 @@
 {
   "meta": {
-    "title": "VS Code Extension Host",
-    "description": "Run real VS Code extension packages inside DSH in a vendored, open source extension host process."
+    "title": "VS Code Extensions",
+    "description": "A VSIX store with trust gating, a real VS Code extension host that runs the installed extensions as extension code, and a stdio language-server provider — one plugin, one switch."
   }
 }

@@ -73,6 +73,8 @@ interface ConfigurationLayer {
 export default function createConfigurationMethods(ctx: any, host: ExtHostContext): Record<string, (...args: any[]) => any> {
 	/** The DEFAULTS layer, built from the extensions' `contributes.configuration`. */
 	const defaults = emptyLayer()
+	/** The contributed schema and owner of each property, by full key. */
+	const schemas = new Map<string, { schema: any; extensionId: string }>()
 	/** The USER layer — the values the user set. */
 	const userLayer = emptyLayer()
 	/** The WORKSPACE layer — DSH has no workspace folder, so this is the same store. */
@@ -136,6 +138,7 @@ export default function createConfigurationMethods(ctx: any, host: ExtHostContex
 				if (!properties || typeof properties !== 'object') { continue }
 				for (const [key, schema] of Object.entries(properties as Record<string, any>)) {
 					if (!schema || typeof schema !== 'object') { continue }
+					schemas.set(key, { schema, extensionId: String((extension as any)?.id ?? '') })
 					if (!('default' in schema)) { continue }
 					setValue(defaults, key, schema.default)
 				}
@@ -155,7 +158,7 @@ export default function createConfigurationMethods(ctx: any, host: ExtHostContex
 	 */
 	function initData(): any {
 		const model = (layer: ConfigurationLayer) => ({
-			contents: { ...layer.contents },
+			contents: nestContents(layer.contents),
 			keys: [...layer.keys],
 			overrides: [],
 		})
@@ -225,6 +228,9 @@ export default function createConfigurationMethods(ctx: any, host: ExtHostContex
 		return undefined
 	}
 
+	const api = { initData }
+	host.setConfigurationApi(api as any)
+
 	// Load the persisted values and publish the defaults as soon as the host is ready.
 	loadPersisted()
 	collectDefaults()
@@ -268,6 +274,35 @@ export default function createConfigurationMethods(ctx: any, host: ExtHostContex
 			await pushWithRetry([key])
 		},
 	}
+}
+
+/**
+ * Nest flat dotted keys into the tree the extension host parses.
+ *
+ * `IConfigurationModel.contents` is a NESTED object: the extension host looks a section up
+ * by walking `contents.dshProbe.greeting`, so a flat `{'dshProbe.greeting': …}` map is
+ * invisible to `workspace.getConfiguration('dshProbe').get('greeting')` — every extension
+ * would read `undefined` for every setting it declares.
+ *
+ * @param flat - the flat dotted map this module keeps.
+ * @returns the nested tree.
+ */
+function nestContents(flat: Record<string, unknown>): Record<string, unknown> {
+	const root: Record<string, unknown> = {}
+	for (const [key, value] of Object.entries(flat)) {
+		const parts = key.split('.')
+		let node: Record<string, unknown> = root
+		for (let index = 0; index < parts.length - 1; index++) {
+			const part = parts[index]
+			const next = node[part]
+			if (next === null || typeof next !== 'object') {
+				node[part] = {}
+			}
+			node = node[part] as Record<string, unknown>
+		}
+		node[parts[parts.length - 1]] = value
+	}
+	return root
 }
 
 /**

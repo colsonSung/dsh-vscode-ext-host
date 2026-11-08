@@ -1,0 +1,6 @@
+{
+  "meta": {
+    "title": "Extension Console",
+    "description": "An Extensions view over the profile's plugins: switch a whole extension on or off, read what it depends on, and recover one that failed to load."
+  }
+}

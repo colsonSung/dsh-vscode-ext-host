@@ -15,15 +15,15 @@ PASS  T2c extensions are normalized consistently
 PASS  T3a a missing executable raises LSP_SERVER_NOT_INSTALLED
       raised LSP_SERVER_NOT_INSTALLED
 PASS  T4a goToDefinition returns a location with one-based positions
-      {"kind":"locations","locations":[{"uri":"file:///workspace/src/answer.ts","range":{"start":{"line":5,"character":3},"end":{"line":5,"character":9}}}],"resolvedWorkspaceUri":"file:///home/<user>/workspace/dsh-vscode-ext-host/lsp-stdio/runtime/verify/tmp"}
+      {"kind":"locations","locations":[{"uri":"file:///workspace/src/answer.ts","range":{"start":{"line":5,"character":3},"end":{"line":5,"character":9}}}],"resolvedWorkspaceUri":"file://<repo>/lsp-stdio/runtime/verify/tmp"}
 PASS  T4b findReferences returns every reference
-      [{"uri":"file:///home/<user>/workspace/dsh-vscode-ext-host/lsp-stdio/runtime/verify/tmp/sample.ts","range":{"start":{"line":2,"character":1},"end":{"line":2,"character":5}}},{"uri":"file:///home/<user>/workspace/dsh-vscode-ext-host/lsp-stdio/runtime/verify/tmp/sample.ts","range":{"start":{"line":7,"character":5},"end":{"line":7,"character":9}}}]
+      [{"uri":"file://<repo>/lsp-stdio/runtime/verify/tmp/sample.ts","range":{"start":{"line":2,"character":1},"end":{"line":2,"character":5}}},{"uri":"file://<repo>/lsp-stdio/runtime/verify/tmp/sample.ts","range":{"start":{"line":7,"character":5},"end":{"line":7,"character":9}}}]
 PASS  T4c hover returns the server contents
       {"kind":"hover","hover":{"contents":"**answer**: the answer","range":{"start":{"line":4,"character":1},"end":{"line":4,"character":7}}}}
 PASS  T4d a method the server does not implement raises LSP_UNSUPPORTED_OPERATION
       raised LSP_UNSUPPORTED_OPERATION
 PASS  T4e the result carries the resolved workspace uri
-      file:///home/<user>/workspace/dsh-vscode-ext-host/lsp-stdio/runtime/verify/tmp
+      file://<repo>/lsp-stdio/runtime/verify/tmp
 PASS  T5a a server that never answers raises LSP_TIMEOUT
       raised LSP_TIMEOUT
 PASS  T6a an unreadable file raises LSP_INVALID_REQUEST

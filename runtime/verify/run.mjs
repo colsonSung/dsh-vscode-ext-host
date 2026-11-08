@@ -20,11 +20,11 @@
  *--------------------------------------------------------------------------------------------*/
 
 import { execFileSync } from 'node:child_process';
-import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { cpSync, existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join, resolve } from 'node:path';
 
-import { ExtensionHostRuntime } from '../../bundle/main-host.js';
+import { ExtensionHostRuntime } from '../../plugin/main-host.js';
 
 const HERE = resolve(import.meta.dirname, '.');
 const REPO = resolve(HERE, '../..');
@@ -122,7 +122,9 @@ async function endToEnd() {
 	console.log(`  host: running=${payload.host.running} pid=${payload.host.pid} restarts=${payload.host.restarts}`);
 	console.log(`  extensions: ${JSON.stringify(payload.extensions)}`);
 
-	const activated = payload.extensions.find((entry) => entry.id === 'redhat.vscode-yaml@2.1.2026102308');
+	// Match the extension, not one build of it: the VSIX is a third-party artefact the reader
+	// downloads, so pinning its version here fails the check whenever the Marketplace ships a newer one.
+	const activated = payload.extensions.find((entry) => entry.publisher === 'redhat' && entry.name === 'vscode-yaml');
 	check(
 		'the extension host loaded redhat.vscode-yaml',
 		payload.extensions.some((entry) => entry.publisher === 'redhat'),
@@ -146,6 +148,46 @@ async function endToEnd() {
 		'the command "jumpToSchema" is registered in the DSH command registry',
 		dshCommand !== undefined,
 		`DSH command registry: ${JSON.stringify(registered.map((definition) => definition.name))}`,
+	);
+
+	// A command an extension contributed must be runnable, not just listed: the
+	// VS Code page and the model tool both dispatch through `runCommand`.
+	let refused = '';
+	try {
+		await runtime.runCommand('dsh.does.not.exist');
+	} catch (error) {
+		refused = error instanceof Error ? error.message : String(error);
+	}
+	check(
+		'an unknown command is refused with its own message',
+		refused.includes('no extension registered the command'),
+		`refusal: ${JSON.stringify(refused)}`,
+	);
+
+	// A webview view a profile has no extension for is refused, not faked.
+	let viewRefusal = '';
+	try {
+		await runtime.resolveWebviewView('dsh.does.not.exist');
+	} catch (error) {
+		viewRefusal = error instanceof Error ? error.message : String(error);
+	}
+	check(
+		'an unregistered webview view is refused with its own message',
+		viewRefusal.includes('no extension registered the webview view'),
+		`refusal: ${JSON.stringify(viewRefusal)}`,
+	);
+
+	let dispatched;
+	let failed = '';
+	try {
+		dispatched = await runtime.runCommand('jumpToSchema');
+	} catch (error) {
+		failed = error instanceof Error ? error.message : String(error);
+	}
+	check(
+		'the extension command is dispatched into the extension host',
+		failed === '' || !failed.includes('no extension registered'),
+		`answer=${JSON.stringify(dispatched)} error=${JSON.stringify(failed)}`,
 	);
 
 	await runtime.stop();
@@ -309,6 +351,141 @@ async function enableStateChange() {
 	rmSync(profileDir, { recursive: true, force: true });
 }
 
+/**
+ * Run the tree-view check.
+ *
+ * A tree view is the contribution kind DSH had no seat for at all: the extension
+ * registers a `TreeDataProvider` and the rows only exist when someone asks. This
+ * section proves the whole lazy chain — registration, root rows, one expanded row —
+ * against a real extension host and a throwaway profile.
+ *
+ * @returns {Promise<void>} after the check.
+ */
+async function treeViews() {
+	console.log('\n=== 5. TREE VIEWS: a TreeDataProvider reaches DSH, lazily ===');
+	const profileDir = mkdtempSync(join(tmpdir(), 'dsh-exthost-tree-'));
+	const directory = join(profileDir, 'extensions', 'dsh-probe.tree-probe-1.0.0');
+	mkdirSync(join(directory, 'extension'), { recursive: true });
+	cpSync(join(HERE, '..', 'fixtures', 'tree-view-extension'), join(directory, 'extension'), { recursive: true });
+	writeFileSync(join(profileDir, 'extensions.json'), JSON.stringify({
+		extensions: [{
+			id: 'dsh-probe.tree-probe@1.0.0',
+			kind: 'vsix',
+			publisher: 'dsh-probe',
+			name: 'tree-probe',
+			version: '1.0.0',
+			directory,
+			enabled: true,
+			trusted: true,
+			installed: true,
+		}],
+	}));
+	writeFileSync(join(profileDir, 'extensions-trust.json'), JSON.stringify({ publishers: { 'dsh-probe': true } }));
+
+	const registered = [];
+	const runtime = new ExtensionHostRuntime(fakeCtx(profileDir, registered));
+	await runtime.start();
+
+	const ready = await waitFor(() => runtime.treeViewList().length > 0, 20_000);
+	check(
+		'the extension registered its tree view',
+		ready && runtime.treeViewList().some((entry) => entry.viewId === 'dshProbe.tree'),
+		`tree views: ${JSON.stringify(runtime.treeViewList())}`,
+	);
+
+	let root;
+	try {
+		root = await runtime.treeChildren('dshProbe.tree');
+	} catch (error) {
+		root = { rows: [], error: error instanceof Error ? error.message : String(error) };
+	}
+	check(
+		'the root rows come back from the provider',
+		Array.isArray(root.rows) && root.rows.length === 2 && root.rows[0]?.label?.label === 'alpha',
+		`rows: ${JSON.stringify(root.rows).slice(0, 400)}`,
+	);
+	const expandable = (root.rows ?? []).find((row) => row?.collapsibleState > 0);
+	check(
+		'a row that can expand carries its handle',
+		typeof expandable?.handle === 'string' && expandable.handle.length > 0,
+		`handle: ${JSON.stringify(expandable?.handle)}`,
+	);
+	let children = { rows: [] };
+	if (typeof expandable?.handle === 'string') {
+		children = await runtime.treeChildren('dshProbe.tree', expandable.handle);
+	}
+	check(
+		'expanding that row fetches only its children',
+		children.rows.length === 2 && children.rows.every((row) => row?.parentHandle === expandable.handle),
+		`children: ${JSON.stringify(children.rows).slice(0, 400)}`,
+	);
+	const bound = (root.rows ?? []).find((row) => row?.command !== undefined);
+	check(
+		'a row that carries a command names it',
+		typeof bound?.command?.id === 'string' && bound.command.originalId === 'dshProbe.say',
+		`command: ${JSON.stringify(bound?.command ?? {})}`,
+	);
+
+	let unknown = '';
+	try {
+		await runtime.treeChildren('dshProbe.nothing');
+	} catch (error) {
+		unknown = error instanceof Error ? error.message : String(error);
+	}
+	check(
+		'an unregistered tree view is refused with its own message',
+		unknown.includes('no extension registered the tree view'),
+		`refusal: ${JSON.stringify(unknown)}`,
+	);
+
+	// Editing: an extension reads and writes a real file through `vscode.workspace.fs`,
+	// which is the half of "open the file with the extension" the preview cannot show.
+	const writtenPath = await runtime.runCommand('dshProbe.writeFile');
+	check(
+		'an extension writes a file into the workspace',
+		typeof writtenPath === 'string' && existsSync(writtenPath),
+		`path: ${JSON.stringify(writtenPath)}`,
+	);
+	const readBack = await runtime.runCommand('dshProbe.readFile');
+	check(
+		'the file it wrote reads back through the same API',
+		readBack === 'written by the probe extension',
+		`content: ${JSON.stringify(readBack)}`,
+	);
+
+	// The same fixture also publishes a status bar item: DSH owns the strip.
+	const statusBar = runtime.statusBarEntries();
+	const probeItem = statusBar.find((entry) => entry.text.includes('probe ok'));
+	check(
+		'the status bar item reaches DSH with its text',
+		probeItem !== undefined,
+		`status bar: ${JSON.stringify(statusBar)}`,
+	);
+	check(
+		'the status bar item carries the command it runs',
+		probeItem?.command?.id !== undefined,
+		`command: ${JSON.stringify(probeItem?.command ?? {})}`,
+	);
+	check(
+		'the status bar item keeps its tooltip',
+		typeof probeItem?.tooltip === 'string' && probeItem.tooltip.includes('tree probe'),
+		`tooltip: ${JSON.stringify(probeItem?.tooltip)}`,
+	);
+	// The configuration model is sent at init, so an extension reads the DEFAULT its own
+	// manifest declares instead of `undefined`. (There is no settings editor: this is the
+	// extension-facing half of configuration.)
+	const greeting = await runtime.runCommand('dshProbe.readSetting');
+	check(
+		'an extension reads the default its manifest declares',
+		greeting === 'hello',
+		`value: ${JSON.stringify(greeting)}`,
+	);
+
+
+	await runtime.stop();
+	rmSync(profileDir, { recursive: true, force: true });
+}
+
 console.log('DSH S1 — extension host verification');
 console.log(`node ${process.version} on ${process.platform}/${process.arch}`);
 console.log(`workspace: ${WORKSPACE}`);
@@ -317,6 +494,7 @@ await endToEnd();
 await crashRecovery();
 await trustGate();
 await enableStateChange();
+await treeViews();
 
 console.log('\n=== RESULT ===');
 if (failures.length === 0) {

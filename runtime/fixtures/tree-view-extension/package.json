@@ -1,0 +1,62 @@
+{
+  "name": "tree-probe",
+  "displayName": "DSH Tree View Probe",
+  "description": "A minimal VS Code extension that contributes one tree view, used to verify the DSH right-Sidebar tree rendering path.",
+  "publisher": "dsh-probe",
+  "version": "1.0.0",
+  "engines": {
+    "vscode": "^1.95.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "main": "./extension.js",
+  "activationEvents": [
+    "onView:dshProbe.tree"
+  ],
+  "contributes": {
+    "views": {
+      "explorer": [
+        {
+          "id": "dshProbe.tree",
+          "name": "DSH Probe"
+        }
+      ]
+    },
+    "configuration": {
+      "title": "DSH Probe",
+      "properties": {
+        "dshProbe.greeting": {
+          "type": "string",
+          "default": "hello",
+          "description": "The greeting the probe returns."
+        },
+        "dshProbe.loud": {
+          "type": "boolean",
+          "default": false,
+          "description": "Whether the greeting is shouted."
+        },
+        "dshProbe.level": {
+          "type": "number",
+          "default": 2,
+          "minimum": 0,
+          "maximum": 5,
+          "description": "How loud the probe is."
+        },
+        "dshProbe.mode": {
+          "type": "string",
+          "enum": [
+            "fast",
+            "careful"
+          ],
+          "enumDescriptions": [
+            "Run at once",
+            "Check twice"
+          ],
+          "default": "fast",
+          "description": "The probe's mode."
+        }
+      }
+    }
+  }
+}

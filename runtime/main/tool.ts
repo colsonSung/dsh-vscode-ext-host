@@ -115,6 +115,40 @@ export function defineTool(options: {
 	};
 }
 
+/**
+ * Make a value lossless JSON.
+ *
+ * The tool result must survive the harness's lossless-JSON check, which rejects
+ * `undefined` members, functions, cycles, `NaN` and `Infinity`. The host payload is a
+ * plain object graph whose OPTIONAL fields are exactly that: `undefined` when the host is
+ * not running, has no error, and so on. Dropping those members is what makes the payload
+ * answerable instead of rejected — and it is also what VS Code's own protocol does.
+ *
+ * @param value - the value to clean.
+ * @returns the cleaned value.
+ */
+export function toLosslessJson(value: unknown): unknown {
+	if (value === null) return null;
+	if (typeof value === 'undefined') return undefined;
+	if (typeof value === 'number') return Number.isFinite(value) ? value : null;
+	if (typeof value === 'function' || typeof value === 'symbol' || typeof value === 'bigint') return undefined;
+	if (Array.isArray(value)) {
+		return value.map((item) => {
+			const cleaned = toLosslessJson(item);
+			return cleaned === undefined ? null : cleaned;
+		});
+	}
+	if (typeof value === 'object') {
+		const out: Record<string, unknown> = {};
+		for (const [key, item] of Object.entries(value as Record<string, unknown>)) {
+			const cleaned = toLosslessJson(item);
+			if (cleaned !== undefined) out[key] = cleaned;
+		}
+		return out;
+	}
+	return value;
+}
+
 const DESCRIPTION = [
 	'Control the VS Code extension host of this DSH profile.',
 	'',
@@ -129,6 +163,7 @@ const DESCRIPTION = [
 	'- stop: stop the extension host.',
 	'- restart: restart the extension host.',
 	'- log: read the tail of the extension host log.',
+	'- command: run one command an installed extension contributed, by its id.',
 ].join('\n');
 
 /**
@@ -146,11 +181,15 @@ export function createExtensionHostTool(runtime: ExtensionHostRuntime): object {
 				type: 'string',
 				required: true,
 				description: 'What to do with the extension host.',
-				enum: ['status', 'start', 'stop', 'restart', 'log'],
+				enum: ['status', 'start', 'stop', 'restart', 'log', 'command'],
 			},
 			lines: {
 				type: 'integer',
 				description: 'How many log lines to read. Only for the log action. Defaults to 200.',
+			},
+			command: {
+				type: 'string',
+				description: 'The command id to run, as the status action lists it. Only for the command action.',
 			},
 		},
 		output: {
@@ -179,20 +218,20 @@ export function createExtensionHostTool(runtime: ExtensionHostRuntime): object {
 						summary: payload.host.running
 							? `The extension host runs (pid ${payload.host.pid ?? 'unknown'}) with ${payload.extensions.length} extension(s) loaded, ${payload.extensions.filter((entry) => entry.active).length} activated.`
 							: `The extension host is not running${payload.host.lastError ? `: ${payload.host.lastError}` : '.'}`,
-						data: { ...payload, commands },
+						data: toLosslessJson({ ...payload, commands }) as Record<string, unknown>,
 					};
 				}
 				case 'start': {
 					const host = await runtime.start();
-					return { action, ok: true, summary: host.running ? 'The extension host is running.' : `The extension host did not start: ${host.lastError ?? 'unknown reason'}`, data: { host } };
+					return { action, ok: true, summary: host.running ? 'The extension host is running.' : `The extension host did not start: ${host.lastError ?? 'unknown reason'}`, data: toLosslessJson({ host }) as Record<string, unknown> };
 				}
 				case 'stop': {
 					const host = await runtime.stop();
-					return { action, ok: true, summary: 'The extension host is stopped.', data: { host } };
+					return { action, ok: true, summary: 'The extension host is stopped.', data: toLosslessJson({ host }) as Record<string, unknown> };
 				}
 				case 'restart': {
 					const host = await runtime.restart();
-					return { action, ok: true, summary: host.running ? 'The extension host was restarted.' : `The extension host did not restart: ${host.lastError ?? 'unknown reason'}`, data: { host } };
+					return { action, ok: true, summary: host.running ? 'The extension host was restarted.' : `The extension host did not restart: ${host.lastError ?? 'unknown reason'}`, data: toLosslessJson({ host }) as Record<string, unknown> };
 				}
 				case 'log': {
 					const count = typeof args.lines === 'number' ? Math.min(Math.max(args.lines, 1), 5000) : 200;
@@ -203,6 +242,28 @@ export function createExtensionHostTool(runtime: ExtensionHostRuntime): object {
 						summary: lines.length === 0 ? 'The extension host log is empty.' : lines.slice(-5).join('\n'),
 						data: { lines },
 					};
+				}
+				case 'command': {
+					const id = typeof args.command === 'string' ? args.command.trim() : '';
+					if (id.length === 0) {
+						return { action, ok: false, summary: 'The command action needs a command id.', data: {} };
+					}
+					try {
+						const answer = await runtime.runCommand(id);
+						return {
+							action,
+							ok: true,
+							summary: `The command "${id}" ran${typeof answer === 'string' && answer.length > 0 ? `: ${answer}` : '.'}`,
+							data: { id, answer },
+						};
+					} catch (error) {
+						return {
+							action,
+							ok: false,
+							summary: `The command "${id}" failed: ${error instanceof Error ? error.message : String(error)}`,
+							data: { id },
+						};
+					}
 				}
 				default:
 					return { action, ok: false, summary: `Unknown action "${action}".`, data: {} };

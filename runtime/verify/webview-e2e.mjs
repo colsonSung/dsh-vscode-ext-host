@@ -27,18 +27,25 @@
  *--------------------------------------------------------------------------------------------*/
 
 import { execFileSync } from 'node:child_process';
-import { copyFileSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { dirname } from 'node:path';
+import { copyFileSync, existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join, resolve } from 'node:path';
 
-import { ExtensionHostRuntime } from '../../bundle/main-host.js';
-import { apply as applyWebviewSurface } from '../../webview-surface/index.js';
+import { ExtensionHostRuntime } from '../../plugin/main-host.js';
+// The surface the BUNDLE ships, not the legacy standalone package: the bundle's copy is the
+// one the plugin mounts (and the one that knows per-editor suffixes and local resource roots).
+import { apply as applyWebviewSurface, relaxCsp, rewriteResourceUrls } from '../../plugin/webview-surface.js';
 
 const HERE = resolve(import.meta.dirname, '.');
 const REPO = resolve(HERE, '../..');
 const WORKSPACE = resolve(REPO, '..');
 const VSIX = resolve(HERE, 'vendor/hediet.vscode-drawio-1.17.261024055.vsix');
-const SAMPLE = resolve(WORKSPACE, 'drawio-preview-sample.drawio');
+// The sample diagram is committed under `samples/`, so a fresh clone can run this suite; the
+// older location next to the repository is only a fallback for an existing development tree.
+const SAMPLE = existsSync(resolve(REPO, 'samples/drawio-preview-sample.drawio'))
+	? resolve(REPO, 'samples/drawio-preview-sample.drawio')
+	: resolve(WORKSPACE, 'drawio-preview-sample.drawio');
 
 /** The failures collected during the run. */
 const failures = [];
@@ -113,6 +120,13 @@ function fakeCtx(profileDir, registered) {
 		/** The routes the surface registered, for the test to call. */
 		routes,
 	};
+}
+
+/** Fetch a URL over real HTTP, the way a browser does. */
+async function fetchHttp(url) {
+	const response = await fetch(url);
+	const text = await response.text();
+	return { status: response.status, headers: response.headers, text };
 }
 
 /**
@@ -199,6 +213,7 @@ copyFileSync(SAMPLE, diagram);
 const registered = [];
 const ctx = fakeCtx(profileDir, registered);
 applyWebviewSurface(ctx);
+const surface = ctx.get('vscodeWebviewSurface');
 
 const runtime = new ExtensionHostRuntime(ctx);
 await runtime.start();
@@ -260,9 +275,13 @@ if (handle === undefined) {
 // -------------------------------------------------------------------------------------------
 console.log('\n=== 3. HTML: the extension produced the webview ===');
 // -------------------------------------------------------------------------------------------
+// The iframe loads the panel from the webview's OWN origin, so that is where the test reads it:
+// the HTML under test is the HTML a browser would actually execute.
+const webviewOrigin = surface.origin();
+console.log(`  webview origin: ${webviewOrigin}`);
 let html = '';
 for (let attempt = 0; attempt < 40; attempt += 1) {
-	const panel = await callRoute(ctx.routes, '/vscode-ext-host/webview/panel/', 'GET', `/vscode-ext-host/webview/panel/${handle}`);
+	const panel = await fetchHttp(`${webviewOrigin}/panel/${encodeURIComponent(handle)}`);
 	html = panel.text;
 	if (html.length > 0) {
 		break;
@@ -270,7 +289,6 @@ for (let attempt = 0; attempt < 40; attempt += 1) {
 	await new Promise((resolvePromise) => setTimeout(resolvePromise, 250));
 }
 console.log(`  html: ${html.length} characters`);
-console.log(`  head: ${html.slice(0, 400).replace(/\n/g, ' ')}`);
 check(
 	'the extension produced the webview HTML',
 	html.length > 0,
@@ -287,37 +305,95 @@ check(
 	'the vscode-cdn.net host does not appear in the HTML',
 );
 check(
-	'the HTML points at DSH\'s own resource route',
-	html.includes('/vscode-ext-host/webview/resource/'),
-	'the resource route appears in the HTML',
+	"the HTML points at DSH's own resource route",
+	html.includes(`${webviewOrigin}/resource/`),
+	`expected ${webviewOrigin}/resource/ in the HTML`,
 );
 
 // -------------------------------------------------------------------------------------------
-console.log('\n=== 4. RESOURCE: the extension\'s own files are served ===');
+console.log("\n=== 4. RESOURCE: the extension's own files are served ===");
 // -------------------------------------------------------------------------------------------
-const resourceMatch = /\/vscode-ext-host\/webview\/resource\/([^"'\s)]+)/.exec(html);
+const resourceMatch = /\/resource\/([^"'()\s]+)/.exec(html);
 check(
 	'the HTML names a resource of the extension',
 	resourceMatch !== null,
-	resourceMatch === null ? 'no resource URL in the HTML' : resourceMatch[1].slice(0, 120),
+	resourceMatch === null ? 'no resource URL in the HTML' : `resource: ${decodeURIComponent(resourceMatch[1]).slice(0, 120)}`,
 );
-if (resourceMatch !== null) {
-	const wanted = decodeURIComponent(resourceMatch[1]);
-	const resource = await callRoute(ctx.routes, '/vscode-ext-host/webview/resource/', 'GET', `/vscode-ext-host/webview/resource/${resourceMatch[1]}`);
-	console.log(`  wanted: ${wanted}`);
-	console.log(`  served: ${resource.status} ${resource.headers['content-type']} ${resource.text.length} bytes`);
-	check(
-		'the resource of the extension is served',
-		resource.status === 200 && resource.text.length > 0,
-		`status=${resource.status} bytes=${resource.text.length} type=${resource.headers['content-type']}`,
-	);
-	const outside = await callRoute(ctx.routes, '/vscode-ext-host/webview/resource/', 'GET', `/vscode-ext-host/webview/resource/${encodeURIComponent('/etc/passwd')}`);
-	check(
-		'a file OUTSIDE the extension is refused',
-		outside.status === 404,
-		`status=${outside.status} body=${outside.text.slice(0, 80)}`,
-	);
-}
+const resourcePath = resourceMatch === null ? '' : decodeURIComponent(resourceMatch[1]);
+const served = await fetchHttp(`${webviewOrigin}/resource/${encodeURIComponent(resourcePath)}`);
+console.log(`  served: ${served.status} ${served.headers.get('content-type')} ${served.text.length} bytes`);
+check(
+	'the resource of the extension is served',
+	served.status === 200 && served.text.length > 0,
+	`status=${served.status} bytes=${served.text.length} type=${served.headers.get('content-type')}`,
+);
+// An extension may carry the URL inside a JSON attribute (the PDF viewer's `data-config`),
+// where `https://` is percent-encoded and the literal rewrite above cannot see it.
+const encodedHtml = `<div data-config="${encodeURIComponent(JSON.stringify({ path: 'https://file+.vscode-resource.vscode-cdn.net/tmp/sample.pdf' }))}"></div>`;
+const rewritten = rewriteResourceUrls(encodedHtml, webviewOrigin);
+const rewrittenConfig = JSON.parse(decodeURIComponent(/data-config="([^"]*)"/.exec(rewritten)[1]));
+check(
+	'a percent-encoded resource URL is rewritten too',
+	rewrittenConfig.path === `${webviewOrigin}/resource/tmp/sample.pdf`,
+	`path: ${rewrittenConfig.path}`,
+);
+// A URL inside an HTML-escaped attribute ends at `&quot;`: a rewrite that runs past it eats
+// the JSON around the URL and leaves the extension unable to parse its own config.
+const escapedConfig = `<meta id="cfg" data-config="{&quot;path&quot;:&quot;https://file+.vscode-resource.vscode-cdn.net/tmp/x.pdf&quot;,&quot;other&quot;:{&quot;flag&quot;:true}}" />`;
+const escapedOut = rewriteResourceUrls(escapedConfig, webviewOrigin);
+const escapedJson = JSON.parse(escapedOut.match(/data-config="([^"]*)"/)[1].replace(/&quot;/g, '"'));
+check(
+	'an HTML-escaped config attribute survives the rewrite',
+	escapedJson.path === `${webviewOrigin}/resource/tmp/x.pdf` && escapedJson.other.flag === true,
+	`config: ${JSON.stringify(escapedJson)}`,
+);
+
+// The policy of a webview is full of single quotes inside a double-quoted attribute, and a
+// source list of `'unsafe-inline' 'none'` is invalid: the browser drops the whole directive.
+const rawPolicy = "default-src 'none'; connect-src 'self' https://*.vscode-cdn.net; script-src 'unsafe-inline' 'self' https://*.vscode-cdn.net; style-src 'unsafe-inline' 'self' https://*.vscode-cdn.net; img-src blob: data: 'self' https://*.vscode-cdn.net;";
+const relaxedPolicy = /content="([^"]*)"/.exec(relaxCsp(`<meta http-equiv="Content-Security-Policy" content="${rawPolicy}">`, webviewOrigin))[1];
+check(
+	'the rebuilt policy keeps every directive valid',
+	relaxedPolicy.includes("default-src 'none'") && /script-src [^;]*'unsafe-inline'[^;]*/.test(relaxedPolicy) && !/'unsafe-inline''none'|blob:'none'/.test(relaxedPolicy),
+	`policy: ${relaxedPolicy.slice(0, 220)}`,
+);
+check(
+	'the rebuilt policy lets the webview load its own scripts',
+	relaxedPolicy.includes(webviewOrigin),
+	`policy: ${relaxedPolicy.slice(0, 220)}`,
+);
+
+const refused = await fetchHttp(`${webviewOrigin}/resource/${encodeURIComponent('/etc/passwd')}`);
+check(
+	'a file OUTSIDE the extension is refused',
+	refused.status === 404,
+	`status=${refused.status} body=${refused.text.slice(0, 80)}`,
+);
+
+// A VIEWER extension loads the file it previews through `webview.asWebviewUri(...)` and
+// declares the directory as a `localResourceRoots` entry. The route has to serve that file
+// too, or the webview draws its chrome around nothing (a PDF viewer did exactly that).
+const beforeRoot = await fetchHttp(`${webviewOrigin}/resource/${encodeURIComponent(diagram)}`);
+check(
+	'a file the webview did not declare is refused',
+	beforeRoot.status === 404,
+	`status=${beforeRoot.status} path=${diagram}`,
+);
+surface.setOptions(handle, {
+	localResourceRoots: [{ $mid: 1, scheme: 'file', path: dirname(diagram) }],
+});
+const declared = await fetchHttp(`${webviewOrigin}/resource/${encodeURIComponent(diagram)}`);
+check(
+	'a file the webview declared as a local root is served',
+	declared.status === 200 && declared.text.length > 0,
+	`status=${declared.status} type=${declared.headers.get('content-type')} bytes=${declared.text.length}`,
+);
+const outsideAgain = await fetchHttp(`${webviewOrigin}/resource/${encodeURIComponent('/etc/passwd')}`);
+check(
+	'declaring one root does not open every file',
+	outsideAgain.status === 404,
+	`status=${outsideAgain.status}`,
+);
 
 // -------------------------------------------------------------------------------------------
 console.log('\n=== 5. MESSAGES: both directions of the webview channel ===');

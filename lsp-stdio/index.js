@@ -27,7 +27,7 @@
  *    violation — each raises an `LspError` with its own code. Nothing ever answers with an
  *    empty result for work that did not happen.
  *
- * @module @local/dsh-lsp-stdio
+ * @module dsh-lsp-stdio
  */
 
 import { Config, DEFAULT_SERVERS, resolveServers } from './lib/config.js'

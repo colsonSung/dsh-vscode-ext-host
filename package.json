@@ -1,16 +1,18 @@
 {
   "name": "dsh-vscode-ext-host",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "private": true,
-  "description": "Source repository for the DeepSeek Harness VS Code extension plugins: the VSIX store that finds and verifies extensions, and the vendored open source VS Code extension host that runs them inside DeepSeek Harness.",
+  "description": "Run real VS Code extension packages (VSIX) inside DeepSeek Harness: a vendored open source VS Code extension host, the store that installs extensions, a stdio language-server provider and the Extensions view — one plugin suite, four plugin rows.",
   "license": "MIT",
   "author": "Ethan Song",
   "scripts": {
-    "build": "npm run build:host && npm run build:protocol && npm run build:client && npm run build:webview",
+    "build": "npm run build:host && npm run build:protocol && npm run build:client && npm run build:console && npm run build:webview",
     "build:host": "node runtime/build.mjs",
     "build:protocol": "node packages/dsh-vscode-protocol/build.mjs",
     "build:client": "node plugin/build-client.mjs",
-    "build:webview": "node webview-surface/build.mjs"
+    "build:console": "node extension-console/build.mjs",
+    "build:webview": "node webview-surface/build.mjs",
+    "verify": "node runtime/verify/run.mjs && node runtime/verify/webview-e2e.mjs && node runtime/verify/bundle-smoke.mjs && node runtime/verify/client-preview.mjs && node runtime/verify/view-tab.mjs"
   },
   "devDependencies": {
     "esbuild": "^0.24.0"

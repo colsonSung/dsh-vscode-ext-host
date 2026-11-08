@@ -31,6 +31,8 @@ const TARGET = resolve(VENDOR, `${PUBLISHER}.${NAME}-${VERSION}.vsix`);
 
 const QUERY_URL = 'https://marketplace.visualstudio.com/_apis/public/gallery/extensionquery';
 const ASSET_URL = `https://${PUBLISHER}.gallerycdn.vsassets.io/extensions/${PUBLISHER}/${NAME}/${VERSION}/${ASSET_TIMESTAMP}/Microsoft.VisualStudio.Services.VSIXPackage`;
+// The direct download endpoint keeps serving a build the gallery index has stopped listing.
+const DIRECT_URL = `https://marketplace.visualstudio.com/_apis/public/gallery/publishers/${PUBLISHER}/vsextensions/${NAME}/${VERSION}/vspackage`;
 
 mkdirSync(VENDOR, { recursive: true });
 
@@ -68,10 +70,12 @@ if (extension === undefined) {
 }
 const version = extension.versions?.find((entry) => entry.version === VERSION);
 if (version === undefined) {
-	throw new Error(`the Marketplace does not have version ${VERSION} of "${PUBLISHER}.${NAME}"`);
+	// The index only advertises the versions it still lists; the pinned build is fetched from the
+	// direct endpoint, which keeps serving it.
+	console.log(`[fetch] the index no longer lists ${VERSION}; using the direct download endpoint`);
 }
-const asset = version.files?.find((file) => file.assetType === 'Microsoft.VisualStudio.Services.VSIXPackage');
-const url = asset?.source ?? ASSET_URL;
+const asset = version?.files?.find((file) => file.assetType === 'Microsoft.VisualStudio.Services.VSIXPackage');
+const url = asset?.source ?? (version === undefined ? DIRECT_URL : ASSET_URL);
 console.log(`[fetch] downloading ${url}`);
 
 const response = await fetch(url);

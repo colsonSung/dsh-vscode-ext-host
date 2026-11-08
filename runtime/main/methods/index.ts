@@ -86,6 +86,8 @@ import createCustomEditorDocumentsMethods from './custom-editor-documents.js';
 import createWebviewPanelsMethods from './webview-panels.js';
 import createWebviewsMethods from './webview-content.js';
 import createWebviewViewsMethods from './webview-views.js';
+import { createTreeViewsMethods } from './tree-views.js';
+import { createStatusBarMethods } from './status-bar.js';
 
 /**
  * One main-thread service: the channel it owns and the factory that builds its handlers.
@@ -155,6 +157,15 @@ export const SERVICES: MainThreadService[] = [
 	{ channel: 'MainThreadWebviewPanels', create: createWebviewPanelsMethods },
 	{ channel: 'MainThreadWebviews', create: createWebviewsMethods },
 	{ channel: 'MainThreadWebviewViews', create: createWebviewViewsMethods },
+
+	// --- tree views ---------------------------------------------------------------------------
+	// An extension's TreeDataProvider is lazy: the registration is recorded here and the
+	// rows are pulled on demand by the right-Sidebar VS Code page.
+	{ channel: 'MainThreadTreeViews', create: createTreeViewsMethods },
+
+	// --- status bar ---------------------------------------------------------------------------
+	// The right-Sidebar VS Code page owns the strip the workbench would have shown.
+	{ channel: 'MainThreadStatusBar', create: createStatusBarMethods },
 
 	// --- D-class: the AI services -------------------------------------------------------------------
 	// The channel is the `MainContext` KEY NAME. `MainThreadLanguageModelTools` is the key;

@@ -13,7 +13,7 @@
  *     └── dsh-extension.json          the store's own metadata
  * ```
  *
- * @module @local/dsh-lsp-stdio/paths
+ * @module dsh-lsp-stdio/paths
  */
 
 import { join } from 'node:path'

@@ -1,7 +1,9 @@
 import { build } from 'esbuild';
-import { dirname, resolve } from 'node:path';
+import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
+// npm runs this script from the repository root, so the paths are anchored to this file
+// rather than to the working directory.
 const HERE = dirname(fileURLToPath(import.meta.url));
 
 const wrap = () => ({
@@ -27,8 +29,8 @@ await build({
   minify: true,
   logLevel: 'info',
   jsx: 'automatic',
-  entryPoints: [resolve(HERE, 'src/client-entry.jsx')],
-  outfile: resolve(HERE, 'client.js'),
+  entryPoints: [join(HERE, 'src/client-entry.jsx')],
+  outfile: join(HERE, 'client.js'),
   // The platform module table owns these; the client resolves them at runtime.
   external: ['react', 'react/jsx-runtime', 'react-dom', 'react-dom/client'],
   ...wrap(),

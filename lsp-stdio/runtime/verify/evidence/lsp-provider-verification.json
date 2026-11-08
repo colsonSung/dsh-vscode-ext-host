@@ -50,12 +50,12 @@
     {
       "name": "T4a goToDefinition returns a location with one-based positions",
       "ok": true,
-      "detail": "{\"kind\":\"locations\",\"locations\":[{\"uri\":\"file:///workspace/src/answer.ts\",\"range\":{\"start\":{\"line\":5,\"character\":3},\"end\":{\"line\":5,\"character\":9}}}],\"resolvedWorkspaceUri\":\"file:///home/<user>/workspace/dsh-vscode-ext-host/lsp-stdio/runtime/verify/tmp\"}"
+      "detail": "{\"kind\":\"locations\",\"locations\":[{\"uri\":\"file:///workspace/src/answer.ts\",\"range\":{\"start\":{\"line\":5,\"character\":3},\"end\":{\"line\":5,\"character\":9}}}],\"resolvedWorkspaceUri\":\"file://<repo>/lsp-stdio/runtime/verify/tmp\"}"
     },
     {
       "name": "T4b findReferences returns every reference",
       "ok": true,
-      "detail": "[{\"uri\":\"file:///home/<user>/workspace/dsh-vscode-ext-host/lsp-stdio/runtime/verify/tmp/sample.ts\",\"range\":{\"start\":{\"line\":2,\"character\":1},\"end\":{\"line\":2,\"character\":5}}},{\"uri\":\"file:///home/<user>/workspace/dsh-vscode-ext-host/lsp-stdio/runtime/verify/tmp/sample.ts\",\"range\":{\"start\":{\"line\":7,\"character\":5},\"end\":{\"line\":7,\"character\":9}}}]"
+      "detail": "[{\"uri\":\"file://<repo>/lsp-stdio/runtime/verify/tmp/sample.ts\",\"range\":{\"start\":{\"line\":2,\"character\":1},\"end\":{\"line\":2,\"character\":5}}},{\"uri\":\"file://<repo>/lsp-stdio/runtime/verify/tmp/sample.ts\",\"range\":{\"start\":{\"line\":7,\"character\":5},\"end\":{\"line\":7,\"character\":9}}}]"
     },
     {
       "name": "T4c hover returns the server contents",
@@ -70,7 +70,7 @@
     {
       "name": "T4e the result carries the resolved workspace uri",
       "ok": true,
-      "detail": "file:///home/<user>/workspace/dsh-vscode-ext-host/lsp-stdio/runtime/verify/tmp"
+      "detail": "file://<repo>/lsp-stdio/runtime/verify/tmp"
     },
     {
       "name": "T5a a server that never answers raises LSP_TIMEOUT",

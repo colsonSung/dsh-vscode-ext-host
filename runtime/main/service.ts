@@ -157,6 +157,65 @@ export class ExtensionHostRuntime {
 	}
 
 	/**
+	 * The names of the views the installed extensions contribute.
+	 *
+	 * @returns the view types with their title and their extension's name.
+	 */
+	viewTitles(): Array<{ viewType: string; title: string; extensionName: string }> {
+		return this._host.viewTitles();
+	}
+
+	/**
+	 * The status bar entries the loaded extensions published.
+	 *
+	 * @returns the entries, in the strip's order.
+	 */
+	statusBarEntries(): Array<{ entryId: string; text: string; tooltip?: string; command?: { id: string; title?: string }; alignLeft: boolean; priority?: number }> {
+		return this._host.statusBarEntries();
+	}
+
+	/**
+	 * The tree views the loaded extensions registered.
+	 *
+	 * @returns the registrations.
+	 */
+	treeViewList(): Array<{ viewId: string; title?: string; message?: unknown; revision: number }> {
+		return this._host.treeViewList();
+	}
+
+	/**
+	 * Read one tree view's children.
+	 *
+	 * @param viewId - the contributed view id.
+	 * @param handle - the tree item handle to expand, or undefined for the root.
+	 * @returns the rows and the view's revision.
+	 */
+	async treeChildren(viewId: string, handle?: string): Promise<{ viewId: string; rows: unknown[]; revision: number }> {
+		return await this._host.treeChildren(viewId, handle);
+	}
+
+	/**
+	 * Resolve one webview view an extension registered.
+	 *
+	 * @param viewType - the view type.
+	 * @param title - the title the view reports.
+	 * @returns the webview handle the surface serves.
+	 */
+	async resolveWebviewView(viewType: string, title?: string): Promise<{ handle: string; viewType: string }> {
+		return await this._host.resolveWebviewView(viewType, title);
+	}
+
+	/**
+	 * Run one command an extension contributed.
+	 *
+	 * @param id - the command id.
+	 * @returns the command's answer.
+	 */
+	async runCommand(id: string): Promise<unknown> {
+		return await this._host.runCommand(id);
+	}
+
+	/**
 	 * The extensions the host refused to load, and why.
 	 *
 	 * @returns the list.

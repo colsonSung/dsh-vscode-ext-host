@@ -20,7 +20,7 @@ import { mkdtempSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 
-const { apply } = await import('../../bundle/index.js');
+const { apply } = await import('../../plugin/index.js');
 
 const profileDir = mkdtempSync(join(tmpdir(), 'dsh-exthost-bundle-'));
 
@@ -139,6 +139,11 @@ check(
 	`status: ${JSON.stringify(status.body).slice(0, 400)}`,
 );
 check(
+	'the status payload carries the status bar entries',
+	Array.isArray(status.body.statusBar),
+	`statusBar: ${JSON.stringify(status.body.statusBar)}`,
+);
+check(
 	'the status action names the extensions with publisher.name@version',
 	status.body.extensions.every((entry) => /^[^@]+@[^@]+$/.test(entry.id)),
 	`extensions: ${JSON.stringify(status.body.extensions)}`,
@@ -149,6 +154,64 @@ check(
 	'the log action answers with the log lines',
 	log.body.ok === true && Array.isArray(log.body.lines),
 	`log lines: ${log.body.lines?.length ?? 'none'}`,
+);
+
+// A command id is required, and an unknown one is refused with the extension
+// host's own message: this profile has no extension to register any.
+const noId = await call(route, { action: 'command', id: '' });
+check(
+	'the command action refuses an empty id',
+	noId.body.ok === false && typeof noId.body.error === 'string',
+	`answer: ${JSON.stringify(noId.body)}`,
+);
+const unknownCommand = await call(route, { action: 'command', id: 'acme.not.registered' });
+check(
+	'the command action reports an unregistered command',
+	unknownCommand.body.ok === false && String(unknownCommand.body.error).includes('no extension registered'),
+	`answer: ${JSON.stringify(unknownCommand.body)}`,
+);
+
+// The webview views an extension registers: none here, and resolving one is
+// refused by the extension host rather than answered with an empty view.
+const views = await call(route, { action: 'views' });
+check(
+	'the views action answers with the registered views',
+	views.body.ok === true && Array.isArray(views.body.views),
+	`answer: ${JSON.stringify(views.body)}`,
+);
+const noViewType = await call(route, { action: 'resolveView', viewType: '' });
+check(
+	'the resolveView action refuses an empty view type',
+	noViewType.body.ok === false && typeof noViewType.body.error === 'string',
+	`answer: ${JSON.stringify(noViewType.body)}`,
+);
+const unknownView = await call(route, { action: 'resolveView', viewType: 'acme.nothing' });
+check(
+	'the resolveView action reports an unregistered view',
+	unknownView.body.ok === false && String(unknownView.body.error).includes('no extension registered the webview view'),
+	`answer: ${JSON.stringify(unknownView.body)}`,
+);
+
+// Tree views: the page pulls one level at a time; with no extension registering
+// one, both the empty id and an unknown view are refused rather than answered.
+const noViewId = await call(route, { action: 'treeChildren', viewId: '' });
+check(
+	'the treeChildren action refuses an empty view id',
+	noViewId.body.ok === false && typeof noViewId.body.error === 'string',
+	`answer: ${JSON.stringify(noViewId.body)}`,
+);
+const unknownTree = await call(route, { action: 'treeChildren', viewId: 'acme.tree' });
+check(
+	'the treeChildren action reports an unregistered tree view',
+	unknownTree.body.ok === false && String(unknownTree.body.error).includes('no extension registered the tree view'),
+	`answer: ${JSON.stringify(unknownTree.body)}`,
+);
+
+const panels = await call(route, { action: 'panels' });
+check(
+	'the panels action answers with the open panels',
+	panels.body.ok === true && Array.isArray(panels.body.panels) && typeof panels.body.origin === 'string',
+	`answer: ${JSON.stringify(panels.body).slice(0, 200)}`,
 );
 
 const unknown = await call(route, { action: 'nonsense' });
@@ -165,6 +228,30 @@ check(
 	toolStatus.ok === true && typeof toolStatus.summary === 'string',
 	`summary: ${toolStatus.summary}`,
 );
+const toolCommand = await tool.execute({ action: 'command' }, {});
+check(
+	'the model tool refuses the command action without an id',
+	toolCommand.ok === false && typeof toolCommand.summary === 'string',
+	`summary: ${toolCommand.summary}`,
+);
+
+// The harness rejects a tool result that is not lossless JSON: no `undefined`
+// members, no functions, no NaN. The status payload is exactly where optional
+// host fields would leak `undefined` in, so it is the one that has to be clean.
+const lossless = (value) => {
+	try {
+		const round = JSON.parse(JSON.stringify(value));
+		return JSON.stringify(round) === JSON.stringify(value);
+	} catch {
+		return false;
+	}
+};
+check(
+	'the model tool\'s status result is lossless JSON',
+	toolStatus.ok === true && lossless(toolStatus),
+	`strength: ${lossless(toolStatus)} value: ${JSON.stringify(toolStatus).slice(0, 240)}`,
+);
+
 const toolLog = await tool.execute({ action: 'log', lines: 5 }, {});
 check(
 	'the model tool answers the log action',

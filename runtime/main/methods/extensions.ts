@@ -217,7 +217,11 @@ export default function createExtensionsMethods(ctx: any, host: ExtHostContext):
 			try {
 				host.markActivationError?.(id, message)
 			} catch { /* the handle is read-only in some builds */ }
-			host.log(`MainThreadExtensionService.$onExtensionActivationError(${id}): ${message}`)
+			// The stack, not just the message: "Argument is `undefined` or `null`" says nothing
+			// about WHICH API the extension called, and a failing extension is otherwise
+			// impossible to diagnose from the log.
+			const stack = typeof (error as any)?.stack === 'string' ? String((error as any).stack) : '';
+			host.log(`MainThreadExtensionService.$onExtensionActivationError(${id}): ${message}${stack.length > 0 ? `\n${stack.slice(0, 3000)}` : ''}`)
 			if (missingExtensionDependency) {
 				host.log(`MainThreadExtensionService: missing dependency ${JSON.stringify(missingExtensionDependency)}`)
 			}

@@ -1,5 +1,5 @@
 {
-  "name": "@local/dsh-vscode-webview-surface",
+  "name": "dsh-vscode-webview-surface",
   "version": "1.0.0",
   "private": true,
   "type": "module",

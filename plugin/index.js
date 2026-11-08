@@ -34,7 +34,7 @@ export const inject = ['profileContext', 'webServer', 'connection', 'tools']
 export const ROUTE = '/vscode-extension-host'
 
 /** The id of this bundle's browser half, as the module table knows it. */
-const CLIENT_MODULE_ID = '@local/dsh-vscode-extension-host'
+const CLIENT_MODULE_ID = 'dsh-vscode-extension-host'
 
 /**
  * Apply the plugin.
@@ -106,6 +106,7 @@ async function handle(ctx, runtime, req, res) {
           host: payload.host,
           extensions: payload.extensions,
           commands: runtime.registeredCommands(),
+          statusBar: runtime.statusBarEntries(),
           skipped: runtime.skippedExtensions(),
         })
         return
@@ -125,6 +126,96 @@ async function handle(ctx, runtime, req, res) {
       case 'log': {
         const lines = typeof body.lines === 'number' ? Math.min(Math.max(body.lines, 1), 5000) : 200
         json(res, 200, { ok: true, lines: runtime.logLines(lines) })
+        return
+      }
+      case 'views': {
+        // Two kinds of view reach the page: the webviews an extension registered, and
+        // the tree data providers it registered. The page lists both and renders each
+        // with its own control.
+        //
+        // A view's NAME lives in the extension's own manifest (`contributes.views`), and
+        // the extension's own name lives in its `displayName`. Without them the list
+        // reads `claude-dev.SidebarProvider`, which nobody can act on.
+        const surface = ctx.get('vscodeWebviewSurface')
+        const named = new Map()
+        for (const row of runtime.viewTitles()) {
+          named.set(row.viewType, { title: row.title, extensionName: row.extensionName })
+        }
+        const webviews = surface?.views === undefined
+          ? []
+          : [...surface.views.values()].map((entry) => {
+            const info = named.get(entry.viewType)
+            return {
+              ...entry,
+              kind: 'webview',
+              title: info?.title ?? entry.viewType,
+              extensionName: info?.extensionName ?? '',
+            }
+          })
+        const trees = runtime.treeViewList().map((entry) => ({
+          viewType: entry.viewId,
+          viewId: entry.viewId,
+          title: entry.title,
+          revision: entry.revision,
+          kind: 'tree',
+        }))
+        json(res, 200, { ok: true, views: [...webviews, ...trees] })
+        return
+      }
+      case 'panels': {
+        // The webview PANELS the extensions opened. A command can create one
+        // (`vscode.window.createWebviewPanel`), and DSH has no tab strip to put it
+        // in, so the page lists the ones that produced HTML and shows one on ask.
+        const surface = ctx.get('vscodeWebviewSurface')
+        const panels = surface?.panels === undefined
+          ? []
+          : [...surface.panels.values()]
+            .filter((panel) => typeof panel?.html === 'string' && panel.html.length > 0)
+            .map((panel) => ({
+              handle: panel.handle,
+              title: panel.title ?? panel.viewType ?? 'webview',
+              viewType: panel.viewType ?? '',
+              extensionId: panel.extensionId ?? '',
+              revision: panel.revision ?? 0,
+            }))
+        json(res, 200, { ok: true, panels, origin: surface?.origin?.() ?? '' })
+        return
+      }
+      case 'treeChildren': {
+        const viewId = String(body.viewId ?? '')
+        if (viewId.length === 0) {
+          json(res, 400, { ok: false, error: 'a view id is required' })
+          return
+        }
+        const answer = await runtime.treeChildren(
+          viewId,
+          typeof body.handle === 'string' && body.handle.length > 0 ? body.handle : undefined,
+        )
+        json(res, 200, { ok: true, ...answer })
+        return
+      }
+      case 'resolveView': {
+        const viewType = String(body.viewType ?? '')
+        if (viewType.length === 0) {
+          json(res, 400, { ok: false, error: 'a view type is required' })
+          return
+        }
+        const resolved = await runtime.resolveWebviewView(viewType, typeof body.title === 'string' ? body.title : undefined)
+        const surface = ctx.get('vscodeWebviewSurface')
+        json(res, 200, { ok: true, ...resolved, origin: surface?.origin?.() ?? '' })
+        return
+      }
+      case 'command': {
+        // A command an installed extension contributed runs inside the extension
+        // host. Its answer is passed through; a command that needs editor state
+        // DSH does not have fails with the extension's own error.
+        const id = String(body.id ?? '')
+        if (id.length === 0) {
+          json(res, 400, { ok: false, error: 'a command id is required' })
+          return
+        }
+        const answer = await runtime.runCommand(id)
+        json(res, 200, { ok: true, id, answer: answer === undefined ? null : answer })
         return
       }
       case 'theme': {

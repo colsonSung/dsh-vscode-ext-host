@@ -35,12 +35,19 @@
 
 import { useEffect, useMemo, useRef, useState } from 'react';
 
+import { registerExtensionViewsTab } from './view-tab.jsx';
+
+// Exported for the landing-view regression check in runtime/verify/view-tab.mjs.
+export { chooseInitialView, offerableViews } from './view-tab.jsx';
+
+
 /** Services this plugin reads. */
 // `documentPreviews` is a HARD dependency: the preview registry must exist
-// before this module registers its renderer into it. Without the declaration the
-// tree may activate this module first, the registry lookup comes back empty, and
-// the renderer is never registered — the file then falls back to plain text.
-export const inject = ['slots', 'locale', 'documentPreviews'];
+// before this module registers its renderers into it. Without the declaration
+// the tree may activate this module first, the lookup comes back empty, and no
+// renderer is registered — the file then falls back to plain text instead of
+// opening in the extension that claims it.
+export const inject = ['slots', 'locale', 'documentPreviews', 'sidebarRightTabs'];
 
 /** The dictionary namespace owned by this plugin. */
 const NS = 'vscodeWebviewSurface';
@@ -77,7 +84,7 @@ const CSS = `
 `;
 
 /** The stable identity of this preview implementation. */
-const BODY_ID = '@local/dsh-vscode-extension-host/webview';
+const BODY_ID = 'dsh-vscode-extension-host/webview';
 
 /**
  * The suffixes an editor REFUSED to open.
@@ -176,6 +183,7 @@ const en = {
 	failed: 'The VS Code webview could not be started: {message}',
 	refused: 'This VS Code extension did not produce a webview for the file — it only opens the files it opened itself. Try another editor.',
 	unclaimed: 'No installed VS Code extension claims this file.',
+
 };
 
 /** The Chinese dictionary. */
@@ -186,6 +194,7 @@ const zh = {
 	failed: 'VS Code webview 启动失败：{message}',
 	refused: '这个 VSCode 扩展没有为该文件生成 webview —— 它只肯打开自己认领过的文件。换一个打开方式试试。',
 	unclaimed: '没有已安装的 VSCode 扩展接管这个文件。',
+
 };
 
 /**
@@ -723,4 +732,8 @@ export function apply(ctx) {
 			registrations = [];
 		};
 	}, 'vscode-webview-surface: preview');
+
+	// The extension's SIDEBAR VIEWS (an AI chat panel is one) get a tab of their own: the
+	// right Sidebar renders file-addressed custom editors, and a view is not a file.
+	registerExtensionViewsTab(ctx);
 }

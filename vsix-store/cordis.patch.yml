@@ -1,3 +1,0 @@
-- insert:
-    - id: vsix-store
-      name: '@local/vsix-store'

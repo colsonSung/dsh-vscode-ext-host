@@ -29,7 +29,7 @@
  *--------------------------------------------------------------------------------------------*/
 
 import { spawn, type ChildProcess } from 'node:child_process';
-import { existsSync, mkdirSync, appendFileSync, statSync, watch, type FSWatcher } from 'node:fs';
+import { existsSync, mkdirSync, appendFileSync, statSync, watch, writeFileSync, type FSWatcher } from 'node:fs';
 import { dirname, join, resolve } from 'node:path';
 
 import {
@@ -46,7 +46,11 @@ import {
 import { STUB_RETURNS } from './stub-returns.js';
 import { resolveProfileExtensions, type ResolvedExtension } from './profile.js';
 import { createChannelMethods } from './methods/index.js';
+import { toVsCancellationToken } from './methods/ai-support.js';
+import { surfaceOf } from './methods/webview-support.js';
 import type {
+	ConfigurationApi,
+	StatusBarEntry,
 	ExtHostContext as HostHandle,
 	ExtensionHostState,
 	LoadedExtension,
@@ -273,6 +277,22 @@ export class HostLog {
 	}
 }
 
+/** One tree view an extension registered. */
+export interface TreeViewRegistration {
+	/** The contributed view id. */
+	viewId: string;
+	/** The provider options the extension passed. */
+	options: unknown;
+	/** The title the extension set, when it set one. */
+	title?: string;
+	/** The "nothing to show" message the extension set. */
+	message?: unknown;
+	/** The badge the extension set. */
+	badge?: unknown;
+	/** Bumped whenever the provider asks for a refresh. */
+	revision: number;
+}
+
 /** The per-extension runtime facts the host tracks. */
 interface ExtensionRuntimeState {
 	active: boolean;
@@ -307,6 +327,12 @@ export class ExtensionHostService {
 	private _skipped: Array<{ id: string; reason: string; detail: string }> = [];
 	private _states = new Map<string, ExtensionRuntimeState>();
 	private _commands = new Map<string, (...args: any[]) => any>();
+	/** The tree views the extensions registered, by view id. */
+	private _treeViews = new Map<string, TreeViewRegistration>();
+	/** The status bar entries the extensions published, by entry id. */
+	private _statusBar = new Map<string, StatusBarEntry>();
+	/** The configuration surface the running host registered, when it registered one. */
+	private _configurationApi: ConfigurationApi | undefined;
 	private _exports = new Map<string, unknown>();
 
 	private _watcher: FSWatcher | undefined;
@@ -410,6 +436,231 @@ export class ExtensionHostService {
 	}
 
 	/**
+	 * Call one method on the extension host's side of the protocol.
+	 *
+	 * @param channel - the `ExtHost*` channel key name.
+	 * @param method - the protocol method name.
+	 * @param args - the method arguments.
+	 * @returns the method's reply.
+	 */
+	private async _call<T = unknown>(channel: string, method: string, ...args: unknown[]): Promise<T> {
+		const rpc = this._rpc;
+		if (rpc === undefined) {
+			throw new Error('the extension host is not running');
+		}
+		const identifier = (ExtHostContextTable as any)[channel];
+		if (identifier === undefined) {
+			throw new Error(`"${channel}" is not an extension host channel`);
+		}
+		const proxy: any = rpc.getProxy(identifier);
+		const handler = proxy[method];
+		if (typeof handler !== 'function') {
+			throw new Error(`"${method}" is not a method of the extension host channel "${channel}"`);
+		}
+		return await handler(...args) as T;
+	}
+
+	/**
+	 * Push the editor tab model to the extension host.
+	 *
+	 * DSH has no tab bar: a document lives in the right Sidebar's preview, not in a row of
+	 * tabs. But `vscode.window.tabGroups` is part of the API an extension may call WHILE IT
+	 * ACTIVATES, and the vendored host answers `activeTabGroup` with
+	 * `assertReturnsDefined(...)` over the groups it was told about: with no model pushed,
+	 * that call throws and the extension's activation fails. `ms-vscode.hexeditor` died
+	 * exactly there — it reads `tabGroups.activeTabGroup` as it starts.
+	 *
+	 * So DSH publishes ONE group with no tabs in it. The group is real (it is active, and
+	 * `tabs` is an empty list), the tab bar is not: an extension that wants a tab can add
+	 * one through the API, and one that only wants the group gets it.
+	 *
+	 * @returns nothing.
+	 */
+	async pushEditorTabModel(): Promise<void> {
+		await this._call('ExtHostEditorTabs', '$acceptEditorTabModel', [
+			{ groupId: 1, isActive: true, viewColumn: 1, tabs: [] },
+		]);
+	}
+
+	/** The webview views this service already resolved, by view type. */
+	private _resolvedViews = new Map<string, string>();
+
+	/**
+	 * Resolve one webview view an extension registered.
+	 *
+	 * VS Code resolves a view when its container shows it: the main thread mints the
+	 * webview handle and asks `ExtHostWebviewViews` to let the provider fill it. DSH
+	 * has no view container, so the right-Sidebar page asks for one explicitly — the
+	 * extension then produces its HTML through the ordinary `MainThreadWebviews`
+	 * channel, and the webview surface serves it exactly like a custom editor's.
+	 *
+	 * The handle is stable per view type: resolving the same view twice returns the
+	 * webview the extension already filled instead of asking it to start over.
+	 *
+	 * @param viewType - the view type the extension registered.
+	 * @param title - the title the view reports.
+	 * @returns the webview handle the surface serves.
+	 */
+	async resolveWebviewView(viewType: string, title?: string): Promise<{ handle: string; viewType: string }> {
+		if (typeof viewType !== 'string' || viewType.length === 0) {
+			throw new Error('a view type is required');
+		}
+		const surface = surfaceOf(this.ctx);
+		const known = surface?.views?.get?.(viewType);
+		if (known === undefined) {
+			throw new Error(`no extension registered the webview view "${viewType}"`);
+		}
+		const resolved = this._resolvedViews.get(viewType);
+		if (resolved !== undefined) {
+			return { handle: resolved, viewType };
+		}
+		const handle = `view:${viewType}`;
+		await this._call(
+			'ExtHostWebviewViews',
+			'$resolveWebviewView',
+			handle,
+			viewType,
+			title ?? viewType,
+			undefined,
+			toVsCancellationToken(),
+		);
+		this._resolvedViews.set(viewType, handle);
+		this._log.write(`resolved the webview view "${viewType}" as "${handle}"`);
+		return { handle, viewType };
+	}
+
+	/**
+	 * A view's name, in words a person can read.
+	 *
+	 * A view's `name` is often a LOCALIZATION PLACEHOLDER (`%view.gitlens.views.graph.name%`),
+	 * which the extension host resolves from the extension's own language pack — and DSH has no
+	 * language pack for it. The last segment of the view type is the next best thing.
+	 *
+	 * @param view - the manifest entry of the view.
+	 * @param viewType - the view's type, the fallback.
+	 * @returns the title.
+	 */
+	private _readableViewTitle(view: any, viewType: string): string {
+		const name = typeof view?.name === 'string' ? view.name.trim() : '';
+		if (name.length > 0 && !/^%.*%$/.test(name)) {
+			return name;
+		}
+		const segments = String(viewType).split('.');
+		const last = segments[segments.length - 1] ?? viewType;
+		return last.length > 0 ? last : viewType;
+	}
+
+	/**
+	 * The names of the views the installed extensions contribute.
+	 *
+	 * A view's NAME lives in the extension's own manifest (`contributes.views`), and the
+	 * extension's own name in its `displayName`. The manifests are far too big to hand out
+	 * whole (GitLens' alone is ~900 KiB), so only this projection leaves the host.
+	 *
+	 * @returns the view types with their title and their extension's name.
+	 */
+	viewTitles(): Array<{ viewType: string; title: string; extensionName: string }> {
+		const rows: Array<{ viewType: string; title: string; extensionName: string }> = [];
+		for (const extension of this._extensions) {
+			const manifest = extension.manifest ?? {};
+			// The extension's own display name can be a localization placeholder too
+			// (`%gitlens.displayName%`); the package name is the fallback.
+			const declared = typeof manifest.displayName === 'string' ? manifest.displayName.trim() : '';
+			const displayName = declared.length > 0 && !/^%.*%$/.test(declared) ? declared : extension.name;
+			const containers = manifest.contributes?.views ?? {};
+			for (const views of Object.values(containers)) {
+				for (const view of Array.isArray(views) ? views : []) {
+					if (typeof view?.id !== 'string') {
+						continue;
+					}
+					rows.push({
+						viewType: view.id,
+						title: this._readableViewTitle(view, view.id),
+						extensionName: displayName,
+					});
+				}
+			}
+		}
+		return rows;
+	}
+
+	/**
+	 * The status bar entries the extensions published.
+	 *
+	 * @returns the entries, left group first, then by priority.
+	 */
+	statusBarEntries(): StatusBarEntry[] {
+		return [...this._statusBar.values()].sort((left, right) => {
+			if (left.alignLeft !== right.alignLeft) return left.alignLeft ? -1 : 1;
+			const leftPriority = left.priority ?? Number.MAX_VALUE / 2;
+			const rightPriority = right.priority ?? Number.MAX_VALUE / 2;
+			return leftPriority - rightPriority;
+		});
+	}
+
+	/**
+	 * The tree views the extensions registered.
+	 *
+	 * @returns the registrations, in registration order.
+	 */
+	treeViewList(): TreeViewRegistration[] {
+		return [...this._treeViews.values()];
+	}
+
+	/**
+	 * Read one tree view's children.
+	 *
+	 * The provider is lazy: `handle` names the row to expand, and omitting it asks for the
+	 * root. The extension host answers the rows it produced; the shape of a row is the
+	 * extension host's own TreeItem DTO, passed through untouched so the browser half sees
+	 * exactly what VS Code would have seen.
+	 *
+	 * @param viewId - the contributed view id.
+	 * @param handle - the tree item handle to expand, or undefined for the root.
+	 * @returns the rows and the view's revision.
+	 */
+	async treeChildren(viewId: string, handle?: string): Promise<{ viewId: string; rows: unknown[]; revision: number }> {
+		const registration = this._treeViews.get(viewId);
+		if (registration === undefined) {
+			throw new Error(`no extension registered the tree view "${viewId}"`);
+		}
+		const answer = await this._call(
+			'ExtHostTreeViews',
+			'$getChildren',
+			viewId,
+			handle === undefined ? undefined : [handle],
+		) as any;
+		// The extension host answers `[[index, ...rows]]` — one group per requested handle.
+		// The page only ever asks for one row at a time, so the first group is the answer.
+		const rows = Array.isArray(answer?.[0]) ? answer[0].slice(1) : [];
+		return { viewId, rows, revision: registration.revision };
+	}
+
+	/**
+	 * Run one command an extension contributed.
+	 *
+	 * The command runs in the extension host, as the extension registered it, and
+	 * answers whatever it returns. DSH has no editor state to hand it: a command
+	 * that needs an active text editor or a UI pick answers the extension's own
+	 * error, and that error is passed on instead of being flattened.
+	 *
+	 * @param id - the command id, as `registeredCommands()` spells it.
+	 * @returns the command's answer.
+	 */
+	async runCommand(id: string): Promise<unknown> {
+		if (typeof id !== 'string' || id.length === 0) {
+			throw new Error('a command id is required');
+		}
+		const handler = this._commands.get(id);
+		if (handler === undefined) {
+			throw new Error(`no extension registered the command "${id}"`);
+		}
+		const answer = await handler();
+		this._log.write(`the command "${id}" ran`);
+		return answer === undefined ? null : answer;
+	}
+
+	/**
 	 * The tail of the host log.
 	 *
 	 * @param count - how many lines.
@@ -467,6 +718,8 @@ export class ExtensionHostService {
 		this._states.clear();
 		this._exports.clear();
 		this._commands.clear();
+		this._treeViews.clear();
+		this._statusBar.clear();
 		return this.status();
 	}
 
@@ -524,10 +777,15 @@ export class ExtensionHostService {
 				sessionId: `dsh-${Date.now()}`,
 			});
 
+			// The payload carries every manifest; GitLens' alone is ~900 KiB, more than the
+			// operating system lets one process put into its environment. The child reads it
+			// from this file instead (see `readInitData` there).
+			const initDataPath = join(logsDir, 'exthost-init.json');
+			writeFileSync(initDataPath, JSON.stringify(initData));
 			const env = curatedChildEnv({
 				...node.env,
 				...this._config.nodeEnv,
-				DSH_EXTHOST_INIT_DATA: JSON.stringify(initData),
+				DSH_EXTHOST_INIT_FILE: initDataPath,
 			});
 
 			this._readyReader = new ReadySignalReader();
@@ -581,6 +839,7 @@ export class ExtensionHostService {
 			this._rpc = rpc;
 			// A new process starts on Dark again: the scheme has to be sent to it.
 			this._toldColorScheme = undefined;
+			this._ensureStorageHomes();
 			this._registerActors(rpc);
 
 			child.on('exit', (code, signal) => {
@@ -592,6 +851,15 @@ export class ExtensionHostService {
 			this._log.write(`the extension host signalled readiness via ${source}`);
 
 			await this._sendInitRpcs(rpc);
+			// The tab model goes out BEFORE the extensions activate: an extension may read
+			// `window.tabGroups` while it starts, and the vendored host answers that call
+			// with an assertion over the model it was given.
+			try {
+				await this.pushEditorTabModel();
+				this._log.write('the editor tab model was published (one active group, no tabs)');
+			} catch (error) {
+				this._log.write(`the editor tab model could not be published: ${(error as Error).message}`);
+			}
 			await this._startExtensionHost(rpc);
 			this._running = true;
 			this._log.write('the extension host is running');
@@ -773,6 +1041,29 @@ export class ExtensionHostService {
 		}
 	}
 
+	/**
+	 * Make the two directories the extension host hands out exist.
+	 *
+	 * `globalStorageUri` and `workspaceStorageUri` point INTO the profile, and an extension
+	 * that creates its own subdirectory under them expects the parent to be there: Continue
+	 * failed to activate with `ENOENT: mkdir <profile>/global-storage/continue.continue` in a
+	 * profile that had no `global-storage/` yet.
+	 */
+	private _ensureStorageHomes(): void {
+		for (const directory of [this._config.profileDir]) {
+			if (typeof directory !== 'string' || directory.length === 0) {
+				continue;
+			}
+			for (const home of ['global-storage', 'workspace-storage']) {
+				try {
+					mkdirSync(join(directory, home), { recursive: true });
+				} catch (error) {
+					this._log.write(`could not create ${home}: ${String((error as any)?.message ?? error)}`);
+				}
+			}
+		}
+	}
+
 	private async _sendInitRpcs(rpc: RPCProtocol): Promise<void> {
 		const workspace = rpc.getProxy(ExtHostContextTable.ExtHostWorkspace);
 		const configuration = rpc.getProxy(ExtHostContextTable.ExtHostConfiguration);
@@ -791,8 +1082,11 @@ export class ExtensionHostService {
 		// The IConfigurationModel interface only shows { contents, overrides }; omitting `keys`
 		// crashes the extension host with "Cannot read properties of undefined (reading 'length')".
 		const emptyModel = () => ({ contents: {}, keys: [], overrides: [] });
-		this._log.write('-> $initializeConfiguration');
-		await configuration.$initializeConfiguration({
+		// The configuration module already built the real model — the DEFAULTS every
+		// installed extension declares plus the values the user set. Send THAT: an empty
+		// model here means every extension reads `undefined` for every setting it
+		// contributed, and the later push only helps if it wins a race with activation.
+		const configurationModel = this._configurationApi?.initData?.() ?? {
 			defaults: emptyModel(),
 			policy: emptyModel(),
 			application: emptyModel(),
@@ -801,7 +1095,9 @@ export class ExtensionHostService {
 			workspace: emptyModel(),
 			folders: [],
 			configurationScopes: [],
-		} as any);
+		};
+		this._log.write(`-> $initializeConfiguration (api=${this._configurationApi === undefined ? 'none' : 'present'}, defaults=${Object.keys((configurationModel as any).defaults?.contents ?? {}).length})`);
+		await configuration.$initializeConfiguration(configurationModel as any);
 
 		this._log.write('-> $initializeTelemetryLevel');
 		await telemetry.$initializeTelemetryLevel(0 /* NONE */, false, { usage: false, error: false });
@@ -847,7 +1143,11 @@ export class ExtensionHostService {
 				await service.$activate(toExtId(extension.extensionId) as any, { kind: 'explicit', extensionId: extension.extensionId } as any);
 				this._log.write(`activated ${extension.extensionId}`);
 			} catch (error) {
-				this._log.write(`ERROR ${extension.extensionId} could not be activated: ${(error as Error).message}`);
+				// The stack is what makes a failing extension diagnosable: the message alone
+				// ("Argument is `undefined` or `null`") says nothing about WHICH API the
+				// extension called. It is capped so one broken extension cannot flood the log.
+				const stack = String((error as Error)?.stack ?? (error as Error)?.message ?? error).slice(0, 4000);
+				this._log.write(`ERROR ${extension.extensionId} could not be activated: ${stack}`);
 				this._states.set(extension.extensionId, { active: false, error: (error as Error).message });
 			}
 		}
@@ -900,6 +1200,53 @@ export class ExtensionHostService {
 			log: (message: string) => this._log.write(message),
 			get commands() {
 				return service._commands;
+			},
+			registerTreeView: (viewId: string, options: unknown) => {
+				const existing = service._treeViews.get(viewId);
+				service._treeViews.set(viewId, {
+					viewId,
+					options,
+					title: existing?.title,
+					message: existing?.message,
+					badge: existing?.badge,
+					revision: (existing?.revision ?? 0) + 1,
+				});
+			},
+			disposeTreeView: (viewId: string) => {
+				service._treeViews.delete(viewId);
+			},
+			refreshTreeView: (viewId: string) => {
+				const existing = service._treeViews.get(viewId);
+				if (existing !== undefined) {
+					existing.revision += 1;
+				}
+			},
+			setTreeViewTitle: (viewId: string, title: string) => {
+				const existing = service._treeViews.get(viewId);
+				if (existing !== undefined) {
+					existing.title = title;
+				}
+			},
+			setTreeViewMessage: (viewId: string, message: unknown) => {
+				const existing = service._treeViews.get(viewId);
+				if (existing !== undefined) {
+					existing.message = message;
+				}
+			},
+			setConfigurationApi: (api: ConfigurationApi) => {
+				service._configurationApi = api;
+			},
+			setStatusBarEntry: (entry: StatusBarEntry) => {
+				service._statusBar.set(entry.entryId, entry);
+			},
+			disposeStatusBarEntry: (entryId: string) => {
+				service._statusBar.delete(entryId);
+			},
+			setTreeViewBadge: (viewId: string, badge: unknown) => {
+				const existing = service._treeViews.get(viewId);
+				if (existing !== undefined) {
+					existing.badge = badge;
+				}
 			},
 			getExtensionExports: (id: string) => service._exports.get(id),
 			markActivated: (extensionId: string) => {
@@ -1101,8 +1448,15 @@ function deriveEvents(manifest: any): string[] {
 	for (const language of contributes.languages ?? []) {
 		events.add(`onLanguage:${language.id}`);
 	}
-	for (const view of Object.values(contributes.views ?? {}) as any[]) {
-		events.add(`onView:${view.id}`);
+	// `contributes.views` maps a container id to the ARRAY of views in it; reading `.id` off
+	// the array produced the event `onView:undefined`, which activated whichever extension
+	// declared a view for the wrong reason.
+	for (const views of Object.values(contributes.views ?? {}) as any[]) {
+		for (const view of Array.isArray(views) ? views : []) {
+			if (typeof view?.id === 'string' && view.id.length > 0) {
+				events.add(`onView:${view.id}`);
+			}
+		}
 	}
 	return [...events];
 }
