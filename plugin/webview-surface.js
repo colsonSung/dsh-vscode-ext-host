@@ -32,12 +32,17 @@ import { createServer } from 'node:http';
  * EVERY route is behind `ctx.connection.authorizeIndex`, the same gate the extension host
  * bundle and the VSIX store use.
  *
- * THE HTML REWRITE
- * ----------------
+ * THE URL REWRITE
+ * ---------------
  * `webview.asWebviewUri(...)` produces an `https://file+.vscode-resource.vscode-cdn.net/...`
  * URL. That host does not exist in DSH, so the surface rewrites those URLs to its own
  * resource route, and relaxes the extension's own CSP just enough for the
  * `acquireVsCodeApi` shim to run.
+ *
+ * The HTML is not the only place such a URL travels. A VIEWER extension hands the file it
+ * previews to its webview in a MESSAGE — the Office Viewer posts `content.path` and its page
+ * `fetch`es it — so the message route rewrites those URLs too. Without that, every Office
+ * document ends in the viewer's own "Failed to open file: Failed to fetch" card.
  *
  * THE WEBVIEW'S OWN ORIGIN
  * ------------------------
@@ -101,6 +106,49 @@ const SHIM = `<script>(function(){
 })();</script>`;
 
 /**
+ * The path of a resource route, from the tail of an `asWebviewUri` URL.
+ *
+ * @param {string} base - the origin the URL should point at (no trailing slash).
+ * @param {string} tail - the URL's path, possibly percent-encoded, possibly with a query.
+ * @returns {string} the rewritten URL.
+ */
+function resourceUrlOf(base, tail) {
+	const withoutQuery = String(tail).split('?')[0];
+	let decoded = withoutQuery;
+	try {
+		decoded = decodeURIComponent(withoutQuery);
+	} catch {
+		/* keep the encoded form when it is not valid percent-encoding */
+	}
+	// `encodeURI` keeps the slashes, so the directory structure survives and the
+	// relative URLs of the webview still resolve into the extension's own tree.
+	return `${base}/resource/${encodeURI(decoded).replace(/^\//, '')}`;
+}
+
+/**
+ * The percent-encoded form of a resource route, from a wholly encoded `asWebviewUri` URL.
+ *
+ * @param {string} base - the origin the URL should point at (no trailing slash).
+ * @param {string} match - the encoded URL, with whatever followed it.
+ * @returns {string} the rewritten, still encoded, URL plus the tail.
+ */
+function encodedResourceUrlOf(base, match) {
+	// The match runs to the end of the attribute; an encoded quote marks where the URL
+	// ends and the JSON around it continues (a URL never contains one).
+	const encoded = String(match).split(/%22|%27/i)[0];
+	let decoded = encoded;
+	try {
+		decoded = decodeURIComponent(encoded);
+	} catch {
+		/* keep the encoded form when it is not valid percent-encoding */
+	}
+	const path = decoded
+		.replace(/^https?:\/\/[^/]*/i, '')
+		.split('?')[0];
+	return encodeURIComponent(`${base}/resource/${encodeURI(path).replace(/^\//, '')}`) + String(match).slice(encoded.length);
+}
+
+/**
  * Rewrite the `asWebviewUri` URLs of an extension's HTML to DSH's resource route.
  *
  * @param {string} html - the extension's HTML.
@@ -115,18 +163,7 @@ export function rewriteResourceUrls(html, origin = RESOURCE_PATH) {
 		// The URL ends at a quote OR at an HTML entity: inside `data-config="{&quot;path&quot;:…}"`
 		// the surrounding JSON is escaped, and a `&` is where the URL stops, not part of it.
 		/https:\/\/[a-z0-9+.%-]*\.vscode-resource\.vscode-cdn\.net([^"'()\s&<>]*)/gi,
-		(_match, tail) => {
-			const withoutQuery = String(tail).split('?')[0];
-			let decoded = withoutQuery;
-			try {
-				decoded = decodeURIComponent(withoutQuery);
-			} catch {
-				/* keep the encoded form when it is not valid percent-encoding */
-			}
-			// `encodeURI` keeps the slashes, so the directory structure survives and the
-			// relative URLs of the webview still resolve into the extension's own tree.
-			return `${base}/resource/${encodeURI(decoded).replace(/^\//, '')}`;
-		},
+		(_match, tail) => resourceUrlOf(base, tail),
 	);
 	// The CSP source of a webview (`webview.cspSource`) points at `https://<id>.vscode-cdn.net`.
 	// There is no such host in DSH, so it becomes the webview's own origin.
@@ -137,21 +174,51 @@ export function rewriteResourceUrls(html, origin = RESOURCE_PATH) {
 	// drew its toolbar around a blank page.
 	out = out.replace(
 		/https(?:%3A|:)%2F%2F[^"'()\s&<>]*?\.vscode-resource\.vscode-cdn\.net[^"'()\s&<>]*/gi,
-		(match) => {
-			// The match runs to the end of the attribute; an encoded quote marks where the URL
-			// ends and the JSON around it continues (a URL never contains one).
-			const encoded = match.split(/%22|%27/i)[0];
-			let decoded = encoded;
-			try {
-				decoded = decodeURIComponent(encoded);
-			} catch {
-				/* keep the encoded form when it is not valid percent-encoding */
-			}
-			const path = decoded
-				.replace(/^https?:\/\/[^/]*/i, '')
-				.split('?')[0];
-			return encodeURIComponent(`${base}/resource/${encodeURI(path).replace(/^\//, '')}`) + match.slice(encoded.length);
-		},
+		(match) => encodedResourceUrlOf(base, match),
+	);
+	return out;
+}
+
+/**
+ * Rewrite the `asWebviewUri` URLs inside a message an extension sends to its webview.
+ *
+ * The HTML is not the only place such a URL travels: a VIEWER extension hands the file it
+ * previews to the webview in a message. The Office Viewer (`cweijan.vscode-office`) reads
+ * the file, then posts
+ *
+ *     {"type":"open","content":{"path":"https://file%2B.vscode-resource.vscode-cdn.net/<file>"}}
+ *
+ * and its webview `fetch`es that path. In DSH the host in it does not exist, the fetch
+ * rejects with `Failed to fetch`, and every Office document ends in the viewer's own
+ * "Failed to open file" card — even though the file is right there and the extension already
+ * declared its directory as a `localResourceRoots` entry.
+ *
+ * The message is the extension's serialized JSON, so the URL is rewritten in the TEXT, with
+ * the same three forms the HTML rewrite knows, but the tail stops at a JSON quote or escape
+ * instead of an HTML entity. Only an absolute origin is useful: the page that fetches the URL
+ * lives on the webview's own origin, where a relative path would resolve below `/panel/`.
+ *
+ * @param {string} value - the message's serialized JSON.
+ * @param {string} [origin] - the webview's own origin.
+ * @returns {string} the message with its resource URLs rewritten.
+ */
+export function rewriteMessageUrls(value, origin = '') {
+	if (typeof value !== 'string' || value.length === 0) {
+		return value;
+	}
+	const base = String(origin ?? '').replace(/\/$/, '');
+	if (!/^https?:\/\//i.test(base)) {
+		return value;
+	}
+	let out = value.replace(
+		// A JSON string ends at an unescaped quote; a backslash starts an escape.
+		/https:\/\/[a-z0-9+.%-]*\.vscode-resource\.vscode-cdn\.net([^"\\\s]*)/gi,
+		(_match, tail) => resourceUrlOf(base, tail),
+	);
+	out = out.replace(/https:\/\/[a-z0-9.%-]*\.vscode-cdn\.net/gi, `${base}/resource`);
+	out = out.replace(
+		/https(?:%3A|:)%2F%2F[^"\\\s]*?\.vscode-resource\.vscode-cdn\.net[^"\\\s]*/gi,
+		(match) => encodedResourceUrlOf(base, match),
 	);
 	return out;
 }
@@ -667,7 +734,14 @@ class WebviewSurface {
 	drainMessages(handle) {
 		const queue = this.outbound.get(handle) ?? []
 		this.outbound.delete(handle)
-		return queue
+		// A viewer extension hands the file it previews to its webview in a MESSAGE, not in
+		// the HTML (the Office Viewer posts `content.path`), so the `asWebviewUri` rewrite has
+		// to run here too: without it the webview `fetch`es a host DSH does not have and the
+		// viewer paints "Failed to open file".
+		const origin = this.origin()
+		return queue.map((entry) => (typeof entry?.value === 'string'
+			? { ...entry, value: rewriteMessageUrls(entry.value, origin) }
+			: entry))
 	}
 
 	/**
